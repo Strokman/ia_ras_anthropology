@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href={{url_for('static', filename="styles.css")}}/>
+    {% block title %}
+    {% if title %}
+        <title>Strontium database - {{title}}</title>
+    {% else %}
+        <title>Strontium database - unnamed</title>
+    {% endif %}
+    {% endblock %}
+    {% if request.endpoint == 'render_map' %}
+ <title>Map</title>
+     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+     <!-- Make sure you put this AFTER Leaflet's CSS -->
+     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+     crossorigin=""></script>
+    {% endif %}
+</head>
+<body>
+    <div>
+        Strontium DB:
+        <a href="{{ url_for('index') }}">Home</a>
+        {% if current_user.is_anonymous %}
+        <a href="{{ url_for('login') }}">Login</a>
+        {% else %}
+        <a href="{{ url_for('submit_site') }}">Submit site</a>
+        <a href="{{ url_for('upload_file') }}">Upload data from file</a>
+                <a href="{{ url_for('render_map') }}">Map</a>
+        <a href="{{ url_for('upload_file') }}">Upload data from file</a>
+        <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+    </div>
+    </div>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+{% block content %}
+
+{% endblock content %}
+</body>
+</html>
