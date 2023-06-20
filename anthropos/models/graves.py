@@ -21,7 +21,7 @@ class Grave(db.Model):
     tachymeter_point = db.Column(db.Integer)
     skeleton = db.Column(db.String(32))
 
-    individ = db.relationship('Individ', backref='grave')
+    individ = db.relationship('Individ', back_populates='grave')
 
     # def __repr__(self):
     #     return f'Kurgan {self.number}, grave {self.grave_number}'

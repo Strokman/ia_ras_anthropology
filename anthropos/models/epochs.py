@@ -7,7 +7,8 @@ class Epoch(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, index=True)
-    archaeological_sites_epoch = db.relationship('ArchaeologicalSite', secondary=sites_epochs, backref='sites_epochs')
+
+    sites = db.relationship('ArchaeologicalSite', secondary=sites_epochs, back_populates='epochs')
 
     def __init__(self, name):
         self.name = name

@@ -6,3 +6,9 @@ from .graves import *
 from .individs import *
 from .researchers import *
 from .sex import *
+from .comments import *
+from .files import *
+from .preservation import *
+from .graves import *
+from .federal_district import *
+from .regions import *

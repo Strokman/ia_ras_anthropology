@@ -9,7 +9,7 @@ class Researcher(db.Model):
     last_name = db.Column(db.String(128), nullable=False)
     middle_name = db.Column(db.String(128))
 
-    sites = db.relationship('ArchaeologicalSite', backref='sites')
+    sites = db.relationship('ArchaeologicalSite', back_populates='researcher')
 
     def __str__(self):
         if self.middle_name:
