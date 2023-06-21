@@ -7,5 +7,8 @@ class Sex(db.Model):
     sex = db.Column(db.String(16), primary_key=True)
     individ = db.relationship('Individ', back_populates='sex')
 
+    def __init__(self, sex):
+        self.sex = sex
+
     def __repr__(self):
         return f'Sex is {self.sex}'

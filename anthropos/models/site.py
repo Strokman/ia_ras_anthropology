@@ -1,5 +1,6 @@
 from anthropos import db
 from anthropos.models.sites_epochs import sites_epochs
+# from anthropos.models import DatabaseUser, Region, Researcher
 
 
 class ArchaeologicalSite(db.Model):
@@ -21,12 +22,14 @@ class ArchaeologicalSite(db.Model):
     regions = db.relationship('Region', back_populates='sites')
     individ = db.relationship("Individ", back_populates='site')
 
-    def __init__(self, name, long, lat, created_by, edited_by):
+    def __init__(self, name: str, long: float, lat: float, user, researcher, region):
         self.name = name
         self.long = long
         self.lat = lat
-        self.created_by = created_by
-        self.edited_by = edited_by
+        self.creator_id = user.id
+        self.editor_id = user.id
+        self.researcher_id = researcher.id
+        self.region_id = region.id
 
     def __repr__(self):
         return f'{self.name} - {self.regions}'

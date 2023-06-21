@@ -8,3 +8,6 @@ class Preservation(db.Model):
     description = db.Column(db.String(64))
 
     individ = db.relationship('Individ', back_populates='preservation')
+
+    def __init__(self, description):
+        self.description = description
