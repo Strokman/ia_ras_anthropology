@@ -1,5 +1,5 @@
 from .database_user import *
-from .site import *
+from .archaeological_site import *
 from .sites_epochs import *
 from .epoch import *
 from .grave import *
