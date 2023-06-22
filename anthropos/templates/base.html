@@ -5,25 +5,15 @@
     <link rel="stylesheet" href={{url_for('static', filename="styles.css")}}/>
     {% block title %}
     {% if title %}
-        <title>Strontium database - {{title}}</title>
+        <title>BaseHabilis - {{title}}</title>
     {% else %}
-        <title>Strontium database - unnamed</title>
+        <title>BaseHabilis</title>
     {% endif %}
     {% endblock %}
-    {% if request.endpoint == 'render_map' %}
- <title>Map</title>
-     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-     crossorigin=""/>
-     <!-- Make sure you put this AFTER Leaflet's CSS -->
-     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-     crossorigin=""></script>
-    {% endif %}
 </head>
 <body>
     <div>
-        Strontium DB:
+        BaseHabilis:
         <a href="{{ url_for('index') }}">Home</a>
         {% if current_user.is_anonymous %}
         <a href="{{ url_for('login') }}">Login</a>

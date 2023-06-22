@@ -4,14 +4,14 @@ from wtforms.validators import DataRequired, Length
 from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
-from .validators import CleanString
+from .validators import CleanString, OnlyCharsValidator
 
 
 class ResearcherForm(FlaskForm):
 
-    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired(), CleanString()])
-    middle_name = StringField(label='Middle Name', validators=[Length(min=2, max=50), CleanString()])
-    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString()])
+    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
+    middle_name = StringField(label='Middle Name', validators=[CleanString(), OnlyCharsValidator()])
+    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
     submit = SubmitField(label='Добавить исследователя')
 
     def validate(self, extra_validators=None):

@@ -72,6 +72,8 @@ def user(username):
 def submit_researcher():
     form = ResearcherForm()
     if form.validate_on_submit():
+        print(form.middle_name.data)
+        print(form.middle_name)
         researcher = Researcher(form.first_name.data,
                                 form.last_name.data,
                                 form.middle_name.data)
@@ -100,20 +102,16 @@ def submit_site():
         db.session.add(site)
         db.session.commit()
         return redirect(url_for('submit_site'))
-    return render_template('site_input.html', title='Submit site form', site_form=site_form, render_kw={"onchange": "change_region()"})
+    return render_template('site_input.html', title='Submit site form', site_form=site_form)
 
 
 @app.route('/submit_site/<fd_id>')
 def region(fd_id):
-
     regions = Region.query.filter_by(federal_districts_id=fd_id).all()
-
     regionArray = [{'id': 0, 'name': 'Выберите субъект'}]
-
     for region in regions:
         regionObj = {}
         regionObj['id'] = region.id
         regionObj['name'] = region.name
         regionArray.append(regionObj)
-
-    return jsonify({'regions' : regionArray})
+    return jsonify({'regions': regionArray})
