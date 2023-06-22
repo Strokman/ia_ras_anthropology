@@ -18,11 +18,13 @@
     </form>
     <script>
         var federal_district_select = document.getElementById("federal_district");
+        console.log(federal_district_select)
         var region_select = document.getElementById("region");
 
         federal_district.onchange = function()  {
 
             federal_district = federal_district.value;
+            console.log(federal_district)
 
             fetch('/submit_site/' + federal_district).then(function(response) {
 

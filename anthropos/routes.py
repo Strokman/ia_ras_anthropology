@@ -102,7 +102,7 @@ def submit_site():
 
 
 @app.route('/submit_site/<fd_id>')
-def city(fd_id):
+def region(fd_id):
 
     regions = Region.query.filter_by(federal_districts_id=fd_id).all()
 
