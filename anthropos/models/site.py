@@ -1,9 +1,10 @@
 from anthropos import db
 from anthropos.models.sites_epochs import sites_epochs
+from .base_model import BaseModel
 # from anthropos.models import DatabaseUser, Region, Researcher
 
 
-class ArchaeologicalSite(db.Model):
+class ArchaeologicalSite(db.Model, BaseModel):
     __tablename__ = 'archaeological_sites'
 
     id = db.Column(db.Integer, primary_key=True)

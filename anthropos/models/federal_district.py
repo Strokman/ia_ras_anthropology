@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class FederalDistrict(db.Model):
+class FederalDistrict(db.Model, BaseModel):
     __tablename__ = 'federal_districts'
 
     id = db.Column(db.Integer, primary_key=True)

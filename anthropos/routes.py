@@ -1,6 +1,6 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
 from anthropos import app, db
 from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm
 from datetime import datetime
@@ -84,9 +84,11 @@ def submit_researcher():
 @app.route('/submit_site', methods=['GET', 'POST'])
 @login_required
 def submit_site():
-    researchers = [(researcher.id, researcher.__str__()) for researcher in Researcher.get_all()]
-    regions = Region.get_all()
-    site_form = ArchaeologicalSiteForm(researchers, regions)
+    researchers = sorted([(0, 'Выберите исследователя')] + \
+                  [(researcher.id, researcher.__str__()) for researcher in Researcher.get_all()])
+    fed_districts = sorted([(0, 'Выберите федеральный округ')] + \
+                    [(district.id, district.name) for district in FederalDistrict.get_all()])
+    site_form = ArchaeologicalSiteForm(researchers, fed_districts)
     if site_form.validate_on_submit():
         site = ArchaeologicalSite(site_form.name.data,
                                   site_form.long.data,
@@ -98,7 +100,7 @@ def submit_site():
         db.session.add(site)
         db.session.commit()
         return redirect(url_for('submit_site'))
-    return render_template('site_input.html', title='Submit site form', site_form=site_form)
+    return render_template('site_input.html', title='Submit site form', site_form=site_form, render_kw={"onchange": "change_region()"})
 
 
 @app.route('/submit_site/<fd_id>')
@@ -106,7 +108,7 @@ def region(fd_id):
 
     regions = Region.query.filter_by(federal_districts_id=fd_id).all()
 
-    regionArray = []
+    regionArray = [{'id': 0, 'name': 'Выберите субъект'}]
 
     for region in regions:
         regionObj = {}

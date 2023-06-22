@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class Grave(db.Model):
+class Grave(db.Model, BaseModel):
     __tablename__ = 'graves'
 
     id = db.Column(db.Integer, primary_key=True)

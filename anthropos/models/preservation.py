@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class Preservation(db.Model):
+class Preservation(db.Model, BaseModel):
     __tablename__ = 'preservation'
 
     id = db.Column(db.Integer, primary_key=True)

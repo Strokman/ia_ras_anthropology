@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class Region(db.Model):
+class Region(db.Model, BaseModel):
     __tablename__ = 'regions'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -12,10 +13,6 @@ class Region(db.Model):
     sites = db.relationship('ArchaeologicalSite', back_populates='regions')
 
     # individ = relationship('Individ', back_populates='region')
-
-    @classmethod
-    def get_all(cls):
-        return db.session.query(cls).all()
 
     def __repr__(self):
         return f'{self.name} part of {self.federal_district}'

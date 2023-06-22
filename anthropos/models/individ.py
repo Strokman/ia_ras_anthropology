@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class Individ(db.Model):
+class Individ(db.Model, BaseModel):
     __tablename__ = 'individs'
 
     id = db.Column(db.Integer, primary_key=True)

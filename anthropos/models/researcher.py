@@ -1,7 +1,8 @@
 from anthropos import db
+from .base_model import BaseModel
 
 
-class Researcher(db.Model):
+class Researcher(db.Model, BaseModel):
     __tablename__ = 'researchers'
 
     id = db.Column(db.Integer, primary_key=True)

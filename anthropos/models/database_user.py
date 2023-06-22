@@ -1,9 +1,10 @@
 from anthropos import db, login
 from werkzeug.security import check_password_hash, generate_password_hash
+from .base_model import BaseModel
 from flask_login import UserMixin
 
 
-class DatabaseUser(UserMixin, db.Model):
+class DatabaseUser(UserMixin, db.Model, BaseModel):
     __tablename__ = 'database_users'
 
     id = db.Column(db.Integer, primary_key=True)

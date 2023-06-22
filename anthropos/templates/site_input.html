@@ -8,37 +8,21 @@
         {{ site_form.hidden_tag() }}
         {% for field in site_form if field.widget.input_type != 'hidden' %}
             <p>
+                {% if field.name == 'federal_district' %}
+                {{ field.label }}<br>
+                {{ field(onchange='run(this.value)') }}<br>
+                {% for error in field.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+                {% else %}
                 {{ field.label }}<br>
                 {{ field }}<br>
                 {% for error in field.errors %}
                 <span style="color: red;">[{{ error }}]</span>
                 {% endfor %}
+                {% endif %}
                 {% endfor %}
             </p>
     </form>
-    <script>
-        var federal_district_select = document.getElementById("federal_district");
-        console.log(federal_district_select)
-        var region_select = document.getElementById("region");
-
-        federal_district.onchange = function()  {
-
-            federal_district = federal_district.value;
-            console.log(federal_district)
-
-            fetch('/submit_site/' + federal_district).then(function(response) {
-
-                response.json().then(function(data) {
-                    var optionHTML = '';
-
-                    for (var region of data.regions) {
-                        optionHTML += '<option value="' + region.id + '">' + region.name + '</option>';
-                    }
-
-                    region_select.innerHTML = optionHTML;
-                })
-
-            });
-        }
-    </script>
+    <script src="{{url_for('static', filename='region_select.js')}}"></script>
 {% endblock %}
