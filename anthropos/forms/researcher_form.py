@@ -12,6 +12,7 @@ class ResearcherForm(FlaskForm):
     first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
     middle_name = StringField(label='Middle Name', validators=[CleanString(), OnlyCharsValidator()])
     last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
+    affiliation = StringField(label='Affiliation', validators=[Length(min=2, max=50), DataRequired()])
     submit = SubmitField(label='Добавить исследователя')
 
     def validate(self, extra_validators=None):

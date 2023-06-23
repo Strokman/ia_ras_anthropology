@@ -8,6 +8,7 @@ class Researcher(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(128), nullable=False)
     last_name = db.Column(db.String(128), nullable=False)
+    affiliation = db.Column(db.String(128))
     middle_name = db.Column(db.String(128))
 
     sites = db.relationship('ArchaeologicalSite', back_populates='researcher')

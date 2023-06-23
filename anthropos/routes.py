@@ -1,18 +1,15 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
-from anthropos import app, db, mail
+from anthropos import app, db
 from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm
 from datetime import datetime
 from urllib.parse import urlsplit
-from flask_mail import Message
-from requests import post
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    # msg = Message('Hello', recipients=['anton.strokov@me.com', 'a_strokov@inbox.ru'])
-    # mail.send(msg)
     return render_template('index.html', title='Index')
 
 
@@ -27,7 +24,7 @@ def login():
             flash('Invalid username or password')
             return redirect(url_for('login'))
         elif not user.activated:
-            flash('Your account is inactive')
+            flash('Email is not confirmed')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
@@ -77,7 +74,7 @@ def user_confirmation(username, token):
         user.activated = True
         db.session.commit()
         flash('Email confirmed')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/user/<username>')
@@ -148,7 +145,7 @@ def submit_site():
         db.session.add(site)
         db.session.commit()
         return redirect(url_for('submit_site'))
-    return render_template('site_input.html', title='Submit site form', site_form=site_form)
+    return render_template('site_input.html', title='Submit site form', form=site_form)
 
 
 @app.route('/submit_site/<fd_id>')

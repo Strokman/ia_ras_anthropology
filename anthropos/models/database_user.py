@@ -36,7 +36,16 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.editor_id',
                                     back_populates='editor')
 
-    def __init__(self, username, password, first_name, last_name, affiliation, email, created, last_login, middle_name=None):
+    def __init__(self,
+                 username,
+                 password,
+                 first_name,
+                 last_name,
+                 affiliation,
+                 email,
+                 created,
+                 last_login,
+                 middle_name=None):
         self.username = username
         self.password_hash = generate_password_hash(password)
         self.first_name: str = first_name
