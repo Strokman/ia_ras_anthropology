@@ -1,7 +1,12 @@
-from anthropos import db, login, admin
+from anthropos import db, login, app
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
+from flask import request, url_for, flash
+from requests import post
+from uuid import uuid4
+from sqlalchemy.dialects.postgresql import UUID
+from anthropos.mail_text import create_text
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
@@ -17,6 +22,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     email = db.Column(db.String(128), index=True, nullable=False, unique=True)
     activated = db.Column(db.Boolean, nullable=False, default=False)
     role = db.Column(db.String(16), nullable=False, default='user')
+    token = db.Column(UUID(as_uuid=True), nullable=False, default=uuid4())
     created = db.Column(db.DateTime, nullable=False)
     last_login = db.Column(db.DateTime, nullable=False)
 
@@ -40,6 +46,18 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
         self.created = created
         self.last_login = last_login
         self.middle_name: str = middle_name
+
+    def send_confirmation_email(self):
+        link = request.url_root[:-1] + url_for('user_confirmation', username=self.username, token=self.token)
+
+        return post(f'https://api.mailgun.net/v3/{app.config["MAILGUN_DOMAIN"]}/messages',
+                    auth=('api', app.config['MAILGUN_API_KEY']),
+                    data={
+                        'from': f'Anton Strokov <mailgun@{app.config["MAILGUN_DOMAIN"]}>',
+                        'to': self.email,
+                        'subject': 'Registration confirmation',
+                        'html': create_text(link)
+                    })
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -65,6 +83,9 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 @login.user_loader
 def load_user(user_id):
     user = db.session.query(DatabaseUser).get(int(user_id))
-    if not user or not user.activated:
+    if not user:
+        return None
+    elif not user.activated:
+        flash('Email is not confiremd')
         return None
     return user

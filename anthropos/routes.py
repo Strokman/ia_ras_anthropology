@@ -6,7 +6,7 @@ from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, Archaeo
 from datetime import datetime
 from urllib.parse import urlsplit
 from flask_mail import Message
-
+from requests import post
 
 @app.route('/')
 @app.route('/index')
@@ -63,10 +63,21 @@ def register():
                             )
         db.session.add(user)
         db.session.commit()
+        user.send_confirmation_email()
         flash(f'Congratulations, {user.username} is now a registered user!')
         flash(f'Please confirm your account - check your mail')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/user_confirmation/<username>/<token>')
+def user_confirmation(username, token):
+    user = db.session.query(DatabaseUser).filter_by(username=username).first()
+    if str(user.token) == token:
+        user.activated = True
+        db.session.commit()
+        flash('Email confirmed')
+    return redirect(url_for('index'))
 
 
 @app.route('/user/<username>')
