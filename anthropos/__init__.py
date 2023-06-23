@@ -4,6 +4,8 @@ from config import Config
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_admin import Admin
+from flask_mail import Mail
+
 # import logging
 # from logging.config import dictConfig
 #
@@ -33,7 +35,7 @@ from flask_admin import Admin
 # root = logging.getLogger("root")
 app = Flask(__name__)
 app.config.from_object(Config)
-
+mail = Mail(app)
 admin = Admin(app, name='strokoff', template_mode='bootstrap3')
 
 

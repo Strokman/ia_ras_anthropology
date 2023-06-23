@@ -1,7 +1,8 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
-from anthropos import app, db
+from anthropos import app, db, mail
+from flask_mail import Message
 from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm
 from datetime import datetime
 from urllib.parse import urlsplit
@@ -10,8 +11,9 @@ from urllib.parse import urlsplit
 @app.route('/')
 @app.route('/index')
 def index():
-    a = db.session.query(DatabaseUser).paginate(page=1, per_page=1).items
-    print(a)
+    msg = Message('KEK', sender=app.config['ADMIN'], recipients=['anton.strokov@me.com'])
+    msg.body = 'random text for test purposes'
+    mail.send(msg)
     return render_template('index.html', title='Index')
 
 
