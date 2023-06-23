@@ -1,14 +1,18 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
-from anthropos import app, db
+from anthropos import app, db, mail
 from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm
 from datetime import datetime
+from urllib.parse import urlsplit
+from flask_mail import Message
 
 
 @app.route('/')
 @app.route('/index')
 def index():
+    # msg = Message('Hello', recipients=['anton.strokov@me.com', 'a_strokov@inbox.ru'])
+    # mail.send(msg)
     return render_template('index.html', title='Index')
 
 
@@ -22,10 +26,16 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
+        elif not user.activated:
+            flash('Your account is inactive')
+            return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
-        return redirect(url_for('index'))
+        next_page = request.args.get('next')
+        if not next_page or urlsplit(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -54,6 +64,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f'Congratulations, {user.username} is now a registered user!')
+        flash(f'Please confirm your account - check your mail')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -89,6 +100,7 @@ def edit_profile():
         form.email.data = current_user.email
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
 
 @app.route('/submit_researcher', methods=['GET', 'POST'])
 @login_required

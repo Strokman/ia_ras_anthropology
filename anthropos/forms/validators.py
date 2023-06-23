@@ -18,6 +18,7 @@ class SelectFieldValidator(object):
 
 class OnlyCharsValidator(object):
     def __call__(self, form, field):
-        data: str = field.data
-        if not data.isalpha():
+        if field.data == None:
+            return field.data
+        if not field.data.isalpha():
             raise ValidationError('Допускаются только буквы')

@@ -1,4 +1,4 @@
-from anthropos import db, login
+from anthropos import db, login, admin
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
@@ -15,6 +15,8 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     middle_name = db.Column(db.String(128))
     affiliation = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), index=True, nullable=False, unique=True)
+    activated = db.Column(db.Boolean, nullable=False, default=False)
+    role = db.Column(db.String(16), nullable=False, default='user')
     created = db.Column(db.DateTime, nullable=False)
     last_login = db.Column(db.DateTime, nullable=False)
 
@@ -42,6 +44,15 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    @classmethod
+    def activate_user(cls, user_id: int):
+        user = db.session.query(cls).filter_by(id=user_id).first()
+        if not user:
+            return f'There is no user {user.username}'
+        user.activated = True
+        db.session.commit()
+        return f'User {user.username} is active'
+
     def __str__(self):
         if self.middle_name:
             return f'{self.last_name} {self.first_name.capitalize()[0]}.{self.middle_name.capitalize()[0]}.'
@@ -53,4 +64,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 
 @login.user_loader
 def load_user(user_id):
-    return db.session.query(DatabaseUser).get(int(user_id))
+    user = db.session.query(DatabaseUser).get(int(user_id))
+    if not user or not user.activated:
+        return None
+    return user
