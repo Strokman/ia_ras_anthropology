@@ -10,6 +10,9 @@ from urllib.parse import urlsplit
 @app.route('/')
 @app.route('/index')
 def index():
+    user = DatabaseUser()
+    db.session.add(user)
+    db.session.commit()
     return render_template('index.html', title='Index')
 
 

@@ -1,4 +1,4 @@
-def create_text(url):
+def confirmation_text(url):
     txt = """
     <!doctype html>
     <html>

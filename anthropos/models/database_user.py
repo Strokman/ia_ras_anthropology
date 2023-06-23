@@ -6,7 +6,7 @@ from flask import request, url_for, flash
 from requests import post
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from anthropos.mail_text import create_text
+from anthropos.lib import MailgunEngine
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
@@ -58,15 +58,15 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 
     def send_confirmation_email(self):
         link = request.url_root[:-1] + url_for('user_confirmation', username=self.username, token=self.token)
-
-        return post(f'https://api.mailgun.net/v3/{app.config["MAILGUN_DOMAIN"]}/messages',
-                    auth=('api', app.config['MAILGUN_API_KEY']),
-                    data={
-                        'from': f'Anton Strokov <mailgun@{app.config["MAILGUN_DOMAIN"]}>',
-                        'to': self.email,
-                        'subject': 'Registration confirmation',
-                        'html': create_text(link)
-                    })
+        MailgunEngine.send_confirmation_email(self.email, link)
+        # return post(f'https://api.mailgun.net/v3/{app.config["MAILGUN_DOMAIN"]}/messages',
+        #             auth=('api', app.config['MAILGUN_API_KEY']),
+        #             data={
+        #                 'from': f'Anton Strokov <mailgun@{app.config["MAILGUN_DOMAIN"]}>',
+        #                 'to': self.email,
+        #                 'subject': 'Registration confirmation',
+        #                 'html': create_text(link)
+        #             })
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
