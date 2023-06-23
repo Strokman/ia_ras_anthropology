@@ -7,6 +7,8 @@ from requests import post
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from anthropos.lib import MailgunEngine
+import jwt
+from time import time
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
@@ -71,6 +73,20 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
         user.activated = True
         db.session.commit()
         return f'User {user.username} is active'
+
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return DatabaseUser.query.get(id)
 
     def __str__(self):
         if self.middle_name:

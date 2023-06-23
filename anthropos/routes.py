@@ -3,9 +3,10 @@ from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
 from anthropos import app, db, mail
 from flask_mail import Message
-from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm
+from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, ResetPasswordRequestForm
 from datetime import datetime
 from urllib.parse import urlsplit
+from .reset_email import send_password_reset_email
 
 
 @app.route('/')
@@ -161,3 +162,18 @@ def region(fd_id):
         regionObj['name'] = region.name
         regionArray.append(regionObj)
     return jsonify({'regions': regionArray})
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password_request():
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = DatabaseUser.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Check your email for the instructions to reset your password')
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html',
+                           title='Reset Password', form=form)
