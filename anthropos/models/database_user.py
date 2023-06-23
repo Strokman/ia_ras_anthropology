@@ -59,14 +59,6 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     def send_confirmation_email(self):
         link = request.url_root[:-1] + url_for('user_confirmation', username=self.username, token=self.token)
         MailgunEngine.send_confirmation_email(self.email, link)
-        # return post(f'https://api.mailgun.net/v3/{app.config["MAILGUN_DOMAIN"]}/messages',
-        #             auth=('api', app.config['MAILGUN_API_KEY']),
-        #             data={
-        #                 'from': f'Anton Strokov <mailgun@{app.config["MAILGUN_DOMAIN"]}>',
-        #                 'to': self.email,
-        #                 'subject': 'Registration confirmation',
-        #                 'html': create_text(link)
-        #             })
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

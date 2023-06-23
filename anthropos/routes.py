@@ -10,9 +10,8 @@ from urllib.parse import urlsplit
 @app.route('/')
 @app.route('/index')
 def index():
-    user = DatabaseUser()
-    db.session.add(user)
-    db.session.commit()
+    a = db.session.query(DatabaseUser).paginate(page=1, per_page=1).items
+    print(a)
     return render_template('index.html', title='Index')
 
 
@@ -61,8 +60,7 @@ def register():
                             datetime.utcnow(),
                             form.middle_name.data
                             )
-        db.session.add(user)
-        db.session.commit()
+        user.save_to_db()
         user.send_confirmation_email()
         flash(f'Congratulations, {user.username} is now a registered user!')
         flash(f'Please confirm your account - check your mail')

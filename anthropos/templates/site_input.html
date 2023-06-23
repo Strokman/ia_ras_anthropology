@@ -5,8 +5,8 @@
 {% block content %}
     <h1>Site input</h1>
     <form action="" method="post" novalidate>
-        {{ site_form.hidden_tag() }}
-        {% for field in site_form if field.widget.input_type != 'hidden' %}
+        {{ form.hidden_tag() }}
+        {% for field in form if field.widget.input_type != 'hidden' %}
             <p>
                 {% if field.name == 'federal_district' %}
                 {{ field.label }}<br>
