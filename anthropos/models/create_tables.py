@@ -45,7 +45,6 @@ def create_tables():
         for k, v in reg.items():
             if v:
                 region = Region(name=k, federal_districts_id=db.session.query(FederalDistrict).filter_by(name=v).first().id)
-                print(region.federal_district)
                 db.session.add(region)
         db.session.commit()
 

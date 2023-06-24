@@ -2,27 +2,8 @@
 
 {{ super() }}
 
-{% block content %}
+{% block app_content %}
     <h1>Site input</h1>
-    <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        {% for field in form if field.widget.input_type != 'hidden' %}
-            <p>
-                {% if field.name == 'federal_district' %}
-                {{ field.label }}<br>
-                {{ field(onchange='run(this.value)') }}<br>
-                {% for error in field.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-                {% else %}
-                {{ field.label }}<br>
-                {{ field }}<br>
-                {% for error in field.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-                {% endif %}
-                {% endfor %}
-            </p>
-    </form>
+{% include "_form.html"%}
     <script src="{{url_for('static', filename='region_select.js')}}"></script>
 {% endblock %}

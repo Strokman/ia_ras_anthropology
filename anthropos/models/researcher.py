@@ -13,9 +13,9 @@ class Researcher(db.Model, BaseModel):
 
     sites = db.relationship('ArchaeologicalSite', back_populates='researcher')
 
-    @classmethod
-    def get_all(cls):
-        return db.session.query(cls).all()
+    # @classmethod
+    # def get_all(cls):
+    #     return db.session.query(cls).all()
 
     def __init__(self, first_name, last_name, middle_name=None):
         self.first_name = first_name

@@ -1,6 +1,7 @@
 from requests import post, Response
 from anthropos import app
 from .mail_text import confirmation_text
+from flask import render_template
 
 
 class MailgunEngine:
@@ -13,7 +14,7 @@ class MailgunEngine:
                         'from': f'Anton Strokov <mailgun@{app.config["MAILGUN_DOMAIN"]}>',
                         'to': email,
                         'subject': 'Registration confirmation',
-                        'html': confirmation_text(link)
+                        'html': render_template('email/mail_confirmation.html', url=link)
                     })
 
     @staticmethod
@@ -26,3 +27,5 @@ class MailgunEngine:
                         'subject': 'Error message',
                         'text': text
                     })
+
+

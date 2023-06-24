@@ -86,7 +86,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        return DatabaseUser.query.get(id)
+        return db.session.query(DatabaseUser).filter_by(id=id)
 
     def __str__(self):
         if self.middle_name:

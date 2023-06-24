@@ -1,3 +1,6 @@
+var newSelect = document.getElementById('federal_district');
+newSelect.setAttribute('onchange', 'run(this.value)');
+
     function run(value) {
         var federal_d_num = value;
         var region_select = document.getElementById("region");

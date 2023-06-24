@@ -1,20 +1,17 @@
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Epoch, Sex, Researcher, Individ, Grave, Region, FederalDistrict
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict
 from anthropos import app, db, mail
 from flask_mail import Message
-from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, ResetPasswordRequestForm
+from anthropos.forms import RegistrationForm, LoginForm, ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, ResetPasswordRequestForm, ResetPasswordForm
 from datetime import datetime
 from urllib.parse import urlsplit
-from .reset_email import send_password_reset_email
+from anthropos.lib.reset_email import send_password_reset_email
 
 
 @app.route('/')
 @app.route('/index')
 def index():
-    msg = Message('KEK', sender=app.config['ADMIN'], recipients=['anton.strokov@me.com'])
-    msg.body = 'random text for test purposes'
-    mail.send(msg)
     return render_template('index.html', title='Index')
 
 
@@ -119,8 +116,6 @@ def edit_profile():
 def submit_researcher():
     form = ResearcherForm()
     if form.validate_on_submit():
-        print(form.middle_name.data)
-        print(form.middle_name)
         researcher = Researcher(form.first_name.data,
                                 form.last_name.data,
                                 form.middle_name.data)
@@ -164,7 +159,7 @@ def region(fd_id):
     return jsonify({'regions': regionArray})
 
 
-@app.route('/reset_password', methods=['GET', 'POST'])
+@app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -177,3 +172,19 @@ def reset_password_request():
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = DatabaseUser.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.password = form.password.data
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password.html', form=form)

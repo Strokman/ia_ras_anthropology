@@ -1,13 +1,5 @@
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        {% for field in form if field.widget.input_type != 'hidden' %}
-            <p>
-                {{ field.label }}<br>
-                {{ field(size=32) }}<br>
-                {% for error in field.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}
-                {% endfor %}
-            </p>
+{% import 'bootstrap/wtf.html' as wtf %}
 
-    </form>
+{% block app_content %}
+            {{ wtf.quick_form(form) }}
+{% endblock %}
