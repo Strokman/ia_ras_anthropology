@@ -5,7 +5,7 @@ newSelect.setAttribute('onchange', 'run(this.value)');
         var federal_d_num = value;
         var region_select = document.getElementById("region");
 
-        fetch('/submit_site/' + federal_d_num).then(function(response) {
+        fetch('/main/submit_site/' + federal_d_num).then(function(response) {
         response.json().then(function(data) {
         var optionHTML = '';
 

@@ -37,21 +37,47 @@ from flask_moment import Moment
 #
 # root = logging.getLogger("root")
 
-app = Flask(__name__)
-app.config.from_object(Config)
-mail = Mail(app)
-admin = Admin(app, name='strokoff', template_mode='bootstrap3')
-bootstrap = Bootstrap(app)
-moment = Moment(app)
-
-from anthropos.errors import bp as errors_bp
-app.register_blueprint(errors_bp)
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-login = LoginManager(app)
-login.login_view = 'login'
+# app = Flask(__name__)
+# app.config.from_object(Config)
+mail = Mail()
+admin = Admin(name='strokoff', template_mode='bootstrap3')
+bootstrap = Bootstrap()
+moment = Moment()
 
 
-from anthropos import routes, models
+
+db = SQLAlchemy()
+migrate = Migrate()
+
+login = LoginManager()
+login.login_view = 'auth.login'
+login.login_message = 'Please login to access this page'
+login.login_message_category = "info"
+
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login.init_app(app)
+    mail.init_app(app)
+    bootstrap.init_app(app)
+    moment.init_app(app)
+    admin.init_app(app)
+
+    from anthropos.errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
+
+    from anthropos.main import bp as main_bp
+    app.register_blueprint(main_bp, url_prefix='/main')
+
+    from anthropos.auth import bp as auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
+    from anthropos.register import bp as register_bp
+    app.register_blueprint(register_bp, url_prefix='/register')
+
+    return app

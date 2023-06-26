@@ -4,6 +4,11 @@ from wtforms.validators import DataRequired, NumberRange
 from .validators import CleanString, SelectFieldValidator
 
 
+class NonValidatingSelectField(SelectField):
+    def pre_validate(self, form):
+        pass
+
+
 class ArchaeologicalSiteForm(FlaskForm):
 
     def __init__(self, researchers, fed_districts):
@@ -17,6 +22,6 @@ class ArchaeologicalSiteForm(FlaskForm):
     lat = DecimalField(label='Широта', validators=[NumberRange(min=-90, max=90), DataRequired()])
     researcher = SelectField(label='Исследователь', validators=[DataRequired(), SelectFieldValidator()])
     federal_district = SelectField(label='Федеральный округ', validators=[DataRequired(), SelectFieldValidator()])
-    region = SelectField(label='Регион', default='Выберите субъект', validators=[DataRequired(), SelectFieldValidator()])
+    region = NonValidatingSelectField(label='Регион', default='Выберите субъект', validators=[DataRequired(), SelectFieldValidator()])
     submit = SubmitField('Submit')
 

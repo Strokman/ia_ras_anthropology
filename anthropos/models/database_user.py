@@ -1,8 +1,8 @@
-from anthropos import db, login, app
+from anthropos import db, login
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
-from flask import request, url_for, flash
+from flask import request, url_for, flash, current_app
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from anthropos.lib import MailgunEngine
@@ -76,12 +76,12 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
-            app.config['SECRET_KEY'], algorithm='HS256')
+            current_app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, app.config['SECRET_KEY'],
+            id = jwt.decode(token, current_app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
             return
