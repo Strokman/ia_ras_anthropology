@@ -23,10 +23,10 @@ def login():
     if form.validate_on_submit():
         user = db.session.query(DatabaseUser).filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', category='danger')
             return redirect(url_for('login'))
         elif not user.activated:
-            flash('Email is not confirmed')
+            flash('Email is not confirmed', 'warning')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
@@ -60,10 +60,10 @@ def register():
                             datetime.utcnow(),
                             form.middle_name.data
                             )
-        user.save_to_db()
+        user.save_to_db(db.session)
         user.send_confirmation_email()
-        flash(f'Congratulations, {user.username} is now a registered user!')
-        flash(f'Please confirm your account - check your mail')
+        flash(f'Congratulations, {user.username} is now a registered user!', 'success')
+        flash(f'Please confirm your account - check your mail', 'info')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -74,7 +74,7 @@ def user_confirmation(username, token):
     if str(user.token) == token:
         user.activated = True
         db.session.commit()
-        flash('Email confirmed')
+        flash('Email confirmed', 'success')
     return redirect(url_for('login'))
 
 
@@ -98,7 +98,7 @@ def edit_profile():
         current_user.affiliation = form.affiliation.data
         current_user.email = form.email.data
         db.session.commit()
-        flash('Your changes have been saved.')
+        flash('Your changes have been saved.', 'success')
         return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -129,9 +129,9 @@ def submit_researcher():
 @login_required
 def submit_site():
     researchers = sorted([(0, 'Выберите исследователя')] + \
-                  [(researcher.id, researcher.__str__()) for researcher in Researcher.get_all()])
+                  [(researcher.id, researcher.__str__()) for researcher in Researcher.get_all(db.session)])
     fed_districts = sorted([(0, 'Выберите федеральный округ')] + \
-                    [(district.id, district.name) for district in FederalDistrict.get_all()])
+                    [(district.id, district.name) for district in FederalDistrict.get_all(db.session)])
     site_form = ArchaeologicalSiteForm(researchers, fed_districts)
     if site_form.validate_on_submit():
         site = ArchaeologicalSite(site_form.name.data,
@@ -168,7 +168,7 @@ def reset_password_request():
         user = DatabaseUser.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password')
+        flash('Check your email for the instructions to reset your password', 'info')
         return redirect(url_for('login'))
     return render_template('reset_password_request.html',
                            title='Reset Password', form=form)
@@ -185,6 +185,6 @@ def reset_password(token):
     if form.validate_on_submit():
         user.password = form.password.data
         db.session.commit()
-        flash('Your password has been reset.')
+        flash('Your password has been reset.', 'success')
         return redirect(url_for('login'))
     return render_template('reset_password.html', form=form)

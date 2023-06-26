@@ -1,6 +1,6 @@
 body {
-            background-color: #3B3B3B;
-            color: #FDFBFB;
+            background-color: #B2B2B2;
+            color: #4C4C4C;
             }
             .pagination {
   display: flex;
@@ -17,8 +17,17 @@ body {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+  width: 40%;
 }
 
       #map {
        height: 600px;
        }
+
+
+.show {
+   opacity: 1;
+   transition: opacity 1s ease-in;
+   -moz-transition: opacity 1s ease-in;
+   -webkit-transition: opacity 1s ease-in;
+}

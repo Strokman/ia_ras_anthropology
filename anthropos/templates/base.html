@@ -1,4 +1,13 @@
 {% extends 'bootstrap/base.html' %}
+{% block head %}
+{{ super() }}
+
+{% block styles %}
+{{ super() }}
+    <link rel="stylesheet"
+      href="{{url_for('.static', filename='styles.css')}}">
+{% endblock %}
+{% endblock %}
     {% block title %}
     {% if title %}
        BaseHabilis - {{title}}
@@ -7,6 +16,7 @@
     {% endif %}
     {% endblock %}
 {% block navbar %}
+{{ super() }}
 <nav class="navbar navbar-default">
             <div class="container">
             <div class="navbar-header">
@@ -38,11 +48,17 @@
 {% endblock %}
 
 {% block content %}
+{{ super() }}
     <div class="container">
-{% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible text-center center-block fade show mx-auto w-25" role="alert">
+          <strong>{{ message }}</strong>
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
             {% endfor %}
     {% endif %}
 {% endwith %}
@@ -50,4 +66,11 @@
     {# application app_content needs to be provided in the app_content block #}
         {% block app_content %}{% endblock %}
         </div>
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+    <script src="{{url_for('static', filename='region_select.js')}}"></script>
+    {{ moment.include_moment() }}
+    {{ moment.locale(auto_detect=True) }}
 {% endblock %}

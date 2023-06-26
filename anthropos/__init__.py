@@ -6,6 +6,7 @@ from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
+from flask_moment import Moment
 
 
 # import logging
@@ -41,6 +42,10 @@ app.config.from_object(Config)
 mail = Mail(app)
 admin = Admin(app, name='strokoff', template_mode='bootstrap3')
 bootstrap = Bootstrap(app)
+moment = Moment(app)
+
+from anthropos.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
@@ -49,4 +54,4 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 
-from anthropos import routes, errors
+from anthropos import routes, models
