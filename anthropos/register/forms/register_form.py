@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from anthropos.models import DatabaseUser
 from anthropos import db
-from anthropos.forms.validators import CleanString, OnlyCharsValidator
+from anthropos.forms.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
 
 
 class RegistrationForm(FlaskForm):
@@ -11,7 +11,7 @@ class RegistrationForm(FlaskForm):
     first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
     last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
     middle_name = StringField(label='Middle Name', validators=[Length(min=0, max=50), CleanString(), OnlyCharsValidator()])
-    email = StringField(label='E-Mail', validators=[Email(), DataRequired()])
+    email = StringField(label='E-Mail', validators=[Email(message='Введите корректный адрес электронной почты'), DataRequiredImproved()])
     affiliation = StringField(label='Current affiliation', validators=[Length(max=100), DataRequired()])
     password = PasswordField(label='Password', validators=[Length(min=8), DataRequired()])
     confirm_password = PasswordField(label='Confirm password', validators=[EqualTo('password'), DataRequired()])

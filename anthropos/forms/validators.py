@@ -1,4 +1,10 @@
-from wtforms.validators import ValidationError
+from wtforms.validators import ValidationError, DataRequired
+
+
+class DataRequiredImproved(DataRequired):
+    def __init__(self):
+        super().__init__()
+        self.message = 'Пожалуйста, заполните данное поле'
 
 
 class CleanString(object):
@@ -18,7 +24,7 @@ class SelectFieldValidator(object):
 
 class OnlyCharsValidator(object):
     def __call__(self, form, field):
-        if field.data == None:
+        if not field.data:
             return field.data
         if not field.data.isalpha():
             raise ValidationError('Допускаются только буквы')

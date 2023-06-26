@@ -71,6 +71,7 @@
 {% block scripts %}
 {{ super() }}
     <script src="{{url_for('static', filename='region_select.js')}}"></script>
+<script src="{{url_for('static', filename='novalidate.js')}}"></script>
     {{ moment.include_moment() }}
     {{ moment.locale(auto_detect=True) }}
 {% endblock %}
