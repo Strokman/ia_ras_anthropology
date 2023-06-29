@@ -1,11 +1,11 @@
 from flask import render_template, current_app
 from anthropos.errors import bp
 from anthropos.lib import MailgunEngine
-from werkzeug.exceptions import InternalServerError
+from werkzeug.exceptions import InternalServerError, NotFound
 
 
 @bp.app_errorhandler(404)
-def not_found_error(error):
+def not_found_error(error: NotFound):
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], error)
     return render_template('errors/404.html', error=error), 404
 

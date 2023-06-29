@@ -1,7 +1,9 @@
-{% import 'bootstrap/wtf.html' as wtf %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
 
 {% block app_content %}
 
-{{ wtf.quick_form(form)}}
+{{ render_form(form)}}
+
 
 {% endblock %}
+

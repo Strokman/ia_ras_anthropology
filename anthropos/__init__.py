@@ -5,7 +5,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_mail import Mail
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
 
 
@@ -41,7 +41,7 @@ from flask_moment import Moment
 # app.config.from_object(Config)
 mail = Mail()
 admin = Admin(name='strokoff', template_mode='bootstrap3')
-bootstrap = Bootstrap()
+bootstrap = Bootstrap5()
 moment = Moment()
 
 

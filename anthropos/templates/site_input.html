@@ -6,3 +6,7 @@
     <h1>Site input</h1>
 {% include "_form.html"%}
 {% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='region_select.js')}}"></script>
+{% endblock %}

@@ -1,11 +1,15 @@
 {% extends "base.html" %}
-
+{% block title %}
+{{super()}}
+{% endblock %}
 {% block app_content %}
 
 {% if current_user.is_authenticated %}
 <h3>Hello {{current_user.username}}</h3>
 {% else %}
 <h3>Hello, buddy</h3>
+
+
 {% endif %}
 
 {% endblock %}

@@ -9,7 +9,7 @@ from anthropos.main import bp
 @bp.route('/')
 @bp.route('/index')
 def index():
-    print(url_for('main.submit_site'))
+    flash('Hello', 'success')
     return render_template('index.html', title='Index')
 
 
