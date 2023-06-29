@@ -1,5 +1,7 @@
 from anthropos import db
 from .base_model import BaseModel
+from .grave import Grave
+from sqlalchemy.orm import Mapped
 
 
 class Individ(db.Model, BaseModel):
@@ -11,6 +13,7 @@ class Individ(db.Model, BaseModel):
     age_min = db.Column(db.Integer)
     age_max = db.Column(db.Integer)
     type = db.Column(db.String(16))
+    created_at = db.Column(db.DateTime, nullable=False)
     sex_type = db.Column(db.String, db.ForeignKey('sex.sex'))
     grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
@@ -18,6 +21,7 @@ class Individ(db.Model, BaseModel):
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
     preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
     file_id = db.Column(db.Integer, db.ForeignKey('files.id'))
+
 
     site = db.relationship('ArchaeologicalSite', back_populates='individ')
     comment = db.relationship('Comment', back_populates='individ')
@@ -27,8 +31,8 @@ class Individ(db.Model, BaseModel):
     file = db.relationship('File', back_populates='individ')
     grave = db.relationship('Grave', back_populates='individ')
 
-    def create_index(self, site):
-        self.index = f'{site.name}-{self.year}'
+    def create_index(self):
+        self.index = f'{self.site.name[:4]}/{self.year}/{self.grave.grave_number}'
 
     def __repr__(self):
         return f'{self.index}:{self.sex}:{self.age_min}-{self.age_max}'

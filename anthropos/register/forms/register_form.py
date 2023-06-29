@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from anthropos.models import DatabaseUser
 from anthropos import db
-from anthropos.forms.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
+from anthropos.main.forms import CleanString, OnlyCharsValidator, DataRequiredImproved
 
 
 class RegistrationForm(FlaskForm):

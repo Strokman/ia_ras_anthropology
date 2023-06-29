@@ -2,12 +2,13 @@ from anthropos import db, login
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
-from flask import request, url_for, flash, current_app
+from flask import request, url_for, flash
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from anthropos.lib import MailgunEngine
 import jwt
 from time import time
+
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
@@ -105,3 +106,7 @@ def load_user(user_id):
         flash('Email is not confirmed')
         return None
     return user
+
+
+
+

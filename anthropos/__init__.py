@@ -45,7 +45,6 @@ bootstrap = Bootstrap5()
 moment = Moment()
 
 
-
 db = SQLAlchemy()
 migrate = Migrate()
 

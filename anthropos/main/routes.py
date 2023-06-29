@@ -1,14 +1,16 @@
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ
 from anthropos import db
-from anthropos.forms import ResearcherForm, ArchaeologicalSiteForm, EditProfileForm
+from .forms import ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, IndividForm
 from anthropos.main import bp
+from datetime import datetime
 
 
 @bp.route('/')
 @bp.route('/index')
 def index():
+
     flash('Hello', 'success')
     return render_template('index.html', title='Index')
 
@@ -92,6 +94,53 @@ def region(fd_id):
         regionObj['name'] = region.name
         regionArray.append(regionObj)
     return jsonify({'regions': regionArray})
+
+
+@bp.route('submit_individ', methods=['GET', 'POST'])
+@login_required
+def individ():
+    sex = sorted(['Выберите пол'] + \
+                  [sex.sex for sex in Sex.get_all(db.session)])
+    sites = sorted([(0, 'Выберите памятник')] + \
+                    [(site.id, site.name) for site in ArchaeologicalSite.get_all(db.session)])
+    form = IndividForm(sex, sites)
+    if form.validate_on_submit():
+        grave = Grave(
+            type=form.grave_type.data,
+            grave_number=form.grave_number.data,
+            site_id=form.site.data
+        )
+        grave.save_to_db(db.session)
+        individ = Individ(
+            year=form.year.data,
+            age_min=form.age_min.data,
+            age_max=form.age_max.data,
+            site_id=form.site.data,
+            preservation_id=form.preservation.data,
+            type=form.type.data,
+            grave_id=grave.id,
+            sex_type=form.sex.data,
+            created_at=datetime.utcnow(),
+            created_by=current_user.id
+        )
+        individ.save_to_db(db.session)
+        individ.create_index()
+        db.session.commit()
+        flash('Successfully added', 'success')
+        return redirect(url_for('main.individ'))
+    return render_template('submit_individ.html', form=form)
+
+
+# @bp.route('/submit_individ/<grave_type>')
+# def region(grave_type):
+#     regions = Region.query.filter_by(federal_districts_id=fd_id).all()
+#     regionArray = [{'id': 0, 'name': 'Выберите субъект'}]
+#     for region in regions:
+#         regionObj = {}
+#         regionObj['id'] = region.id
+#         regionObj['name'] = region.name
+#         regionArray.append(regionObj)
+#     return jsonify({'regions': regionArray})
 
 
 

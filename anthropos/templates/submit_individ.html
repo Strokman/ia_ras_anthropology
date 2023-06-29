@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% from 'bootstrap/form.html' import render_form, render_field %}
+{% block app_content %}
+
+{% include "_form.html" %}
+
+<!--{% for field in form %}-->
+<!--{% if field.name == 'preservation' %}-->
+<!--{{ field.label}}-->
+<!--{{ field(min=1, max=4, action='/main/individ' ) }}-->
+<!--{% else %}-->
+<!--{{render_field(field)}}-->
+<!--{% endif %}-->
+<!--{% endfor %}-->
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<!--<script>-->
+<!--var preservation = document.getElementById("preservation");-->
+<!--preservation.setAttribute("min", 1);-->
+<!--preservation.setAttribute("max", 4);-->
+<!--</script>-->
+{% endblock %}

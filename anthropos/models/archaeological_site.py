@@ -22,6 +22,7 @@ class ArchaeologicalSite(db.Model, BaseModel):
     researcher = db.relationship("Researcher", back_populates='sites')
     regions = db.relationship('Region', back_populates='sites')
     individ = db.relationship("Individ", back_populates='site')
+    graves = db.relationship("Grave", back_populates='site')
 
     def __init__(self, name: str, long: float, lat: float, user, researcher, region):
         self.name = name

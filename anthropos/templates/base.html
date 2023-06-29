@@ -40,6 +40,7 @@
 
       <a class="nav-item nav-link" href="{{ url_for('main.submit_researcher') }}">Submit researcher</a>
       <a class="nav-item nav-link" href="{{ url_for('main.submit_site') }}">Submit site</a>
+        <a class="nav-item nav-link" href="{{ url_for('main.individ') }}">Submit individ</a>
       <a class="nav-item nav-link" href="{{ url_for('main.user', username=current_user.username) }}">Profile: {{ current_user.username }}</a>
     </div>
                 <div class="collapse navbar-collapse" id="logout">
@@ -65,6 +66,7 @@
     {% endif %}
 {% endwith %}
         {% block app_content %}{% endblock %}
+            </div>
         </div>
 
 {% endblock %}
