@@ -10,7 +10,6 @@ from datetime import datetime
 @bp.route('/')
 @bp.route('/index')
 def index():
-
     flash('Hello', 'success')
     return render_template('index.html', title='Index')
 
@@ -103,7 +102,7 @@ def individ():
     sites = sorted([(0, 'Выберите памятник')] + \
                     [(site.id, site.name) for site in ArchaeologicalSite.get_all(db.session)])
     form = IndividForm(sex, sites)
-    if form.validate():
+    if form.validate_on_submit():
         grave = Grave(
             type=form.grave_type.data,
             grave_number=form.grave_number.data,
