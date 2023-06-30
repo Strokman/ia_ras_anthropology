@@ -54,14 +54,16 @@
             </div>
 </nav>
 {% block content %}
-<div class="container mx-auto">
+<div class="container">
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
             {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible text-center center-block fade show mx-auto w-25" role="alert">
+    <div class="row">
+        <div class="alert alert-{{ category }} alert-dismissible text-center center-block fade show mx-auto w-50" role="alert">
           <strong>{{ message }}</strong>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
           </button>
+        </div>
         </div>
             {% endfor %}
     {% endif %}

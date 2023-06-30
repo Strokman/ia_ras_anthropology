@@ -1,12 +1,12 @@
 {% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
 
 {{ super() }}
 
 {% block app_content %}
-<div class="container mx-auto text-center">
-    <h1>Site input</h1>
-</div>
-{% include "_form.html"%}
+{% include "_form.html" %}
+
+
 {% endblock %}
 {% block scripts %}
 {{ super() }}

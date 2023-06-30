@@ -1,8 +1,30 @@
 {% extends "base.html" %}
-{% from 'bootstrap/form.html' import render_form, render_field %}
+{% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
 {% block app_content %}
+<div class="row text-center"><h1>Добавить индивида</h1></div>
+<form method="post">
+    <div class="row">
+        <div class="col">
+            {{ form.hidden_tag() }}
+    {{ render_hidden_errors(form) }}
+    {{ render_field(form.site) }}
+    {{ render_field(form.grave_type) }}
 
-{% include "_form.html" %}
+            {{ render_field(form.year) }}
+
+            {{ render_field(form.grave_number) }}
+
+        </div>
+                <div class="col">
+    {{ render_field(form.age_min) }}
+    {{ render_field(form.age_max) }}
+    {{ render_field(form.sex) }}
+                    {{ render_field(form.preservation) }}
+                    {{ render_field(form.submit) }}
+        </div>
+    </div>
+
+</form>
 
 <!--{% for field in form %}-->
 <!--{% if field.name == 'preservation' %}-->
@@ -16,9 +38,5 @@
 {% endblock %}
 {% block scripts %}
 {{ super() }}
-<!--<script>-->
-<!--var preservation = document.getElementById("preservation");-->
-<!--preservation.setAttribute("min", 1);-->
-<!--preservation.setAttribute("max", 4);-->
-<!--</script>-->
+<script src="{{url_for('static', filename='novalidate.js')}}"></script>
 {% endblock %}

@@ -78,8 +78,7 @@ def submit_site():
                                   db.session.query(Researcher).filter_by(id=site_form.researcher.data).first(),
                                   db.session.query(Region).filter_by(id=site_form.region.data).first()
                                   )
-        db.session.add(site)
-        db.session.commit()
+        site.save_to_db(db.session)
         return redirect(url_for('main.submit_site'))
     return render_template('site_input.html', title='Submit site form', form=site_form)
 
@@ -104,7 +103,7 @@ def individ():
     sites = sorted([(0, 'Выберите памятник')] + \
                     [(site.id, site.name) for site in ArchaeologicalSite.get_all(db.session)])
     form = IndividForm(sex, sites)
-    if form.validate_on_submit():
+    if form.validate():
         grave = Grave(
             type=form.grave_type.data,
             grave_number=form.grave_number.data,

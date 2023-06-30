@@ -22,7 +22,6 @@ class Individ(db.Model, BaseModel):
     preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
     file_id = db.Column(db.Integer, db.ForeignKey('files.id'))
 
-
     site = db.relationship('ArchaeologicalSite', back_populates='individ')
     comment = db.relationship('Comment', back_populates='individ')
     creator = db.relationship("DatabaseUser", back_populates='individs')
