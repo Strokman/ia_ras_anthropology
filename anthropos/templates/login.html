@@ -4,11 +4,16 @@
 {{ super() }}
 {% endblock %}
 {% block app_content %}
+
     <h1>Sign In</h1>
-{% include "_form.html"%}
+
+
+{% include "_form.html" %}
+<div class=row>
 <p>New User? <a href="{{ url_for('register.register') }}">Click to Register!</a></p>
     <p>
         Forgot Your Password?
         <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a>
     </p>
+</div>
 {% endblock %}

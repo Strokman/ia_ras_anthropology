@@ -5,6 +5,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_admin import Admin
 from flask_mail import Mail
+from flask_session import Session
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
 
@@ -43,6 +44,7 @@ mail = Mail()
 admin = Admin(name='strokoff', template_mode='bootstrap3')
 bootstrap = Bootstrap5()
 moment = Moment()
+sess = Session()
 
 
 db = SQLAlchemy()
@@ -66,6 +68,7 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
     admin.init_app(app)
+    sess.init_app(app)
 
     from anthropos.errors import bp as errors_bp
     app.register_blueprint(errors_bp)

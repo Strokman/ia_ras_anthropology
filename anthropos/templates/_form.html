@@ -1,9 +1,24 @@
-{% from 'bootstrap4/form.html' import render_form, render_field %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
 
 {% block app_content %}
+<div class="row w-50">
+<!--    <div class="mx-auto col-10 col-md-8 col-lg-8">-->
+{{ render_form(form, novalidate=True) }}
+<!--    <form action="" method="post">-->
+<!--        {{ form.hidden_tag() }}-->
+<!--        <div class="container-fluid mb-4">-->
+<!--        {% for field in form if field.widget.input_type != 'hidden' %}-->
 
-{{ render_form(form)}}
+<!--                {{ field.label(class="mb-2") }}-->
+<!--                {{ field(class='form-control mb-2 mx-auto w-25') }}-->
+<!--                {% for error in field.errors %}-->
+<!--                <span style="color: red;">[{{ error }}]</span>-->
+<!--                {% endfor %}-->
+<!--                {% endfor %}-->
+<!--        </div>-->
 
-
+<!--    </form>-->
+<!--</div>-->
+</div>
 {% endblock %}
 

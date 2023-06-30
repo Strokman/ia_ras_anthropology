@@ -18,11 +18,9 @@ class CleanString(object):
 
 class SelectFieldValidator(object):
     def __call__(self, form, field):
-        try:
-            if int(field.data) == 0:
-                raise ValidationError('Пожалуйста, выберите из выпадающего списка')
-        except ValueError:
-            pass
+        if int(field.data) == 0:
+            raise ValidationError('Пожалуйста, выберите из выпадающего списка')
+
 
 
 class OnlyCharsValidator(object):

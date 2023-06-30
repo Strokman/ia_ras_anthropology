@@ -2,13 +2,13 @@ from anthropos import db, login
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
-from flask import request, url_for, flash
+from flask import request, url_for, flash, session, redirect, current_app
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from anthropos.lib import MailgunEngine
 import jwt
 from time import time
-
+from functools import wraps
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
@@ -108,5 +108,14 @@ def load_user(user_id):
     return user
 
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        if session['user_role'] != 'admin':
+            flash('Unauthorized access', 'warning')
+            return redirect(url_for('main.index'))
+        else:
+            return f(*args, **kwargs)
+    return decorated_view
 
 

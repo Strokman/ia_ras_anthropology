@@ -1,5 +1,5 @@
 from anthropos.auth import bp
-from flask import redirect, render_template, url_for, flash, request
+from flask import redirect, render_template, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user
 from datetime import datetime
 from urllib.parse import urlsplit
@@ -25,6 +25,7 @@ def login():
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
+        session['user_role'] = user.role
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('main.index')

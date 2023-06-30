@@ -1,6 +1,6 @@
 from flask_login import current_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required
 from anthropos import db
 from .forms import ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, IndividForm
 from anthropos.main import bp
