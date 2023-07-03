@@ -68,13 +68,10 @@ def submit_researcher():
 @bp.route('/submit_site', methods=['GET', 'POST'])
 @login_required
 def submit_site():
-    researchers = sorted([(0, 'Выберите исследователя')] + \
-                  [(researcher.id, researcher) for researcher in Researcher.get_all(db.session)])
-    fed_districts = sorted([(0, 'Выберите федеральный округ')] + \
-                    [(district.id, district.name) for district in FederalDistrict.get_all(db.session)])
-    epochs = sorted([(0, 'Неизвестно')] + \
-                    [(epoch.id, epoch) for epoch in Epoch.get_all(db.session)])
-    site_form = ArchaeologicalSiteForm(researchers, fed_districts, epochs)
+    site_form = ArchaeologicalSiteForm()
+    site_form.epoch.query = Epoch.get_all(db.session)
+    site_form.researcher.query = Researcher.get_all(db.session)
+    site_form.federal_district.query = FederalDistrict.get_all(db.session)
     if site_form.validate_on_submit():
         site = ArchaeologicalSite(site_form.name.data,
                                   site_form.long.data,
@@ -83,7 +80,7 @@ def submit_site():
                                   Researcher.get_by_id(site_form.researcher.data, db.session),
                                   Region.get_by_id(site_form.region.data, db.session)
                                   )
-        site.epochs.append(Epoch.get_by_id(site_form.epoch.data, db.session))
+        site.epochs.extend(site_form.epoch.data)
         site.save_to_db(db.session)
         return redirect(url_for('main.submit_site'))
     return render_template('site_input.html', title='Submit site form', form=site_form)
