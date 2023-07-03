@@ -113,7 +113,7 @@ def admin_required(f):
     def decorated_view(*args, **kwargs):
         if session['user_role'] != 'admin':
             flash('Unauthorized access', 'warning')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('index.index'))
         else:
             return f(*args, **kwargs)
     return decorated_view

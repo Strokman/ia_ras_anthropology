@@ -82,4 +82,7 @@ def create_app(config_class=Config):
     from anthropos.register import bp as register_bp
     app.register_blueprint(register_bp, url_prefix='/register')
 
+    from anthropos.index import bp as index_bp
+    app.register_blueprint(index_bp)
+
     return app

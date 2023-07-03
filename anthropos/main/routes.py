@@ -7,11 +7,7 @@ from anthropos.main import bp
 from datetime import datetime
 
 
-@bp.route('/')
-@bp.route('/index')
-def index():
-    flash('Hello', 'success')
-    return render_template('index.html', title='Index')
+
 
 
 @bp.route('/user/<username>')

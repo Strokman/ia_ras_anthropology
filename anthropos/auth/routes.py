@@ -12,7 +12,7 @@ from .reset_email import send_password_reset_email
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = db.session.query(DatabaseUser).filter_by(username=form.username.data).first()
@@ -28,7 +28,7 @@ def login():
         session['user_role'] = user.role
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('main.index')
+            next_page = url_for('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
@@ -36,13 +36,13 @@ def login():
 @bp.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('index'))
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = DatabaseUser.query.filter_by(email=form.email.data).first()
@@ -57,10 +57,10 @@ def reset_password_request():
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('index'))
     user = DatabaseUser.verify_reset_password_token(token)
     if not user:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.password = form.password.data

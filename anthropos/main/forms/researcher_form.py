@@ -5,11 +5,12 @@ from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
 from .validators import CleanString, OnlyCharsValidator
+from flask import url_for
 
 
 class ResearcherForm(FlaskForm):
 
-    first_name = StringField(label='First Name', render_kw={'class': 'LAL'}, validators=[Length(min=2, max=50), DataRequired('LLLLLUUUULLLL'), CleanString(), OnlyCharsValidator()])
+    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired('LLLLLUUUULLLL'), CleanString(), OnlyCharsValidator()])
     middle_name = StringField(label='Middle Name', validators=[CleanString(), OnlyCharsValidator()])
     last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
     affiliation = StringField(label='Affiliation', validators=[Length(min=2, max=50), DataRequired()])
