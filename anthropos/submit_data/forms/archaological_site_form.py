@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DecimalField, SelectField
 from wtforms.validators import DataRequired, NumberRange
-from .validators import CleanString, SelectFieldValidator, DataRequiredImproved
+from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
 from wtforms_sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
 
 

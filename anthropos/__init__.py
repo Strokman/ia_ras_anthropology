@@ -85,4 +85,7 @@ def create_app(config_class=Config):
     from anthropos.index import bp as index_bp
     app.register_blueprint(index_bp)
 
+    from anthropos.submit_data import bp as submit_bp
+    app.register_blueprint(submit_bp, url_prefix='/submit')
+
     return app

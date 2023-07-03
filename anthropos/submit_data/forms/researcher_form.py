@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, Length
 from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
-from .validators import CleanString, OnlyCharsValidator
+from anthropos.lib.validators import CleanString, OnlyCharsValidator
 from flask import url_for
 
 
