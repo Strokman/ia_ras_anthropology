@@ -1,10 +1,11 @@
 {% from 'bootstrap5/form.html' import render_form %}
 
 {% block app_content %}
-<div class="row">
-    <div class="col-12 ms-auto">
-    <div class="ms-auto col-12 col-md-8 col-lg-8">
+<div class="row justify-content-center">
+    <div class="col-md-10 offset-md-5">
 {{ render_form(form, novalidate=True) }}
+    </div>
+</div>
 <!--    <form action="" method="post">-->
 <!--        {{ form.hidden_tag() }}-->
 <!--        <div class="container-fluid mb-4">-->
@@ -19,8 +20,6 @@
 <!--        </div>-->
 
 <!--    </form>-->
-</div>
-        </div>
-</div>
+
 {% endblock %}
 

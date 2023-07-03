@@ -7,9 +7,6 @@ from anthropos.main import bp
 from datetime import datetime
 
 
-
-
-
 @bp.route('/user/<username>')
 @login_required
 def user(username):
