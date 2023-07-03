@@ -1,21 +1,39 @@
 from flask_login import current_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required, Epoch
 from anthropos import db
 from .forms import ResearcherForm, ArchaeologicalSiteForm, EditProfileForm, IndividForm
 from anthropos.main import bp
 from datetime import datetime
 
 
-@bp.route('/user/<username>')
+@bp.route('/user/<username>', methods=['GET'])
 @login_required
 def user(username):
     user = db.session.query(DatabaseUser).filter_by(username=username).first_or_404()
     sites = db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all()
-    return render_template('profile.html', user=user, sites=sites)
+    form = EditProfileForm(current_user.username, current_user.email)
+    # if form.validate_on_submit():
+    #     current_user.username = form.username.data
+    #     current_user.first_name = form.first_name.data
+    #     current_user.last_name = form.last_name.data
+    #     current_user.middle_name = form.middle_name.data
+    #     current_user.affiliation = form.affiliation.data
+    #     current_user.email = form.email.data
+    #     db.session.commit()
+    #     flash('Your changes have been saved.', 'success')
+    #     return redirect(url_for('main.user', username=user.username))
+    # elif request.method == 'GET':
+    form.username.data = current_user.username
+    form.first_name.data = current_user.first_name
+    form.last_name.data = current_user.last_name
+    form.middle_name.data = current_user.middle_name
+    form.affiliation.data = current_user.affiliation
+    form.email.data = current_user.email
+    return render_template('profile.html', user=user, sites=sites, form=form)
 
 
-@bp.route('/edit_profile', methods=['GET', 'POST'])
+@bp.route('/edit_profile', methods=['POST'])
 @login_required
 def edit_profile():
     form = EditProfileForm(current_user.username, current_user.email)
@@ -28,16 +46,9 @@ def edit_profile():
         current_user.email = form.email.data
         db.session.commit()
         flash('Your changes have been saved.', 'success')
-        return redirect(url_for('main.edit_profile'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.first_name.data = current_user.first_name
-        form.last_name.data = current_user.last_name
-        form.middle_name.data = current_user.middle_name
-        form.affiliation.data = current_user.affiliation
-        form.email.data = current_user.email
-    return render_template('edit_profile.html', title='Edit Profile',
-                           form=form)
+        return redirect(url_for('main.user', username=current_user.username))
+    # return render_template('edit_profile.html', title='Edit Profile',
+    #                        form=form)
 
 
 @bp.route('/submit_researcher', methods=['GET', 'POST'])
@@ -58,18 +69,21 @@ def submit_researcher():
 @login_required
 def submit_site():
     researchers = sorted([(0, 'Выберите исследователя')] + \
-                  [(researcher.id, researcher.__str__()) for researcher in Researcher.get_all(db.session)])
+                  [(researcher.id, researcher) for researcher in Researcher.get_all(db.session)])
     fed_districts = sorted([(0, 'Выберите федеральный округ')] + \
                     [(district.id, district.name) for district in FederalDistrict.get_all(db.session)])
-    site_form = ArchaeologicalSiteForm(researchers, fed_districts)
+    epochs = sorted([(0, 'Неизвестно')] + \
+                    [(epoch.id, epoch) for epoch in Epoch.get_all(db.session)])
+    site_form = ArchaeologicalSiteForm(researchers, fed_districts, epochs)
     if site_form.validate_on_submit():
         site = ArchaeologicalSite(site_form.name.data,
                                   site_form.long.data,
                                   site_form.lat.data,
                                   current_user,
-                                  db.session.query(Researcher).filter_by(id=site_form.researcher.data).first(),
-                                  db.session.query(Region).filter_by(id=site_form.region.data).first()
+                                  Researcher.get_by_id(site_form.researcher.data, db.session),
+                                  Region.get_by_id(site_form.region.data, db.session)
                                   )
+        site.epochs.append(Epoch.get_by_id(site_form.epoch.data, db.session))
         site.save_to_db(db.session)
         return redirect(url_for('main.submit_site'))
     return render_template('site_input.html', title='Submit site form', form=site_form)

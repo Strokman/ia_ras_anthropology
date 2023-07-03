@@ -50,11 +50,10 @@ def create_tables():
 
 
         """ДОБАВЛЕНИЕ ПОЛА"""
-        sex = ('male', 'female')
+        sex = ('unknown', 'male', 'female')
         for i in sex:
             b = Sex(sex=i)
-            db.session.add(b)
-        db.session.commit()
+            b.save_to_db
 
 
         """ДОБАВЛЕНИЕ СОХРАННОСТИ"""

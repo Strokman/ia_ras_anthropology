@@ -15,8 +15,8 @@ class KurganGrave(db.Model, BaseModel):
     skeleton = db.Column(db.String(32))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
 
-    individ = db.relationship('Individ', back_populates='grave')
-    site = db.relationship('ArchaeologicalSite', back_populates='graves')
+    individ = db.relationship('Individ', back_populates='kurgan_grave')
+    site = db.relationship('ArchaeologicalSite', back_populates='kurgan_graves')
 
     def __repr__(self):
         return f'{self.grave_number}'

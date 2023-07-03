@@ -1,16 +1,19 @@
 {% extends "base.html" %}
-
+{% from 'bootstrap5/form.html' import render_form %}
 {% block app_content %}
     <h1>User: {{ user.username }}</h1>
 <h3>Account created - {{ user.created }}</h3>
 <h3>Last login - {{ moment(user.last_login).format('L') }}</h3>
 
     {% if user == current_user %}
-                <p><a href="{{ url_for('main.edit_profile') }}">Edit your profile</a></p>
+
+{% with form=form, task='Редактировать профиль', action=url_for('main.edit_profile') %}
+{% include "_modal.html" %}
+{% endwith %}
                 {% endif %}
 {% include "_user.html" %}
-    {% for site in sites %}
+{% with sites=sites %}
         {% include "_site.html" %}
-    {% endfor %}
+        {% endwith %}
 
 {% endblock %}

@@ -1,8 +1,26 @@
-    <table>
-        <tr valign="top">
-            <td>{{ site.id }} - </td>
-            <td>{{ site.name }} - </td>
-            <td>{{ site.researcher.__str__() }} - </td>
-            <td>{{ site.regions.name }}</td>
-        </tr>
+    <table class="table table-light table-striped">
+        <thead>
+            <tr>
+                <th class="text-start">ID</th>
+                <th class="text-end">Name</th>
+                <th class="text-end">Location</th>
+                <th class="text-end">Epoch</th>
+                <th class="text-end">Researcher</th>
+            </tr>
+        </thead>
+       
+        
+        <tbody>
+            {% for site in sites %}
+                <tr>
+                    <td class="text-start">{{ site.id }}</td>
+                    <td class="text-end">{{ site.name }}</td>
+                    <td class="text-end">{{ site.regions.name }}</td>
+                    <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
+                    <td class="text-end">{{ site.researcher.__str__() }}</td>
+                </tr>
+                {% endfor %}
+    
+        </tbody>
     </table>
+   
