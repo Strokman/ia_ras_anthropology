@@ -2,3 +2,4 @@
 /region.csv
 /config.py
 /.env
+/__pycache__
