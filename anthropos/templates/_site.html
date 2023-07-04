@@ -6,6 +6,8 @@
                 <th class="text-end">Location</th>
                 <th class="text-end">Epoch</th>
                 <th class="text-end">Researcher</th>
+                <th class="text-end">Edit</th>
+                
             </tr>
         </thead>
        
@@ -18,6 +20,10 @@
                     <td class="text-end">{{ site.regions.name }}</td>
                     <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
                     <td class="text-end">{{ site.researcher.__str__() }}</td>
+                    <td class="text-end">{% with form=site_form, action=url_for("main.edit_site", site_id=site.id), task="Редактировать памятник", id="editSite" %}
+                        {include "_modal.html"}
+                        {% endwith %}
+                    </td>
                 </tr>
                 {% endfor %}
     

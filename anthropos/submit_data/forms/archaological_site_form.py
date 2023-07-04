@@ -23,7 +23,7 @@ class ArchaeologicalSiteForm(FlaskForm):
     # researcher = SelectField(label='Исследователь', validators=[DataRequiredImproved(), SelectFieldValidator()])
     researcher = QuerySelectField('Исследователи')
     # federal_district = SelectField(label='Федеральный округ', validators=[DataRequiredImproved(), SelectFieldValidator()])
-    federal_district = QuerySelectField('Федеральный округ')
+    federal_district = QuerySelectField('Федеральный округ', allow_blank=True, blank_text='Выберите округ')
     region = NonValidatingSelectField(label='Регион', default='Выберите субъект', validators=[DataRequiredImproved(), SelectFieldValidator()])
     submit = SubmitField('Submit')
 
