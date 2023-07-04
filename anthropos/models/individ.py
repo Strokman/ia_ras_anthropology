@@ -31,7 +31,7 @@ class Individ(db.Model, BaseModel):
     grave = db.relationship('Grave', back_populates='individ')
 
     def create_index(self):
-        self.index = f'{self.site.name[:4]}/{self.year}/{self.grave.grave_number}'
+        self.index = f'{self.site.name}/{self.year}/{self.grave.grave_number}'
 
     def __repr__(self):
         return f'{self.index}:{self.sex}:{self.age_min}-{self.age_max}'

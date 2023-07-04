@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
+
+{% block app_content %}
+
+
+<table class="table table-border">
+    <thead>
+        <tr>
+            <th class="text-start">Index</th>
+            <th class="text-end">Памятник</th>
+            <th class="text-end">Возраст</th>
+            <th class="text-end">Пол</th>
+            <th class="text-end">Обряд</th>
+            <th class="text-end">Location</th>
+            <th class="text-end">Epoch</th>
+            <th class="text-end">Researcher</th>
+            <th class="text-end">Edit</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for individ in individs %}
+            <tr>
+                <td class="text-start">{{ individ.index }}</td>
+                <td class="text-end">{{ individ.site.name }}</td>
+                <td class="text-end">{{ individ.age_min }} - {{ individ.age_max }}</td>
+                <td class="text-end">{{ individ.sex.sex }}</td>
+                <td class="text-end">{{ individ.type }}</td>
+                <td class="text-end">{{ individ.site.regions.name }}</td>
+                <td class="text-end">{% for epoch in individ.site.epochs %}{{ epoch }}<br> {% endfor %}</td>
+                <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
+                <td class="text-center"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editIndivid">
+                    Edit site
+                  </button>
+                  
+                 
+                    
+                  
+                  
+                </td>
+            </tr>
+            {% endfor %}
+
+{% endblock %}

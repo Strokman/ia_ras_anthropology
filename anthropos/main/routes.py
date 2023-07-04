@@ -52,6 +52,7 @@ def edit_profile():
         current_user.email = form.email.data
         db.session.commit()
         flash('Изменения сохранены', 'success')
+        return redirect(url_for('main.user', username=current_user.username))
     flash('Изменения не сохранены. См. ошибки ниже', 'danger')
     for field in form:
         if field.errors:

@@ -1,7 +1,7 @@
 from flask import redirect, url_for, render_template, flash, jsonify
 from flask_login import login_required, current_user
 from anthropos import db
-from .forms import ResearcherForm, IndividForm, ArchaeologicalSiteForm
+from .forms import ResearcherForm, IndividForm, ArchaeologicalSiteForm, GraveForm
 from anthropos.submit_data import bp
 from anthropos.models import ArchaeologicalSite, FederalDistrict, Region, Researcher, Epoch, Sex, Grave, Individ
 from datetime import datetime
@@ -14,7 +14,9 @@ def submit_researcher():
     if form.validate_on_submit():
         researcher = Researcher(form.first_name.data,
                                 form.last_name.data,
-                                form.middle_name.data)
+                                form.affiliation.data,
+                                form.middle_name.data
+                                )
         db.session.add(researcher)
         db.session.commit()
         return redirect(url_for('submit.submit_researcher'))
@@ -25,15 +27,15 @@ def submit_researcher():
 @login_required
 def submit_site():
     site_form = ArchaeologicalSiteForm()
-    site_form.epoch.query = Epoch.get_all(db.session)
-    site_form.researcher.query = Researcher.get_all(db.session)
-    site_form.federal_district.query = FederalDistrict.get_all(db.session)
+    # site_form.epoch.query = Epoch.get_all(db.session)
+    # site_form.researcher.query = Researcher.get_all(db.session)
+    # site_form.federal_district.query = sorted(FederalDistrict.get_all(db.session), key=lambda x: x.name)
     if site_form.validate_on_submit():
         site = ArchaeologicalSite(site_form.name.data,
                                   site_form.long.data,
                                   site_form.lat.data,
                                   current_user,
-                                  Researcher.get_by_id(site_form.researcher.data, db.session),
+                                  site_form.researcher.data,
                                   Region.get_by_id(site_form.region.data, db.session)
                                   )
         site.epochs.extend(site_form.epoch.data)
@@ -54,30 +56,33 @@ def region(fd_id):
     return jsonify({'regions': regionArray})
 
 
-@bp.route('submit_individ', methods=['GET', 'POST'])
+@bp.route('/submit_grave', methods=['GET', 'POST'])
+@login_required
+def grave():
+    form = IndividForm()
+    return render_template('submit_researcher.html', form=form)
+
+
+@bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
 def individ():
-    sex = sorted(['Выберите пол'] + \
-                  [sex.sex for sex in Sex.get_all(db.session)])
-    sites = sorted([(0, 'Выберите памятник')] + \
-                    [(site.id, site.name) for site in ArchaeologicalSite.get_all(db.session)])
-    form = IndividForm(sex, sites)
+    form = IndividForm()
     if form.validate_on_submit():
         grave = Grave(
             type=form.grave_type.data,
             grave_number=form.grave_number.data,
-            site_id=form.site.data
+            site_id=form.site.data.id
         )
         grave.save_to_db(db.session)
         individ = Individ(
             year=form.year.data,
             age_min=form.age_min.data,
             age_max=form.age_max.data,
-            site_id=form.site.data,
+            site_id=form.site.data.id,
             preservation_id=form.preservation.data,
             type=form.type.data,
             grave_id=grave.id,
-            sex_type=form.sex.data,
+            sex_type=form.sex.data.sex,
             created_at=datetime.utcnow(),
             created_by=current_user.id
         )
@@ -87,3 +92,11 @@ def individ():
         flash('Successfully added', 'success')
         return redirect(url_for('submit.individ'))
     return render_template('submit_individ.html', form=form)
+
+
+@bp.route('/data', methods=['GET', 'POST'])
+@login_required
+def data():
+    individs = Individ.get_all(db.session)
+    form = IndividForm()
+    return render_template('data_output.html', individs=individs, form=form)

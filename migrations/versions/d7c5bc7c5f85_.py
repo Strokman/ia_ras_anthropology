@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 55d3d4e8a6c9
+Revision ID: d7c5bc7c5f85
 Revises: 
-Create Date: 2023-06-23 12:41:18.321604
+Create Date: 2023-07-04 14:57:03.008928
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '55d3d4e8a6c9'
+revision = 'd7c5bc7c5f85'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,7 +34,7 @@ def upgrade():
     sa.Column('email', sa.String(length=128), nullable=False),
     sa.Column('activated', sa.Boolean(), nullable=False),
     sa.Column('role', sa.String(length=16), nullable=False),
-    sa.Column('token', sa.UUID(), nullable=True),
+    sa.Column('token', sa.UUID(), nullable=False),
     sa.Column('created', sa.DateTime(), nullable=False),
     sa.Column('last_login', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -61,25 +61,6 @@ def upgrade():
     sa.Column('path', sa.String(length=128), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('graves',
-    sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('number', sa.Integer(), nullable=True),
-    sa.Column('catacomb', sa.Integer(), nullable=True),
-    sa.Column('chamber', sa.Integer(), nullable=True),
-    sa.Column('grave_number', sa.Integer(), nullable=True),
-    sa.Column('trench', sa.String(length=32), nullable=True),
-    sa.Column('area', sa.String(length=32), nullable=True),
-    sa.Column('object', sa.String(length=32), nullable=True),
-    sa.Column('layer', sa.String(length=32), nullable=True),
-    sa.Column('plast', sa.String(length=32), nullable=True),
-    sa.Column('horizont', sa.String(length=32), nullable=True),
-    sa.Column('square', sa.String(length=32), nullable=True),
-    sa.Column('sector', sa.String(length=32), nullable=True),
-    sa.Column('niveau_point', sa.Integer(), nullable=True),
-    sa.Column('tachymeter_point', sa.Integer(), nullable=True),
-    sa.Column('skeleton', sa.String(length=32), nullable=True),
-    sa.PrimaryKeyConstraint('id')
-    )
     op.create_table('preservation',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=64), nullable=True),
@@ -89,6 +70,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=128), nullable=False),
     sa.Column('last_name', sa.String(length=128), nullable=False),
+    sa.Column('affiliation', sa.String(length=128), nullable=True),
     sa.Column('middle_name', sa.String(length=128), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
@@ -121,6 +103,33 @@ def upgrade():
     with op.batch_alter_table('archaeological_sites', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_archaeological_sites_name'), ['name'], unique=False)
 
+    op.create_table('graves',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('type', sa.String(length=32), nullable=True),
+    sa.Column('catacomb', sa.Integer(), nullable=True),
+    sa.Column('chamber', sa.Integer(), nullable=True),
+    sa.Column('grave_number', sa.Integer(), nullable=True),
+    sa.Column('trench', sa.String(length=32), nullable=True),
+    sa.Column('area', sa.String(length=32), nullable=True),
+    sa.Column('object', sa.String(length=32), nullable=True),
+    sa.Column('layer', sa.String(length=32), nullable=True),
+    sa.Column('plast', sa.String(length=32), nullable=True),
+    sa.Column('horizont', sa.String(length=32), nullable=True),
+    sa.Column('square', sa.String(length=32), nullable=True),
+    sa.Column('sector', sa.String(length=32), nullable=True),
+    sa.Column('niveau_point', sa.Integer(), nullable=True),
+    sa.Column('tachymeter_point', sa.Integer(), nullable=True),
+    sa.Column('skeleton', sa.String(length=32), nullable=True),
+    sa.Column('site_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['site_id'], ['archaeological_sites.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('sites_epochs',
+    sa.Column('archaeological_site_id', sa.Integer(), nullable=True),
+    sa.Column('epoch_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['archaeological_site_id'], ['archaeological_sites.id'], ),
+    sa.ForeignKeyConstraint(['epoch_id'], ['epochs.id'], )
+    )
     op.create_table('individs',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('index', sa.String(length=128), nullable=True),
@@ -128,6 +137,7 @@ def upgrade():
     sa.Column('age_min', sa.Integer(), nullable=True),
     sa.Column('age_max', sa.Integer(), nullable=True),
     sa.Column('type', sa.String(length=16), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('sex_type', sa.String(), nullable=True),
     sa.Column('grave_id', sa.Integer(), nullable=True),
     sa.Column('site_id', sa.Integer(), nullable=True),
@@ -144,19 +154,14 @@ def upgrade():
     sa.ForeignKeyConstraint(['site_id'], ['archaeological_sites.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_table('sites_epochs',
-    sa.Column('archaeological_site_id', sa.Integer(), nullable=True),
-    sa.Column('epoch_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['archaeological_site_id'], ['archaeological_sites.id'], ),
-    sa.ForeignKeyConstraint(['epoch_id'], ['epochs.id'], )
-    )
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_table('sites_epochs')
     op.drop_table('individs')
+    op.drop_table('sites_epochs')
+    op.drop_table('graves')
     with op.batch_alter_table('archaeological_sites', schema=None) as batch_op:
         batch_op.drop_index(batch_op.f('ix_archaeological_sites_name'))
 
@@ -165,7 +170,6 @@ def downgrade():
     op.drop_table('sex')
     op.drop_table('researchers')
     op.drop_table('preservation')
-    op.drop_table('graves')
     op.drop_table('files')
     op.drop_table('federal_districts')
     with op.batch_alter_table('epochs', schema=None) as batch_op:

@@ -12,4 +12,5 @@ class Sex(db.Model, BaseModel):
         self.sex = sex
 
     def __repr__(self):
-        return f'Sex is {self.sex}'
+        return self.sex
+    
