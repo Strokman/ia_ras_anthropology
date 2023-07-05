@@ -8,6 +8,14 @@ body {
   margin-top: 10px;
 }
 
+.table{
+  font-size: 14px;
+}
+
+.comment_field {
+  padding: 20px 10px;
+  line-height: 28px;
+}
 
 .alert {
   display: flex;

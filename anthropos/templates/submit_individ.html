@@ -2,7 +2,7 @@
 {% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
 {% block app_content %}
 <div class="row text-center"><h1>Добавить индивида</h1></div>
-<form class="form-control" style="background-color: #B2B2B2" method="post">
+<form class="form-control" method="post">
     <div class="row">
         
         <div class="col">
@@ -17,14 +17,13 @@
 
         </div>
                 <div class="col">
-                    {{ render_field(form.age_min) }}
+                    <div class="input-group">
+                        {{ render_field(form.age_min) }} 
                     {{ render_field(form.age_max) }}
-    {{ render_field(form.sex) }}
-                    
-    <br>
-                    
-                    {{ render_field(form.submit) }}
-                    
+                    </div>
+    {{ render_field(form.sex) }}        
+    {{ render_field(form.file) }} 
+    {{ render_field(form.comment, class='comment_field') }} 
         </div>
         <div class="col">
             
@@ -47,6 +46,12 @@
                 <td class="text-center">{{ form.skeleton }}</td>
             </tr>
             
+        </div>
+        <div class="row">
+ 
+
+                {{ render_field(form.submit) }}
+           
         </div>
         
 </div>

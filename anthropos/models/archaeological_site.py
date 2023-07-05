@@ -24,14 +24,14 @@ class ArchaeologicalSite(db.Model, BaseModel):
     individ = db.relationship("Individ", back_populates='site')
     graves = db.relationship("Grave", back_populates='site')
 
-    def __init__(self, name: str, long: float, lat: float, user, researcher, region):
+    def __init__(self, name: str, long: float, lat: float, user, researcher, region_id):
         self.name = name
         self.long = long
         self.lat = lat
         self.creator_id = user.id
         self.editor_id = user.id
         self.researcher_id = researcher.id
-        self.region_id = region.id
+        self.region_id = region_id
 
     def __repr__(self):
         return self.name

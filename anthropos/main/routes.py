@@ -6,6 +6,7 @@ from .forms import EditProfileForm
 from anthropos.submit_data.forms import ArchaeologicalSiteForm
 from anthropos.main import bp
 from datetime import datetime
+from sqlalchemy import delete
 
 
 @bp.route('/user/<username>', methods=['GET'])
@@ -66,7 +67,13 @@ def edit_site(site_id):
     print(site_id)
     return 'LULKA', 200
 
-
+@bp.route('/delete_individ/<int:individ_id>', methods=['GET'])
+@login_required
+def delete_individ(individ_id):
+    stmt = delete(Individ).where(Individ.id==individ_id)
+    db.session.execute(stmt)
+    db.session.commit()
+    return redirect(request.referrer)
 
 # @bp.route('/submit_individ/<grave_type>')
 # def region(grave_type):

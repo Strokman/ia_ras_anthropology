@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from anthropos import db
 from .forms import ResearcherForm, IndividForm, ArchaeologicalSiteForm, GraveForm
 from anthropos.submit_data import bp
-from anthropos.models import ArchaeologicalSite, FederalDistrict, Region, Researcher, Epoch, Sex, Grave, Individ
+from anthropos.models import ArchaeologicalSite, Region, Researcher, Grave, Individ
 from datetime import datetime
 
 
@@ -12,13 +12,13 @@ from datetime import datetime
 def submit_researcher():
     form = ResearcherForm()
     if form.validate_on_submit():
-        researcher = Researcher(form.first_name.data,
-                                form.last_name.data,
-                                form.affiliation.data,
-                                form.middle_name.data
-                                )
+        researcher = Researcher()
+        for k, v in form.data.items():
+            if hasattr(researcher, k) and v is not None:
+                setattr(researcher, k, v)
         db.session.add(researcher)
         db.session.commit()
+        flash('Исследователь добавлен', 'success')
         return redirect(url_for('submit.submit_researcher'))
     return render_template('submit_researcher.html', title='Submit researcher form', form=form)
 
@@ -36,7 +36,7 @@ def submit_site():
                                   site_form.lat.data,
                                   current_user,
                                   site_form.researcher.data,
-                                  Region.get_by_id(site_form.region.data, db.session)
+                                  int(site_form.region.data)
                                   )
         site.epochs.extend(site_form.epoch.data)
         site.save_to_db(db.session)
@@ -44,7 +44,7 @@ def submit_site():
     return render_template('site_input.html', title='Submit site form', form=site_form)
 
 
-@bp.route('/submit_site/<fd_id>')
+@bp.route('/get_region/<fd_id>')
 def region(fd_id):
     regions = Region.query.filter_by(federal_districts_id=fd_id).all()
     regionArray = [{'id': 0, 'name': 'Выберите субъект'}]
@@ -69,20 +69,32 @@ def individ():
     form = IndividForm()
     if form.validate_on_submit():
         grave = Grave(
-            type=form.grave_type.data,
-            grave_number=form.grave_number.data,
-            site_id=form.site.data.id
+            type=form.data.get('grave_type', None),
+            kurgan_number=form.data.get('kurgan_number', None),
+            grave_number=form.data.get('grave_number', None),
+            catacomb=form.data.get('catacomb', None),
+            chamber=form.data.get('chamber', None),
+            trench=form.data.get('trench', None),
+            area=form.data.get('area', None),
+            object=form.data.get('object', None),
+            layer=form.data.get('layer', None),
+            square=form.data.get('square', None),
+            sector=form.data.get('sector', None),
+            niveau_point=form.data.get('niveau_point', None),
+            tachymeter_point=form.data.get('tachymeter_point', None),
+            skeleton=form.data.get('skeleton', None),
+            site_id=form.data.get('site').id if form.data.get('site') else None
         )
         grave.save_to_db(db.session)
         individ = Individ(
-            year=form.year.data,
-            age_min=form.age_min.data,
-            age_max=form.age_max.data,
-            site_id=form.site.data.id,
-            preservation_id=form.preservation.data,
-            type=form.type.data,
+            year=form.data.get('year', None),
+            age_min=form.data.get('age_min', None),
+            age_max=form.data.get('age_max', None),
+            site_id=form.data.get('site', None).id,
+            preservation_id=form.data.get('preservation', None),
+            type=form.data.get('type', None),
             grave_id=grave.id,
-            sex_type=form.sex.data.sex,
+            sex_type=form.data.get('sex', None).sex,
             created_at=datetime.utcnow(),
             created_by=current_user.id
         )

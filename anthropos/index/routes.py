@@ -1,5 +1,6 @@
 from anthropos.index import bp
-# from anthropos import db
+from anthropos.models import DatabaseUser
+from anthropos import db
 from flask import flash, render_template
 # from anthropos.models import Epoch, FederalDistrict, Region, Sex, Preservation
 # from csv import DictReader

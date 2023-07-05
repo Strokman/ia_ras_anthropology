@@ -12,6 +12,8 @@ class CleanString(object):
         if field.data == '':
             field.data = None
             return field.data
+        elif field.data == None:
+            return   
         field.data = field.data.replace('.', '').strip().lower().capitalize()
         return field.data
 

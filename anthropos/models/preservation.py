@@ -12,3 +12,6 @@ class Preservation(db.Model, BaseModel):
 
     def __init__(self, description):
         self.description = description
+
+    def __repr__(self):
+        return self.description

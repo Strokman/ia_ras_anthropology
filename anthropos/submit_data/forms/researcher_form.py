@@ -1,19 +1,19 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import Length
 from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
-from anthropos.lib.validators import CleanString, OnlyCharsValidator
+from anthropos.lib.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
 from flask import url_for
 
 
 class ResearcherForm(FlaskForm):
 
-    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequired('LLLLLUUUULLLL'), CleanString(), OnlyCharsValidator()])
+    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanString(), OnlyCharsValidator()])
+    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanString(), OnlyCharsValidator()])
     middle_name = StringField(label='Middle Name', validators=[CleanString(), OnlyCharsValidator()])
-    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequired(), CleanString(), OnlyCharsValidator()])
-    affiliation = StringField(label='Affiliation', validators=[Length(min=2, max=50), DataRequired()])
+    affiliation = StringField(label='Affiliation', validators=[Length(min=2, max=50), DataRequiredImproved()])
     submit = SubmitField(label='Добавить исследователя')
 
     def validate(self, extra_validators=None):
