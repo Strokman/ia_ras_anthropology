@@ -3,11 +3,12 @@ from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required, Epoch
 from anthropos import db
 from .forms import EditProfileForm
+from anthropos.submit_data.forms import IndividForm
 from anthropos.submit_data.forms import ArchaeologicalSiteForm
 from anthropos.main import bp
 from datetime import datetime
 from sqlalchemy import delete
-
+from wtforms import Form
 
 @bp.route('/user/<username>', methods=['GET'])
 @login_required
@@ -74,6 +75,28 @@ def delete_individ(individ_id):
     db.session.execute(stmt)
     db.session.commit()
     return redirect(request.referrer)
+
+
+@bp.route('/edit_individ/<individ_id>', methods=['GET', 'POST'])
+@login_required
+def edit_individ(individ_id):
+    individ = Individ.get_by_id(individ_id, db.session)
+    form = IndividForm()
+    print(form.site.default)
+    form.site.data = individ.site
+    form.sex.data = individ.sex
+    form.type.data = individ.type
+    print(form.site.default)
+    # print(type(individ.site))
+    # form.site.data=individ.site,
+    # form.year.data=individ.year,
+    # form.age_min.data=individ.age_min
+    # print(form.site)
+    # print()
+    # stmt = delete(Individ).where(Individ.id==individ_id)
+    # db.session.execute(stmt)
+    # db.session.commit()
+    return render_template('edit_individ.html', form=form, individ=individ)
 
 # @bp.route('/submit_individ/<grave_type>')
 # def region(grave_type):

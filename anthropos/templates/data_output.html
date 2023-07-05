@@ -35,9 +35,9 @@
                 <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
                 <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>
-                <td class="text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editIndivid">
-                    Edit
-                  </button>
+                <td>
+                    <a href="{{url_for('main.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Ред</a>
+                    </td>
                 </td>
                 <td>
                 <a href="{{url_for('main.delete_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>

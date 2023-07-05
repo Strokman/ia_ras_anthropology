@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
+{% block app_content %}
+<div class="row text-center"><h1>Добавить индивида</h1></div>
+<form class="form-control" method="post">
+    <div class="row">
+        
+        <div class="col">
+            {{ form.hidden_tag() }}
+    {{ render_hidden_errors(form) }}
+    {{ render_field(form.site) }}
+    {{ render_field(form.year, value=individ.year) }}
+    {{ render_field(form.type) }}
+    {{ render_field(form.preservation) }}
+       
+
+        </div>
+                <div class="col">
+                    <div class="input-group">
+                        {{ render_field(form.age_min) }} 
+                    {{ render_field(form.age_max) }}
+                    </div>
+    {{ render_field(form.sex) }}        
+    {{ render_field(form.file) }} 
+    {{ render_field(form.comment, class='comment_field') }} 
+        </div>
+        <div class="col">
+            
+            
+          
+            {{ render_field(form.grave_type) }}
+            <p>Параметры погребения</p>
+            <tr>
+                <td class="text-center">{{ form.kurgan_number }}</td>
+                <td class="text-center">{{ form.grave_number }}</td>
+                <td class="text-center">{{ form.catacomb }}</td>
+                <td class="text-center">{{ form.chamber }}</td>
+                <td class="text-center">{{ form.trench }}</td>
+                <td class="text-center">{{ form.area }}</td>
+                <td class="text-center">{{ form.object }}</td>
+                <td class="text-center">{{ form.layer }}</td>
+                <td class="text-center">{{ form.square }}</td>
+                <td class="text-center">{{ form.sector }}</td>
+                <td class="text-center">{{ form.niveau_point }}</td>
+                <td class="text-center">{{ form.skeleton }}</td>
+            </tr>
+            
+        </div>
+        <div class="row">
+ 
+
+                {{ render_field(form.submit) }}
+           
+        </div>
+        
+</div>
+</div>
+
+</form>
+
+<!--{% for field in form %}-->
+<!--{% if field.name == 'preservation' %}-->
+<!--{{ field.label}}-->
+<!--{{ field(min=1, max=4, action='/main/individ' ) }}-->
+<!--{% else %}-->
+<!--{{render_field(field)}}-->
+<!--{% endif %}-->
+<!--{% endfor %}-->
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{url_for('static', filename='novalidate.js')}}"></script>
+{% endblock %}
