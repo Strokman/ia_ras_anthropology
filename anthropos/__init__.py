@@ -75,9 +75,6 @@ def create_app(config_class=Config):
     from anthropos.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
-    from anthropos.main import bp as main_bp
-    app.register_blueprint(main_bp, url_prefix='/main')
-
     from anthropos.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
@@ -85,7 +82,7 @@ def create_app(config_class=Config):
     app.register_blueprint(index_bp)
 
     from anthropos.submit_data import bp as submit_bp
-    app.register_blueprint(submit_bp, url_prefix='/submit')
+    app.register_blueprint(submit_bp)
 
     from anthropos.researcher import bp as researcher_bp
     app.register_blueprint(researcher_bp, url_prefix='/researcher')

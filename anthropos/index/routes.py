@@ -2,13 +2,29 @@ from anthropos.index import bp
 from anthropos.site import bp as site_bp
 from anthropos.models import DatabaseUser
 from anthropos import db
+from flask_login import current_user
 from flask import flash, render_template, url_for
 # from anthropos.models import Epoch, FederalDistrict, Region, Sex, Preservation
 # from csv import DictReader
+from anthropos.models import Researcher, ArchaeologicalSite
+from sqlalchemy import delete
 
 @bp.route('/')
 @bp.route('/index')
 def index():
+    # user = current_user
+    # reser = Researcher.get_by_id(2, db.session)
+    # print(reser)
+    # site = db.session.query(ArchaeologicalSite).first()
+    # print(reser.sites)
+    # db.session.delete(reser)
+    # db.session.commit
+    # print(reser)
+    # stmt = delete(Researcher).where(Researcher.id==reser.id)
+    # print(stmt)
+    # db.session.execute(stmt)
+    # db.session.commit()
+    # print(reser)
     # """ДОБАВЛЕНИЕ ЭПОХ"""
     # epochs = ["Палеолит",
     #             "Мезолит",

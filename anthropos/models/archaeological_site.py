@@ -13,7 +13,7 @@ class ArchaeologicalSite(db.Model, BaseModel):
     lat = db.Column(db.Numeric(9, 6), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     editor_id = db.Column(db.Integer, db.ForeignKey('database_users.id'))
-    researcher_id = db.Column(db.Integer, db.ForeignKey("researchers.id"))
+    researcher_id = db.Column(db.Integer, db.ForeignKey("researchers.id", ondelete='CASCADE'))
     region_id = db.Column(db.Integer, db.ForeignKey('regions.id'))
 
     owner = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.creator_id", back_populates='sites_created')

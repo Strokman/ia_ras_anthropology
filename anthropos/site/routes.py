@@ -37,3 +37,10 @@ def region(fd_id):
         regionObj['name'] = region.name
         regionArray.append(regionObj)
     return jsonify({'regions': regionArray})
+
+
+@bp.route('/edit_site/<site_id>', methods=['GET'])
+@login_required
+def edit_site(site_id):
+    print(site_id)
+    return 'LULKA', 200
