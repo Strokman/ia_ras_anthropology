@@ -42,9 +42,9 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
 
-                    <a class="nav-item nav-link" href="{{ url_for('submit.submit_researcher') }}">Submit researcher</a>
-                    <a class="nav-item nav-link" href="{{ url_for('submit.submit_site') }}">Submit site</a>
-                    <a class="nav-item nav-link" href="{{ url_for('submit.individ') }}">Submit individ</a>
+                    <a class="nav-item nav-link" href="{{ url_for('researcher.submit_researcher') }}">Submit researcher</a>
+                                        <a class="nav-item nav-link" href="{{ url_for('site.submit_site') }}">Submit site</a>
+                    <a class="nav-item nav-link" href="{{ url_for('individ.individ') }}">Submit individ</a>
                     <a class="nav-item nav-link"
                         href="{{ url_for('main.user', username=current_user.username) }}">Profile: {{
                         current_user.username }}</a>

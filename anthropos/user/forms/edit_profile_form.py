@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
 from wtforms.validators import Length, Email
 from anthropos.models import DatabaseUser
-from ...lib.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
+from anthropos.lib.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
 
 
 class EditProfileForm(FlaskForm):

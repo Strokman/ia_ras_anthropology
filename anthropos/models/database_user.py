@@ -28,7 +28,8 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     created = db.Column(db.DateTime, nullable=False)
     last_login = db.Column(db.DateTime, nullable=False)
 
-    individs = db.relationship('Individ', back_populates='creator')
+    individs_created = db.relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
+    individs_edited = db.relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
     """
     РЕЛЕЙШЕНЫ ПИСАТЬ КАК ЗДЕСЬ И В КЛАССЕ АРХПАМЯТНИК - ТОГДА РАБОТАЕТ НОРМАЛЬНО
     """

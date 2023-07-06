@@ -9,13 +9,18 @@ class DataRequiredImproved(DataRequired):
 
 class CleanString(object):
     def __call__(self, form, field):
-        if field.data == '':
-            field.data = None
+        try:
+            if field.data == '':
+                field.data = None
+                return field.data
+            elif field.data == None:
+                return   
+            field.data = field.data.replace('.', '').strip().lower().capitalize()
             return field.data
-        elif field.data == None:
-            return   
-        field.data = field.data.replace('.', '').strip().lower().capitalize()
-        return field.data
+        except:
+            print(form)
+            print(field)
+            print(field.data)
 
 
 class SelectFieldValidator(object):

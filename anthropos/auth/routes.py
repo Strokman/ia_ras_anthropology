@@ -3,7 +3,7 @@ from flask import redirect, render_template, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user
 from datetime import datetime
 from urllib.parse import urlsplit
-from .forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm
+from .forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
 from anthropos.models import DatabaseUser
 from anthropos import db
 from .reset_email import send_password_reset_email
@@ -37,6 +37,40 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+
+@bp.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('index.index'))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = DatabaseUser(form.username.data,
+                            form.password.data,
+                            form.first_name.data,
+                            form.last_name.data,
+                            form.affiliation.data,
+                            form.email.data,
+                            datetime.utcnow(),
+                            datetime.utcnow(),
+                            form.middle_name.data
+                            )
+        user.save_to_db(db.session)
+        user.send_confirmation_email()
+        flash(f'Congratulations, {user.username} is now a registered user!', 'success')
+        flash(f'Please confirm your account - check your mail', 'info')
+        return redirect(url_for('auth.login'))
+    return render_template('register.html', title='Register', form=form)
+
+
+@bp.route('/user_confirmation/<username>/<token>')
+def user_confirmation(username, token):
+    user = db.session.query(DatabaseUser).filter_by(username=username).first()
+    if str(user.token) == token:
+        user.activated = True
+        db.session.commit()
+        flash('Email confirmed', 'success')
+    return redirect(url_for('auth.login'))
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])

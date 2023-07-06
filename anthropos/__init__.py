@@ -46,7 +46,6 @@ bootstrap = Bootstrap5()
 moment = Moment()
 sess = Session()
 
-
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -70,6 +69,9 @@ def create_app(config_class=Config):
     admin.init_app(app)
     sess.init_app(app)
 
+    from anthropos.site import bp as site_bp
+    app.register_blueprint(site_bp, url_prefix='/site')
+
     from anthropos.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
 
@@ -79,13 +81,19 @@ def create_app(config_class=Config):
     from anthropos.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
-    from anthropos.register import bp as register_bp
-    app.register_blueprint(register_bp, url_prefix='/register')
-
     from anthropos.index import bp as index_bp
     app.register_blueprint(index_bp)
 
     from anthropos.submit_data import bp as submit_bp
     app.register_blueprint(submit_bp, url_prefix='/submit')
+
+    from anthropos.researcher import bp as researcher_bp
+    app.register_blueprint(researcher_bp, url_prefix='/researcher')
+
+    from anthropos.individ import bp as individ_bp
+    app.register_blueprint(individ_bp, url_prefix='/individ')
+
+    from anthropos.user import bp as user_bp
+    app.register_blueprint(user_bp, url_prefix='/user')
 
     return app
