@@ -24,7 +24,7 @@ def submit_site():
         site.epochs.extend(site_form.epoch.data)
         site.save_to_db(db.session)
         return redirect(url_for('site.submit_site'))
-    return render_template('site_input.html', title='Submit site form', form=site_form)
+    return render_template('site/site_input.html', title='Submit site form', form=site_form)
 
 
 @bp.route('/get_region/<fd_id>')

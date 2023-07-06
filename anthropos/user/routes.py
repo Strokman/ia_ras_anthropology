@@ -2,10 +2,10 @@ from flask_login import current_user, login_required
 from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required, Epoch
 from anthropos import db
-from ..user.forms import EditProfileForm
+from anthropos.user.forms import EditProfileForm
 from anthropos.submit_data.forms import IndividForm
 from anthropos.submit_data.forms import ArchaeologicalSiteForm
-from anthropos.main import bp
+from anthropos.user import bp
 from datetime import datetime
 
 @bp.route('/user/<username>', methods=['GET'])
@@ -35,7 +35,7 @@ def user(username):
     profile_form.middle_name.data = current_user.middle_name
     profile_form.affiliation.data = current_user.affiliation
     profile_form.email.data = current_user.email
-    return render_template('profile.html', user=user, sites=sites, profile_form=profile_form, site_form=site_form)
+    return render_template('user/profile.html', user=user, sites=sites, profile_form=profile_form, site_form=site_form)
 
 
 @bp.route('/edit_profile', methods=['POST'])
@@ -52,9 +52,9 @@ def edit_profile():
         current_user.email = form.email.data
         db.session.commit()
         flash('Изменения сохранены', 'success')
-        return redirect(url_for('main.user', username=current_user.username))
+        return redirect(url_for('user.user', username=current_user.username))
     flash('Изменения не сохранены. См. ошибки ниже', 'danger')
     for field in form:
         if field.errors:
             flash(f'Поле {field.label.text} - {field.errors[0]}', 'warning')
-    return redirect(url_for('main.user', username=current_user.username))
+    return redirect(url_for('user.user', username=current_user.username))

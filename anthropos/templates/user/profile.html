@@ -7,11 +7,10 @@
 
     {% if user == current_user %}
 
-{% with form=profile_form, task='Редактировать профиль', action=url_for('main.edit_profile'), id='editProfile' %}
+{% with form=profile_form, task='Редактировать профиль', action=url_for('user.edit_profile'), id='editProfile' %}
 {% include "_modal.html" %}
 {% endwith %}
                 {% endif %}
-{% include "_user.html" %}
 
 <table class="table table-border">
     <thead>

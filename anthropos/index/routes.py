@@ -66,4 +66,4 @@ def index():
     # db.session.commit()
 
     flash('Hello', 'success')
-    return render_template('index.html', title='Index')
+    return render_template('index/index.html', title='Index')
