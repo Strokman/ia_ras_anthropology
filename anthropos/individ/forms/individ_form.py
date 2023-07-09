@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, FileField
+from flask_wtf.file import FileField
+from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, NumberRange
 from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
@@ -19,8 +20,8 @@ class IndividForm(FlaskForm):
     
     year = IntegerField(label='Год')
     type = SelectField(label='Обряд')
-    age_min = IntegerField(label='Возраст мин')
-    age_max = IntegerField(label='Возраст макс')
+    age_min = IntegerField(label='Возраст мин', validators=[NumberRange(min=0, max=150)])
+    age_max = IntegerField(label='Возраст макс', validators=[NumberRange(min=0, max=150)])
     sex = QuerySelectField('Пол', allow_blank=True, blank_text='Выберите пол', validators=[DataRequiredImproved()])
     preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
     
@@ -40,7 +41,7 @@ class IndividForm(FlaskForm):
     skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[CleanString()])
     
 
-    comment = StringField(label='Примечание')
+    comment = TextAreaField(label='Примечание')
     file = FileField(label='Файл')
 
     submit = SubmitField(label='Добавить индивида')

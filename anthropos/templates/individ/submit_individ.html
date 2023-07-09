@@ -2,7 +2,7 @@
 {% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
 {% block app_content %}
 <div class="row text-center"><h1>Добавить индивида</h1></div>
-<form class="form-control" method="post">
+<form class="form-control" method="post" enctype="multipart/form-data">
     <div class="row">
         
         <div class="col">
@@ -23,7 +23,7 @@
                     </div>
     {{ render_field(form.sex) }}        
     {{ render_field(form.file) }} 
-    {{ render_field(form.comment, class='comment_field') }} 
+    {{ render_field(form.comment) }} 
         </div>
         <div class="col">
             

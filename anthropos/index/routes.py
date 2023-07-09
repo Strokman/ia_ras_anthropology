@@ -6,14 +6,18 @@ from flask_login import current_user
 from flask import flash, render_template, url_for
 # from anthropos.models import Epoch, FederalDistrict, Region, Sex, Preservation
 # from csv import DictReader
-from anthropos.models import Researcher, ArchaeologicalSite
-from sqlalchemy import delete
+from anthropos.models import Researcher, ArchaeologicalSite, Individ, Comment
+from sqlalchemy import delete, select
 
 @bp.route('/')
 @bp.route('/index')
 def index():
+    stmt = delete(Individ).where(Individ.id==3)
+    individ = db.session.scalars(select(Individ).where(Individ.id==4)).first()
+    db.session.delete(individ)
+    db.session.commit()
+    # db.session.execute(stmt)
     # user = current_user
-    # reser = Researcher.get_by_id(2, db.session)
     # print(reser)
     # site = db.session.query(ArchaeologicalSite).first()
     # print(reser.sites)

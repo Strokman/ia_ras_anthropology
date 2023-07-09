@@ -1,12 +1,13 @@
-from flask import redirect, url_for, render_template, flash, jsonify, request
+from flask import redirect, url_for, render_template, flash, jsonify, request, current_app
 from flask_login import login_required, current_user
 from anthropos import db
 from .forms import IndividForm
 from anthropos.individ import bp
 from anthropos.models import Grave, Individ, Comment
 from datetime import datetime
-from sqlalchemy import delete
-
+from sqlalchemy import select, delete
+from os import path
+from werkzeug.utils import secure_filename
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
@@ -34,6 +35,14 @@ def individ():
             site.graves.append(grave)
         comment = Comment(text=form.comment.data)
         comment.save_to_db(db.session)
+
+        file = form.file.data
+        if '.' in file.filename and \
+           file.filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']:
+            filename = secure_filename(file.filename)
+            file.save(path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename))
+
+
         individ = Individ(
             year=form.data.get('year', None),
             age_min=form.data.get('age_min', None),
@@ -51,23 +60,23 @@ def individ():
         individ.create_index()
         db.session.commit()
         flash('Successfully added', 'success')
-        return redirect(url_for('submit.individ'))
+        return redirect(url_for('individ.individ'))
     return render_template('individ/submit_individ.html', form=form)
 
 
 @bp.route('/delete_individ/<int:individ_id>', methods=['GET'])
 @login_required
 def delete_individ(individ_id):
-    stmt = delete(Individ).where(Individ.id==individ_id)
-    db.session.execute(stmt)
+    individ = db.session.scalars(select(Individ).where(Individ.id==individ_id)).first()
+    db.session.delete(individ)
     db.session.commit()
     return redirect(request.referrer)
 
 
-@bp.route('/edit_individ/<individ_id>', methods=['GET', 'POST'])
+@bp.route('/edit_individ/<int:individ_id>', methods=['GET', 'POST'])
 @login_required
 def edit_individ(individ_id):
-    individ = Individ.get_by_id(11, db.session)
+    individ = db.session.get(Individ, individ_id)
     form = IndividForm()
     grave: Grave = individ.grave
     grave.grave_number = 121321

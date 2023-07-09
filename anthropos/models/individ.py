@@ -23,12 +23,12 @@ class Individ(db.Model, BaseModel):
     preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
 
     site = db.relationship('ArchaeologicalSite', back_populates='individ')
-    comment = db.relationship('Comment', uselist=False, back_populates='individ')
+    comment = db.relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
     creator = db.relationship("DatabaseUser", foreign_keys='Individ.created_by', back_populates='individs_created')
     editor = db.relationship("DatabaseUser", foreign_keys='Individ.edited_by', back_populates='individs_edited')
     sex = db.relationship('Sex', back_populates='individ')
     preservation = db.relationship('Preservation', back_populates='individ')
-    file = db.relationship('File', back_populates='individ')
+    file = db.relationship('File', back_populates='individ', cascade='all, delete-orphan')
     grave = db.relationship('Grave', back_populates='individ')
 
     def create_index(self):
