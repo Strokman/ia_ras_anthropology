@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template, flash, jsonify, request, current_app
+from flask import redirect, url_for, render_template, flash, jsonify, send_file, request, current_app, send_from_directory
 from flask_login import login_required, current_user
 from anthropos import db
 from .forms import IndividForm
@@ -7,6 +7,7 @@ from anthropos.models import Grave, Individ, Comment, File
 from datetime import datetime
 from sqlalchemy import select
 from os import path, remove
+from io import BytesIO
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
@@ -60,7 +61,7 @@ def individ():
         if file := form.file.data:
             extension = file.filename.rsplit('.', 1)[1].lower()
             if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                filename = individ.index + '.' + extension
+                filename = f'{individ.index}.{extension}'
                 saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(saving_path)
             file = File(path=saving_path, filename=filename)
@@ -107,7 +108,6 @@ def edit_individ(individ_id):
         individ.grave.niveau_point=form.data.get('niveau_point', None)
         individ.grave.tachymeter_point=form.data.get('tachymeter_point', None)
         individ.grave.skeleton=form.data.get('skeleton', None)
-        # individ.grave.site_id=form.data.get('site').id if form.data.get('site') else None
         individ.comment.text = form.comment.data
         individ.year=form.data.get('year', None)
         individ.age_min=form.data.get('age_min', None)
@@ -124,7 +124,7 @@ def edit_individ(individ_id):
             remove(individ.file.path)
             extension = file.filename.rsplit('.', 1)[1].lower()
             if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                filename = individ.index + '.' + extension
+                filename = f'{individ.index}.{extension}'
                 save_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(save_path)
                 individ.file.path = save_path
@@ -171,3 +171,8 @@ def edit_individ(individ_id):
     # db.session.execute(stmt)
     # db.session.commit()
     return render_template('individ/submit_individ.html', form=form)
+
+
+@bp.route('/file/<filename>')
+def file(filename):
+    return send_file(path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename))

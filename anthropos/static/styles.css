@@ -44,3 +44,8 @@ body {
    -moz-transition: opacity 1s ease-in;
    -webkit-transition: opacity 1s ease-in;
 }
+
+.modal-body {
+  height: 80vh;
+  overflow-y: auto;
+}
