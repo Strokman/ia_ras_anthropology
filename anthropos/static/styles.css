@@ -49,3 +49,8 @@ body {
   height: 80vh;
   overflow-y: auto;
 }
+
+
+.clickable-row {
+  cursor: pointer;
+}

@@ -38,4 +38,4 @@ class Individ(db.Model, BaseModel):
             self.index = f'{self.site.name}-{self.year}-{self.grave.grave_number}'
 
     def __repr__(self):
-        return {self.index}
+        return f'{self.index}'
