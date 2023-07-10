@@ -12,78 +12,18 @@ from sqlalchemy import delete, select
 @bp.route('/')
 @bp.route('/index')
 def index():
-    stmt = delete(Individ).where(Individ.id==3)
-    individ = db.session.scalars(select(Individ).where(Individ.id==4)).first()
-    db.session.delete(individ)
-    db.session.commit()
-    # db.session.execute(stmt)
-    # user = current_user
-    # print(reser)
-    # site = db.session.query(ArchaeologicalSite).first()
-    # print(reser.sites)
-    # db.session.delete(reser)
-    # db.session.commit
-    # print(reser)
-    # stmt = delete(Researcher).where(Researcher.id==reser.id)
-    # print(stmt)
-    # db.session.execute(stmt)
-    # db.session.commit()
-    # print(reser)
-    # """ДОБАВЛЕНИЕ ЭПОХ"""
-    # epochs = ["Палеолит",
-    #             "Мезолит",
-    #             "Неолит",
-    #             "Энеолит",
-    #             "Ранний бронзовый век",
-    #             "Средний бронзовый век",
-    #             "Поздний бронзовый век",
-    #             "Ранний железный век",
-    #             "Античное время",
-    #             "Эпоха переселения народов",
-    #             "Раннее средневековье",
-    #             "Развитое средневековье",
-    #             "Позднее средневековье",
-    #             "Новое время"]
-    # for i in epochs:
-    #     epoch = Epoch(name=i)
-    #     db.session.add(epoch)
+    # stmt = delete(Individ).where(Individ.id==3)
+    # individ = db.session.scalars(select(Individ).where(Individ.id==4)).first()
+    # db.session.delete(individ)
     # db.session.commit()
 
-    # """ДОБАВЛЕНИЕ РЕГИОНОВ И ФО"""
-    # fo = set()
-    # reg = dict()
-    # with open('/Users/antonstrokov/PycharmProjects/ia_ras_anthropology/region.csv', 'r') as f:
-    #     a = DictReader(f, delimiter=',')
-    #     for i in a:
-    #         if i['federal_district']:
-    #             fo.add(i['federal_district'])
-    #         if i['name_with_type']:
-    #             reg.setdefault(i['name_with_type'], i['federal_district'])
+    site = db.session.scalars(select(ArchaeologicalSite).where(ArchaeologicalSite.id==6)).first()
+    print(site.individ)
+    site = db.session.scalars(select(ArchaeologicalSite).where(ArchaeologicalSite.id==5)).first()
+    print(site.individ)
+    individ = db.session.scalars(select(Individ).where(Individ.id==15)).first()
+    for k in individ.grave.__dict__:
 
-    # for dictrict in fo:
-    #     dist = FederalDistrict(name=dictrict)
-    #     db.session.add(dist)
-    # db.session.commit()
-    # for k, v in reg.items():
-    #     if v:
-    #         region = Region(name=k, federal_districts_id=db.session.query(FederalDistrict).filter_by(name=v).first().id)
-    #         db.session.add(region)
-    # db.session.commit()
-
-
-    # """ДОБАВЛЕНИЕ ПОЛА"""
-    # sex = ('не определен', 'мужской', 'женский')
-    # for i in sex:
-    #     b = Sex(sex=i)
-    #     b.save_to_db(db.session)
-
-
-    # """ДОБАВЛЕНИЕ СОХРАННОСТИ"""
-    # preservation_rates = ('плохая', 'удовлетворительная', 'средняя', 'хорошая')
-    # for i in preservation_rates:
-    #     d = Preservation(i)
-    #     db.session.add(d)
-    # db.session.commit()
-
+        print(individ.grave.__dict__[k])
     flash('Hello', 'success')
     return render_template('index/index.html', title='Index')

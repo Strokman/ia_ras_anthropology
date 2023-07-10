@@ -20,6 +20,7 @@ class Grave(db.Model, BaseModel):
     niveau_point = db.Column(db.Integer)
     tachymeter_point = db.Column(db.Integer)
     skeleton = db.Column(db.String(32))
+    individ_id = db.Column(db.Integer, db.ForeignKey('individs.id'))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
 
     individ = db.relationship('Individ', back_populates='grave')

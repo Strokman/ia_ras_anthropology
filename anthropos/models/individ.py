@@ -16,7 +16,7 @@ class Individ(db.Model, BaseModel):
     created_at = db.Column(db.DateTime, nullable=False)
     edited_at = db.Column(db.DateTime)
     sex_type = db.Column(db.String, db.ForeignKey('sex.sex'))
-    grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'))
+    # grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
     created_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     edited_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
@@ -28,11 +28,14 @@ class Individ(db.Model, BaseModel):
     editor = db.relationship("DatabaseUser", foreign_keys='Individ.edited_by', back_populates='individs_edited')
     sex = db.relationship('Sex', back_populates='individ')
     preservation = db.relationship('Preservation', back_populates='individ')
-    file = db.relationship('File', back_populates='individ', cascade='all, delete-orphan')
-    grave = db.relationship('Grave', back_populates='individ')
+    file = db.relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
+    grave = db.relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')
 
     def create_index(self):
-        self.index = f'{self.site.name[:4]}/{self.year}/{self.grave.grave_number}'
+        if self.grave.type == 'курганный':
+            self.index = f'{self.site.name}-{self.year}-к.{self.grave.kurgan_number}-погр.{self.grave.grave_number}'
+        else:
+            self.index = f'{self.site.name}-{self.year}-погр.{self.grave.grave_number}'
 
     def __repr__(self):
-        return f'{self.index}:{self.sex}:{self.age_min}-{self.age_max}'
+        return {self.index}

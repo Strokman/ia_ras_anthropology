@@ -1,14 +1,13 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from flask_login import LoginManager
 from flask_migrate import Migrate
-from flask_admin import Admin
 from flask_mail import Mail
-from flask_session import Session
+# from flask_session import Session
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
-
+from anthropos.extensions import login, admin, db, sess
+from flask_admin.contrib.sqla import ModelView
+from anthropos.models import *
 
 # import logging
 # from logging.config import dictConfig
@@ -40,19 +39,21 @@ from flask_moment import Moment
 
 # app = Flask(__name__)
 # app.config.from_object(Config)
+
+
 mail = Mail()
-admin = Admin(name='strokoff', template_mode='bootstrap3')
+# db = SQLAlchemy()
 bootstrap = Bootstrap5()
 moment = Moment()
-sess = Session()
 
-db = SQLAlchemy()
+
+# admin = Admin(name='strokoff', template_mode='bootstrap3')
 migrate = Migrate()
 
-login = LoginManager()
-login.login_view = 'auth.login'
-login.login_message = 'Please login to access this page'
-login.login_message_category = "info"
+# login = LoginManager()
+# login.login_view = 'auth.login'
+# login.login_message = 'Please login to access this page'
+# login.login_message_category = "info"
 
 
 def create_app(config_class=Config):
@@ -67,8 +68,12 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
     admin.init_app(app)
+    admin.add_view(ModelView(DatabaseUser, db.session))
+    admin.add_view(ModelView(ArchaeologicalSite, db.session))
+    admin.add_view(ModelView(Region, db.session))
+    admin.add_view(ModelView(Epoch, db.session))
     sess.init_app(app)
-
+    
     from anthropos.site import bp as site_bp
     app.register_blueprint(site_bp, url_prefix='/site')
 

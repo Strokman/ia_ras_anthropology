@@ -1,4 +1,4 @@
-from anthropos import db, login
+from anthropos.extensions import login, db
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin

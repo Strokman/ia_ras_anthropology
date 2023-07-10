@@ -34,7 +34,9 @@ body {
        }
 
 
-
+#logo {
+  margin: 10px
+}
 
 .show {
    opacity: 1;

@@ -17,6 +17,7 @@
             <th class="text-end">Researcher</th>
             <th class="text-end">Добавлено</th>
             <th class="text-end">Сохранность</th>
+            <th class="text-end">Файл</th>
             <th class="text-end"></th>
             <th class="text-end"></th>
             
@@ -35,6 +36,7 @@
                 <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
                 <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>
+                <td class="text-end"><a href="#" class="btn btn-primary" tabindex="-1" role="button">Скачать</a></td>
                 <td>
                     <a href="{{url_for('individ.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Ред</a>
                     </td>

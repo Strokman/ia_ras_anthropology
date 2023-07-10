@@ -3,11 +3,10 @@ from flask_login import login_required, current_user
 from anthropos import db
 from .forms import IndividForm
 from anthropos.individ import bp
-from anthropos.models import Grave, Individ, Comment
+from anthropos.models import Grave, Individ, Comment, File
 from datetime import datetime
-from sqlalchemy import select, delete
-from os import path
-from werkzeug.utils import secure_filename
+from sqlalchemy import select
+from os import path, remove
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
@@ -36,12 +35,6 @@ def individ():
         comment = Comment(text=form.comment.data)
         comment.save_to_db(db.session)
 
-        file = form.file.data
-        if '.' in file.filename and \
-           file.filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']:
-            filename = secure_filename(file.filename)
-            file.save(path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename))
-
 
         individ = Individ(
             year=form.data.get('year', None),
@@ -50,15 +43,33 @@ def individ():
             site_id=form.data.get('site', None).id,
             preservation_id=form.data.get('preservation', None),
             type=form.data.get('type', None),
-            grave_id=grave.id,
             sex_type=form.data.get('sex', None).sex,
             created_at=datetime.utcnow(),
-            created_by=current_user.id
+            created_by=current_user.id,
+            edited_at=datetime.utcnow(),
+            edited_by=current_user.id,
         )
         individ.save_to_db(db.session)
+
+        individ.grave = grave
         individ.comment = comment
+
         individ.create_index()
+
+        
+        if file := form.file.data:
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
+                filename = individ.index + '.' + extension
+                saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(saving_path)
+            file = File(path=saving_path, filename=filename)
+            file.save_to_db(db.session)
+
+            individ.file = file
+
         db.session.commit()
+
         flash('Successfully added', 'success')
         return redirect(url_for('individ.individ'))
     return render_template('individ/submit_individ.html', form=form)
@@ -68,8 +79,10 @@ def individ():
 @login_required
 def delete_individ(individ_id):
     individ = db.session.scalars(select(Individ).where(Individ.id==individ_id)).first()
+    remove(individ.file.path)
     db.session.delete(individ)
     db.session.commit()
+    flash('Запись удалена', 'warning')
     return redirect(request.referrer)
 
 
@@ -78,43 +91,8 @@ def delete_individ(individ_id):
 def edit_individ(individ_id):
     individ = db.session.get(Individ, individ_id)
     form = IndividForm()
-    grave: Grave = individ.grave
-    grave.grave_number = 121321
-    individ.grave.grave_number = 123
-    new_grave = db.session.query(Grave).filter_by(id=4).first_or_404()
-    new_grave.individ.append(individ)
 
-    db.session.commit()
-    print(new_grave.individ)
-    try:
-        form.site.data = individ.site
-        form.sex.data = individ.sex
-        form.type.data = individ.type
-        form.age_min.data = individ.age_min
-        form.age_max.data = individ.age_max
-        form.year.data = individ.year
-        form.preservation.data = individ.preservation.id
-        form.grave_type.data = individ.grave.type
-        form.kurgan_number.data = individ.grave.kurgan_number
-        form.grave_number.data = individ.grave.grave_number
-        form.catacomb.data = individ.grave.catacomb
-        form.chamber.data = individ.grave.chamber
-        form.trench.data = individ.grave.trench
-        form.area.data = individ.grave.area
-        form.object.data = individ.grave.object
-        form.chamber.data = individ.grave.chamber
-        form.layer.data = individ.grave.layer
-        form.layer.data = individ.grave.layer
-        form.square.data = individ.grave.square
-        form.sector.data = individ.grave.sector
-        form.niveau_point.data = individ.grave.niveau_point
-        form.tachymeter_point.data = individ.grave.tachymeter_point
-        form.skeleton.data = individ.grave.skeleton
-        form.comment.data = individ.comment.text
-        form.file.data = individ.file.filename
-    except AttributeError:
-        pass
-    if form.validate_on_submit():
+    if request.method == 'POST' and form.validate_on_submit():
         individ.grave.type=form.data.get('grave_type', None)
         individ.grave.kurgan_number=form.data.get('kurgan_number', None)
         individ.grave.grave_number=form.data.get('grave_number', None)
@@ -129,19 +107,60 @@ def edit_individ(individ_id):
         individ.grave.niveau_point=form.data.get('niveau_point', None)
         individ.grave.tachymeter_point=form.data.get('tachymeter_point', None)
         individ.grave.skeleton=form.data.get('skeleton', None)
-        individ.grave.site_id=form.data.get('site').id if form.data.get('site') else None
+        # individ.grave.site_id=form.data.get('site').id if form.data.get('site') else None
         individ.comment.text = form.comment.data
         individ.year=form.data.get('year', None)
         individ.age_min=form.data.get('age_min', None)
         individ.age_max=form.data.get('age_max', None)
-        individ.site_id=form.data.get('site', None).id
         individ.preservation_id=form.data.get('preservation', None)
         individ.type=form.data.get('type', None)
-        individ.sex_type=form.data.get('sex', None).sex
-        individ.created_at=datetime.utcnow()
-        individ.created_by=current_user.id
+        individ.edited_at=datetime.utcnow()
+        individ.edited_by=current_user.id
+        form.sex.data.individ.append(individ)
+        if individ.site != (site := form.site.data):
+            site.individ.append(individ)
+        individ.create_index()
+        if file := form.file.data:
+            remove(individ.file.path)
+            extension = file.filename.rsplit('.', 1)[1].lower()
+            if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
+                filename = individ.index + '.' + extension
+                save_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+                file.save(save_path)
+                individ.file.path = save_path
+                individ.file.filename = filename
         db.session.commit()
-        return redirect(request.referrer)
+        flash('Изменения сохранены', 'success')
+        return redirect(url_for('submit.data'))
+    elif request.method == 'GET':
+        try:
+            form.submit.label.text = 'Редактировать'
+            form.site.data = individ.site
+            form.sex.data = individ.sex
+            form.type.data = individ.type
+            form.age_min.data = individ.age_min
+            form.age_max.data = individ.age_max
+            form.year.data = individ.year
+            form.preservation.data = individ.preservation.id
+            form.grave_type.data = individ.grave.type
+            form.kurgan_number.data = individ.grave.kurgan_number
+            form.grave_number.data = individ.grave.grave_number
+            form.catacomb.data = individ.grave.catacomb
+            form.chamber.data = individ.grave.chamber
+            form.trench.data = individ.grave.trench
+            form.area.data = individ.grave.area
+            form.object.data = individ.grave.object
+            form.chamber.data = individ.grave.chamber
+            form.layer.data = individ.grave.layer
+            form.layer.data = individ.grave.layer
+            form.square.data = individ.grave.square
+            form.sector.data = individ.grave.sector
+            form.niveau_point.data = individ.grave.niveau_point
+            form.tachymeter_point.data = individ.grave.tachymeter_point
+            form.skeleton.data = individ.grave.skeleton
+            form.comment.data = individ.comment.text
+        except AttributeError:
+            pass
     # print(type(individ.site))
     # form.site.data=individ.site,
     # form.year.data=individ.year,
@@ -151,4 +170,4 @@ def edit_individ(individ_id):
     # stmt = delete(Individ).where(Individ.id==individ_id)
     # db.session.execute(stmt)
     # db.session.commit()
-    return render_template('edit_individ.html', form=form, individ=individ)
+    return render_template('individ/submit_individ.html', form=form)
