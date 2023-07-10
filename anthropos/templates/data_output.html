@@ -25,7 +25,7 @@
     </thead>
     <tbody>
         {% for individ in individs %}
-            <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#FILE">
+            <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#{{individ.id}}">
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>
                 <td class="text-end">{{ individ.age_min }} - {{ individ.age_max }}</td>
@@ -37,7 +37,7 @@
                 <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>
                 <td class="text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FILE">
-                    KEK
+                    File
                   </button></td>
                 <td>
                     <a href="{{url_for('individ.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Ред</a>
@@ -61,6 +61,10 @@
                   </div>
                 </div>
               </div>
+
+{% with individ=individ %}
+{% include "_modal_table.html" %}
+{% endwith %}
             {% endfor %}
 
 {% endblock %}
