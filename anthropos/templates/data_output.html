@@ -2,25 +2,21 @@
 {% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
 
 {% block app_content %}
-
-
-<table class="table table-border">
+<h1>Индивиды</h1>
+<div class="container-fluid">
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th class="text-start">Index</th>
-            <th class="text-end">Памятник</th>
-            <th class="text-end">Возраст</th>
-            <th class="text-end">Пол</th>
-            <th class="text-end">Обряд</th>
-            <th class="text-end">Location</th>
-            <th class="text-end">Epoch</th>
-            <th class="text-end">Researcher</th>
-            <th class="text-end">Добавлено</th>
-            <th class="text-end">Сохранность</th>
-            <th class="text-end">Файл</th>
-            <th class="text-end"></th>
-            <th class="text-end"></th>
-            
+            <th class="text-start" click>Index</th>
+            <th class="text-end" click>Памятник</th>
+            <th class="text-end" click>Возраст</th>
+            <th class="text-end" click>Пол</th>
+            <th class="text-end" click>Обряд</th>
+            <th class="text-end" click>Location</th>
+            <th class="text-end" click>Epoch</th>
+            <th class="text-end" click>Researcher</th>
+            <th class="text-end" click>Добавлено</th>
+            <th class="text-end" click>Сохранность</th>
         </tr>
     </thead>
     <tbody>
@@ -36,35 +32,19 @@
                 <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
                 <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>
-                <td class="text-end"><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#FILE">
-                    File
-                  </button></td>
-                <td>
-                    <a href="{{url_for('individ.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Ред</a>
-                    </td>
-                </td>
-                <td>
-                <a href="{{url_for('individ.delete_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
-                </td>
             </tr>
 
-            <div class="modal fade" id="FILE" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit profile</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                            <embed height="100%" width="100%" src="{{url_for('individ.file', filename=individ.file.filename)}}" frameborder="0" width="100%" height="400px">
-                    </div>
-                  </div>
-                </div>
-              </div>
 
 {% with individ=individ %}
 {% include "_modal_table.html" %}
+{% include "_modal_file.html" %}
 {% endwith %}
             {% endfor %}
-
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='sort_table.js')}}"></script>
 {% endblock %}

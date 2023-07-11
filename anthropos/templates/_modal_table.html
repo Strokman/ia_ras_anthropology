@@ -1,20 +1,34 @@
 
   <!-- Modal -->
   <div class="modal fade" id="{{individ.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="staticBackdropLabel">Edit profile</h1>
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">{{individ.index}}</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <ul class="list-group">
-          {% for k, v in individ.as_dict().items()%}
-         
-            <li class="list-group-item"><strong>{{k}}:</strong> {{v}} </li>
-         
-          {% endfor %}
-        </ul>
+
+                {% for k, v in individ.as_dict().items()%}
+                <div class="container text-start">
+                <div class="row justify-content-start">
+                  <div class="col">
+                  <strong>{{k}}:</strong> 
+                </div>
+                <div class="col">
+                  {{v}}
+                </div>
+              </div>
+            </div>
+                {% endfor %}
+          
+
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{individ.file.id}}">Файл</button>
+          <a href="{{url_for('individ.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Редактировать</a>
+          <a href="{{url_for('individ.delete_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
         </div>
       </div>
     </div>

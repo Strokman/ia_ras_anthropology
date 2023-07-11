@@ -131,7 +131,7 @@ def edit_individ(individ_id):
                 individ.file.filename = filename
         db.session.commit()
         flash('Изменения сохранены', 'success')
-        return redirect(url_for('submit.data'))
+        return redirect(request.referrer)
     elif request.method == 'GET':
         try:
             form.submit.label.text = 'Редактировать'

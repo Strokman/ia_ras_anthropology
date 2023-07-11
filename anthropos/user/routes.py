@@ -3,8 +3,8 @@ from flask import redirect, url_for, flash, render_template, jsonify, request
 from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required, Epoch
 from anthropos import db
 from anthropos.user.forms import EditProfileForm
-from anthropos.submit_data.forms import IndividForm
-from anthropos.submit_data.forms import ArchaeologicalSiteForm
+from anthropos.data.forms import IndividForm
+from anthropos.data.forms import ArchaeologicalSiteForm
 from anthropos.user import bp
 from datetime import datetime
 

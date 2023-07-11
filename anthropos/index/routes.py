@@ -17,13 +17,11 @@ def index():
     # db.session.delete(individ)
     # db.session.commit()
 
-    site = db.session.scalars(select(ArchaeologicalSite).where(ArchaeologicalSite.id==6)).first()
-    print(site.individ)
-    site = db.session.scalars(select(ArchaeologicalSite).where(ArchaeologicalSite.id==5)).first()
-    print(site.individ)
-    individ = db.session.scalars(select(Individ).where(Individ.id==15)).first()
-    for k in individ.grave.__dict__:
-
-        print(individ.grave.__dict__[k])
+    individs = db.session.scalars(select(Individ)).all()
+    individs = enumerate(sorted(Individ.get_all(db.session), key=lambda x: x.index))
+    
+    # for i in individs:
+    #     for k, v in i:
+    #         print(k)
     flash('Hello', 'success')
     return render_template('index/index.html', title='Index')

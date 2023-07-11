@@ -45,12 +45,16 @@ body {
    -webkit-transition: opacity 1s ease-in;
 }
 
-.modal-body {
+.file {
   height: 80vh;
   overflow-y: auto;
 }
 
 
 .clickable-row {
+  cursor: pointer;
+}
+
+th {
   cursor: pointer;
 }
