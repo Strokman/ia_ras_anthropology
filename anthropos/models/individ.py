@@ -16,7 +16,6 @@ class Individ(db.Model, BaseModel):
     created_at = db.Column(db.DateTime, nullable=False)
     edited_at = db.Column(db.DateTime)
     sex_type = db.Column(db.String, db.ForeignKey('sex.sex'))
-    # grave_id = db.Column(db.Integer, db.ForeignKey('graves.id'))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
     created_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     edited_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))

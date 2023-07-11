@@ -9,19 +9,28 @@
         </div>
         <div class="modal-body">
 
-                {% for k, v in individ.as_dict().items()%}
                 <div class="container text-start">
                 <div class="row justify-content-start">
                   <div class="col">
-                  <strong>{{k}}:</strong> 
+                  <strong>ID:</strong> 
                 </div>
                 <div class="col">
-                  {{v}}
+                  {{individ.id}}
+                </div>
+
+                <div class="row justify-content-start">
+                <div class="col">
+                  <strong>Epochs:</strong> 
+                </div>
+                <div class="col">
+                  <ul>
+                  {% for epoch in individ.site.epochs %}<li>{{ epoch }}</li>{% endfor %}
+                  </ul>
+                </div>
                 </div>
               </div>
             </div>
-                {% endfor %}
-          
+                        
 
           
         </div>

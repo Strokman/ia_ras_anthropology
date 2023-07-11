@@ -7,21 +7,18 @@ from flask import flash, render_template, url_for
 # from anthropos.models import Epoch, FederalDistrict, Region, Sex, Preservation
 # from csv import DictReader
 from anthropos.models import Researcher, ArchaeologicalSite, Individ, Comment
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, or_, and_
 
 @bp.route('/')
 @bp.route('/index')
 def index():
-    # stmt = delete(Individ).where(Individ.id==3)
-    # individ = db.session.scalars(select(Individ).where(Individ.id==4)).first()
-    # db.session.delete(individ)
-    # db.session.commit()
-
-    individs = db.session.scalars(select(Individ)).all()
-    individs = enumerate(sorted(Individ.get_all(db.session), key=lambda x: x.index))
-    
-    # for i in individs:
-    #     for k, v in i:
-    #         print(k)
+    subq = select(ArchaeologicalSite).where(ArchaeologicalSite.researcher_id==2).subquery()
+    stmt = select(Individ).join(subq, Individ.site_id==subq.c.id)
+    b = db.session.execute(stmt).all()
+    print(b)
+    res_id = 3
+    stmt = select(Individ).join(ArchaeologicalSite, and_(ArchaeologicalSite.researcher_id==res_id))
+    b = db.session.execute(stmt).all()
+    print(b)
     flash('Hello', 'success')
     return render_template('index/index.html', title='Index')

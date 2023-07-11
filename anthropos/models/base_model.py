@@ -7,6 +7,7 @@ class BaseModel:
     @classmethod
     def get_all(cls, session: Session):
         return session.execute(select(cls)).scalars().all()
+        # return session.scalars(select(cls))
 
     def save_to_db(self, session: Session):
         session.add(self)
