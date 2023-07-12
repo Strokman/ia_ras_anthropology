@@ -18,7 +18,10 @@ class ArchaeologicalSite(db.Model, BaseModel):
 
     owner = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.creator_id", back_populates='sites_created')
     editor = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.editor_id", back_populates='sites_edited')
-    epochs = db.relationship("Epoch", secondary=sites_epochs, back_populates='sites')
+    epochs = db.relationship("Epoch", secondary=sites_epochs,
+                             primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
+        secondaryjoin= 'Epoch.id==sites_epochs.c.epoch_id',
+          back_populates='sites')
     researcher = db.relationship("Researcher", back_populates='sites')
     regions = db.relationship('Region', back_populates='sites')
     individ = db.relationship("Individ", back_populates='site')

@@ -46,7 +46,6 @@ mail = Mail()
 bootstrap = Bootstrap5()
 moment = Moment()
 
-
 # admin = Admin(name='strokoff', template_mode='bootstrap3')
 migrate = Migrate()
 

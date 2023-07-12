@@ -2,10 +2,10 @@
 {% from 'bootstrap5/form.html' import render_form, render_field, render_hidden_errors %}
 {% block buttons %}
 <div class="row">
-    <div class="col-2">
+    <div class="col">
         {% if form %}
         {% with form=form %}
-        {% include "_form.html" %}
+        {{render_form(form, method='get')}}
         {% endwith %}
         {% else %}
         KUk
