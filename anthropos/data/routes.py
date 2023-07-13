@@ -91,6 +91,6 @@ def search():
         if g := args_dict.get('preservation'):
             stmt = stmt.where(getattr(Preservation, 'id').in_(g))
         print(stmt)
-        individs=db.session.scalars(stmt).all()
+        individs=db.session.scalars(stmt.group_by(Individ.id)).all()
         return render_template('data_output.html', individs=individs, form=form)
     return redirect(url_for('data.individ_data'))
