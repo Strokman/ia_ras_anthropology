@@ -27,4 +27,6 @@ class Grave(db.Model, BaseModel):
     site = db.relationship('ArchaeologicalSite', back_populates='graves')
 
     def __repr__(self):
-        return f'{self.site.name}/{self.grave_number}/{self.type}'
+        if self.kurgan_number:
+            return f'к.{self.kurgan_number}/п.{self.grave_number}'
+        return f'п.{self.grave_number}'

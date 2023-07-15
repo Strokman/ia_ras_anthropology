@@ -10,3 +10,6 @@ class Comment(db.Model, BaseModel):
 
 
     individ = db.relationship('Individ', back_populates='comment')
+
+    def __repr__(self):
+        return f'{self.text}'

@@ -15,4 +15,4 @@ class Region(db.Model, BaseModel):
     # individ = relationship('Individ', back_populates='region')
 
     def __repr__(self):
-        return f'{self.name} part of {self.federal_district}'
+        return f'{self.name}'
