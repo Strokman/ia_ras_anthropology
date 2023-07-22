@@ -6,7 +6,7 @@ class Grave(db.Model, BaseModel):
     __tablename__ = 'graves'
 
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(32))
+    grave_type = db.Column(db.String(32))
     kurgan_number = db.Column(db.String(32))
     grave_number = db.Column(db.Integer)
     catacomb = db.Column(db.Integer)

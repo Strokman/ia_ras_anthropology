@@ -54,7 +54,7 @@
     </thead>
     <tbody>
         {% for individ in individs %}
-            <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#{{individ.id}}">
+            <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#individ{{individ.id}}">
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>
                 <td class="text-end">{{ individ.age_min }} - {{ individ.age_max }}</td>

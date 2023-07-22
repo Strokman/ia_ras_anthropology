@@ -62,7 +62,7 @@
         </div>
     </nav>
     {% block content %}
-    <div class="container text-center">
+    <div class="container-fluid text-center">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category, message in messages %}
@@ -74,7 +74,7 @@
                 </button>
             </div>
         </div>
-    </div>
+    
         {% endfor %}
         {% endif %}
         {% endwith %}
@@ -83,7 +83,7 @@
 
         
         {% block app_content %}{% endblock %}
-
+    </div>
         
         {% endblock %}
     

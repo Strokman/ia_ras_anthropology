@@ -15,7 +15,7 @@ def individ():
     form = IndividForm()
     if form.validate_on_submit():
         grave = Grave(
-            type=form.data.get('grave_type', None),
+            grave_type=form.data.get('grave_type', None),
             kurgan_number=form.data.get('kurgan_number', None),
             grave_number=form.data.get('grave_number', None),
             catacomb=form.data.get('catacomb', None),
@@ -94,7 +94,7 @@ def edit_individ(individ_id):
     form = IndividForm()
 
     if request.method == 'POST' and form.validate_on_submit():
-        individ.grave.type=form.data.get('grave_type', None)
+        individ.grave.grave_type=form.data.get('grave_type', None)
         individ.grave.kurgan_number=form.data.get('kurgan_number', None)
         individ.grave.grave_number=form.data.get('grave_number', None)
         individ.grave.catacomb=form.data.get('catacomb', None)
@@ -121,14 +121,26 @@ def edit_individ(individ_id):
             site.individ.append(individ)
         individ.create_index()
         if file := form.file.data:
-            remove(individ.file.path)
-            extension = file.filename.rsplit('.', 1)[1].lower()
-            if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                filename = f'{individ.index}.{extension}'
-                save_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
-                file.save(save_path)
-                individ.file.path = save_path
-                individ.file.filename = filename
+            if individ.file != None:
+                remove(individ.file.path)
+                extension = file.filename.rsplit('.', 1)[1].lower()
+                if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
+                    filename = f'{individ.index}.{extension}'
+                    save_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(save_path)
+                    individ.file.path = save_path
+                    individ.file.filename = filename
+            else:
+                extension = file.filename.rsplit('.', 1)[1].lower()
+                if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
+                    filename = f'{individ.index}.{extension}'
+                    saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+                    file.save(saving_path)
+                file = File(path=saving_path, filename=filename)
+                file.save_to_db(db.session)
+
+                individ.file = file
+
         db.session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(request.referrer)
@@ -142,7 +154,7 @@ def edit_individ(individ_id):
             form.age_max.data = individ.age_max
             form.year.data = individ.year
             form.preservation.data = individ.preservation.id
-            form.grave_type.data = individ.grave.type
+            form.grave_type.data = individ.grave.grave_type
             form.kurgan_number.data = individ.grave.kurgan_number
             form.grave_number.data = individ.grave.grave_number
             form.catacomb.data = individ.grave.catacomb
