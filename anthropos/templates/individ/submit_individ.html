@@ -17,9 +17,12 @@
 
         </div>
                 <div class="col">
+                    <p>Возраст</p>
                     <div class="input-group">
-                        {{ render_field(form.age_min) }} 
-                    {{ render_field(form.age_max) }}
+                        <span class="input-group-text">мин</span>
+                        {{ form.age_min(class='form-control') }} 
+                        <span class="input-group-text">макс</span>
+                        {{ form.age_max(class='form-control') }}
                     </div>
     {{ render_field(form.sex) }}        
     {{ render_field(form.file) }} 
