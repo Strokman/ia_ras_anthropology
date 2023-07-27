@@ -1,11 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DecimalField, SelectField, IntegerField, SelectMultipleField
 from wtforms.validators import Optional
-from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
-from wtforms_sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
+from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from anthropos.models import FederalDistrict, Epoch, Researcher, Sex, Preservation, DatabaseUser, ArchaeologicalSite
 from anthropos import db
-from anthropos.site.forms import NonValidatingSelectField
 
 
 class FilterForm(FlaskForm):

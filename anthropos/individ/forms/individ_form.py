@@ -3,7 +3,7 @@ from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
 from wtforms.validators import DataRequired, NumberRange, Optional
-from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
+from ...lib.validators import CleanString, DataRequiredImproved
 from anthropos.models import ArchaeologicalSite, Sex, Epoch
 from anthropos import db
 

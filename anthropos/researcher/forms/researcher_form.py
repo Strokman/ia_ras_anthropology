@@ -4,15 +4,15 @@ from wtforms.validators import Length
 from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
-from anthropos.lib.validators import CleanString, OnlyCharsValidator, DataRequiredImproved
+from anthropos.lib.validators import CleanName, OnlyCharsValidator, DataRequiredImproved
 from flask import url_for
 
 
 class ResearcherForm(FlaskForm):
 
-    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanString(), OnlyCharsValidator()])
-    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanString(), OnlyCharsValidator()])
-    middle_name = StringField(label='Middle Name', validators=[CleanString(), OnlyCharsValidator()])
+    last_name = StringField(label='Last Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
+    first_name = StringField(label='First Name', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
+    middle_name = StringField(label='Middle Name', validators=[CleanName(), OnlyCharsValidator()])
     affiliation = StringField(label='Affiliation', validators=[Length(min=2, max=50), DataRequiredImproved()])
     submit = SubmitField(label='Добавить исследователя')
 
