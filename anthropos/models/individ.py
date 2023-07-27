@@ -38,3 +38,15 @@ class Individ(db.Model, BaseModel):
 
     def __repr__(self):
         return f'{self.index}'
+    
+    def table_view_russian(self):
+        return {
+            'ID': self.id,
+            'Индекс': self.index,
+            'Год': self.year,
+            'Памятник': self.site,
+            'Регион': self.site.regions,
+            'Исследователь': self.site.researcher,
+            # 'Тип погребения': self.grave.grave_type,
+            'Возраст': f'{self.age_min} - {self.age_max}'
+        }

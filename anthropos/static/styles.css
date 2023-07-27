@@ -55,6 +55,10 @@ body {
   cursor: pointer;
 }
 
+.modal-body div.col {
+  border:0.5px solid black;
+}
+
 th {
   cursor: pointer;
 }

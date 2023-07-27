@@ -13,11 +13,8 @@ from anthropos.data.export_data import export_xls
 def individ_data():
     individs = Individ.get_all(db.session)
     form = FilterForm()
-    a = 'kek'
-    fn = 123
     if request.method == 'POST':
         file = export_xls(individs, current_app, export_name='all_individs')
-        aaa = export_xls(a, current_app, export_name=fn)
         return send_file(file, as_attachment=True)
     return render_template('data_output.html', individs=individs, form=form, action=url_for('data.individ_data'))
 

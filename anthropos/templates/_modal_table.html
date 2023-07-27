@@ -9,126 +9,19 @@
         </div>
         <div class="modal-body">
 
-                <div class="container text-start">
-                <div class="row justify-content-start">
-                  <div class="col">
-                  <strong>Индекс:</strong> 
-                </div>
-                <div class="col">
-                  {{individ.index}}
-                </div>
-              </div>
+                <div class="container text-start modal-with-borders">
+                    {% for key, value in individ.table_view_russian().items() %}
+                    <div class="row justify-content-start">
+                      <div class="col">
+                      <strong>{{ key }}:</strong> 
+                    </div>
+                    <div class="col">
+                      {{ value }}
+                    </div>
+                  </div>
+                  {% endfor %}
 
-              <div class="row justify-content-start">
-                <div class="col">
-                <strong>Год исследования:</strong> 
-              </div>
-              <div class="col">
-                {{individ.year}}
-              </div>
-            </div>
 
-            <div class="row justify-content-start">
-              <div class="col">
-              <strong>Памятник:</strong> 
-            </div>
-            <div class="col">
-              {{individ.site}}, {{ individ.grave }}
-            </div>
-          </div>
-
-          <div class="row justify-content-start">
-            <div class="col">
-            <strong>Регион:</strong> 
-          </div>
-          <div class="col">
-            {{individ.site.regions}}
-          </div>
-        </div>
-
-        <div class="row justify-content-start">
-          <div class="col">
-          <strong>Исследователь:</strong> 
-        </div>
-        <div class="col">
-          {{individ.site.researcher}}
-        </div>
-      </div>
-
-          <div class="row justify-content-start">
-            <div class="col">
-            <strong>Тип погребения:</strong> 
-          </div>
-          <div class="col">
-            {{individ.grave.type}}
-          </div>
-        </div>
-
-            <div class="row justify-content-start">
-              <div class="col">
-              <strong>Возраст:</strong> 
-            </div>
-            <div class="col">
-              {{individ.age_min}}-{{individ.age_max}}
-            </div>
-          </div>
-
-          <div class="row justify-content-start">
-            <div class="col">
-            <strong>Пол:</strong> 
-          </div>
-          <div class="col">
-            {{individ.sex}}
-          </div>
-        </div>
-
-          <div class="row justify-content-start">
-            <div class="col">
-            <strong>Обряд:</strong> 
-          </div>
-          <div class="col">
-            {{individ.type}}
-          </div>
-        </div>
-
-        <div class="row justify-content-start">
-          <div class="col">
-          <strong>Сохранность:</strong> 
-        </div>
-        <div class="col">
-          {{individ.preservation}}
-        </div>
-      </div>
-                <div class="row justify-content-start">
-                <div class="col">
-                  <strong>Эпохи:</strong> 
-                </div>
-                <div class="col">
-                  <ul class="list-group list-group-flush">
-                  {% for epoch in individ.site.epochs %}<li class="list-group-item">{{ epoch }}</li>{% endfor %}
-                  </ul>
-                </div>
-                </div>
-
-                <div class="row justify-content-start">
-                  <div class="col">
-                  <strong>Комментарий:</strong> 
-                </div>
-                <div class="col">
-                  {{individ.comment}}
-                </div>
-              </div>
-              
-                <div class="row justify-content-start">
-                  <div class="col">
-                  <strong>Последние изменения:</strong> 
-                </div>
-                <div class="col">
-                  {{individ.editor}}: {{ moment(individ.edited_at).format('L') }} {{ moment(individ.edited_at).format('LT') }}
-                </div>
-              </div>
-
-            </div>
                         
 
           
@@ -141,3 +34,4 @@
       </div>
     </div>
   </div>
+  </div>  
