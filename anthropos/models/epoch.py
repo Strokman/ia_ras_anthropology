@@ -12,6 +12,7 @@ class Epoch(db.Model, BaseModel):
     sites = db.relationship('ArchaeologicalSite', secondary=sites_epochs,
                             primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
         secondaryjoin= 'Epoch.id==sites_epochs.c.epoch_id', back_populates='epochs')
+    individ = db.relationship('Individ', back_populates='epoch', cascade='all, delete-orphan')
 
     def __init__(self, name):
         self.name = name

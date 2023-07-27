@@ -17,12 +17,14 @@ class Individ(db.Model, BaseModel):
     edited_at = db.Column(db.DateTime)
     sex_type = db.Column(db.String, db.ForeignKey('sex.sex'))
     site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
+    epoch_id = db.Column(db.Integer, db.ForeignKey('epochs.id'))
     created_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     edited_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
 
     site = db.relationship('ArchaeologicalSite', back_populates='individ')
     comment = db.relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
+    epoch = db.relationship('Epoch', uselist=False, back_populates='individ')
     creator = db.relationship("DatabaseUser", foreign_keys='Individ.created_by', back_populates='individs_created')
     editor = db.relationship("DatabaseUser", foreign_keys='Individ.edited_by', back_populates='individs_edited')
     sex = db.relationship('Sex', back_populates='individ')
@@ -38,15 +40,31 @@ class Individ(db.Model, BaseModel):
 
     def __repr__(self):
         return f'{self.index}'
+
+    def age(self):
+        if self.age_min and self.age_max:
+            return f'{self.age_min}-{self.age_max}'
+        if self.age_min:
+            return f'{self.age_min}+'
+        return ''
     
     def table_view_russian(self):
         return {
             'ID': self.id,
             'Индекс': self.index,
-            'Год': self.year,
+            'Год раскопок': self.year,
             'Памятник': self.site,
-            'Регион': self.site.regions,
-            'Исследователь': self.site.researcher,
-            # 'Тип погребения': self.grave.grave_type,
-            'Возраст': f'{self.age_min} - {self.age_max}'
+            'Погребение': self.grave,
+            'Федеральный округ': self.site.regions.federal_district,
+            'Область': self.site.regions,
+            'Долгота': self.site.long,
+            'Широта': self.site.lat,
+            'Автор': self.site.researcher,
+            'Тип погребения': self.grave.grave_type,
+            'Возраст': self.age(),
+            'Пол': self.sex.sex,
+            'Сохранность': self.preservation.description,
+            'Примечание': self.comment.text,
+            'Кем создано': self.creator,
+            'Кем изменено': self.editor
         }

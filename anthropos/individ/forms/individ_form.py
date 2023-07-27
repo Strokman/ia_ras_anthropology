@@ -2,9 +2,9 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import DataRequired, NumberRange, Optional
 from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
-from anthropos.models import ArchaeologicalSite, Sex, Researcher
+from anthropos.models import ArchaeologicalSite, Sex, Epoch
 from anthropos import db
 
 class IndividForm(FlaskForm):
@@ -15,15 +15,18 @@ class IndividForm(FlaskForm):
         self.sex.query = Sex.get_all(db.session)
         self.type.choices = ['ингумация', 'кремация']
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
+        self.epoch.query = Epoch.get_all(db.session)
+
 
     site = QuerySelectField('Памятник', allow_blank=True, blank_text='Выберите памятник', validators=[DataRequiredImproved()])
     
     year = IntegerField(label='Год')
     type = SelectField(label='Обряд')
-    age_min = IntegerField(label='Возраст мин', validators=[NumberRange(min=0, max=150)])
-    age_max = IntegerField(label='Возраст макс', validators=[NumberRange(min=0, max=150)])
+    age_min = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
+    age_max = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
     sex = QuerySelectField('Пол', allow_blank=True, blank_text='Выберите пол', validators=[DataRequiredImproved()])
     preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
+    epoch = QuerySelectField('Эпоха', allow_blank=True, blank_text='Выберите эпоху', validators=[DataRequiredImproved()])
     
     grave_type = SelectField(label='Тип погребения', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])
