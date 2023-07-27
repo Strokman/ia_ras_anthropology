@@ -60,7 +60,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
         self.middle_name: str = middle_name
 
     def send_confirmation_email(self):
-        link = request.url_root[:-1] + url_for('register.user_confirmation', username=self.username, token=self.token)
+        link = request.url_root[:-1] + url_for('auth.user_confirmation', username=self.username, token=self.token)
         MailgunEngine.send_confirmation_email(self.email, link)
 
     def check_password(self, password):

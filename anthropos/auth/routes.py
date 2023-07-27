@@ -30,7 +30,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index.index')
         return redirect(next_page)
-    return render_template('auth/login.html', title='Sign In', form=form)
+    return render_template('auth/login.html', title='Вход в систему', form=form)
 
 
 @bp.route('/logout')
@@ -60,7 +60,7 @@ def register():
         flash(f'Congratulations, {user.username} is now a registered user!', 'success')
         flash(f'Please confirm your account - check your mail', 'info')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', title='Register', form=form)
+    return render_template('auth/register.html', title='Регистрация', form=form)
 
 
 @bp.route('/user_confirmation/<username>/<token>')
@@ -85,7 +85,7 @@ def reset_password_request():
         flash('Check your email for the instructions to reset your password', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password_request.html',
-                           title='Reset Password', form=form)
+                           title='Восстановление пароля', form=form)
 
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -101,4 +101,4 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.', 'success')
         return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password.html', form=form)
+    return render_template('auth/reset_password.html', title='Восстановление пароля', form=form)

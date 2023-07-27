@@ -3,10 +3,14 @@
 {% block app_content %}
 
 {% if current_user.is_authenticated %}
-<h3>Hello {{current_user.username}}</h3>
+<div class="row">
+<h3>Добрый день, {{current_user.first_name}} {{current_user.middle_name}}!</h3>
+</div>
 {% else %}
-<h3>Hello, buddy</h3>
-
+<div class="row">
+<h3>Добрый день!</h3>
+<p>Для продолжения работы необходимо войти в систему</p>
+</div>
 {% endif %}
 
 {% endblock %}

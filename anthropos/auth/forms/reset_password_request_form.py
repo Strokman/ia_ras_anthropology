@@ -7,9 +7,9 @@ from anthropos.models import DatabaseUser
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
-    submit = SubmitField('Request Password Reset')
+    submit = SubmitField('Запросить изменение пароля')
 
     def validate_email(self, email):
         user = db.session.query(DatabaseUser).filter_by(email=email.data).first()
         if user is None:
-            raise ValidationError("User with this email doesn't exist!")
+            raise ValidationError("Такого пользователя не существует!")

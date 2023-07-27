@@ -32,7 +32,7 @@
         </div>
       </div>
       <div class="row">
-        <h2>Таблица индивидов</h2>
+        <h2>{{ title }}</h2>
       </div>
       <div class="row">
 <div class="col">
@@ -40,16 +40,18 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th class="text-start" click>Index</th>
+            <th class="text-start" click>Индекс индивида</th>
             <th class="text-end" click>Памятник</th>
+            <th class="text-end" click>Автор раскопок</th>
+            <th class="text-end" click>Регион</th>
             <th class="text-end" click>Возраст</th>
             <th class="text-end" click>Пол</th>
             <th class="text-end" click>Обряд</th>
-            <th class="text-end" click>Location</th>
-            <th class="text-end" click>Epoch</th>
-            <th class="text-end" click>Researcher</th>
-            <th class="text-end" click>Добавлено</th>
             <th class="text-end" click>Сохранность</th>
+            <th class="text-end" click>Эпоха</th>
+            
+            <th class="text-end" click>Добавлено</th>
+            
         </tr>
     </thead>
     <tbody>
@@ -57,20 +59,24 @@
             <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#individ{{individ.id}}">
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>
+                <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
+                <td class="text-end">{{ individ.site.regions}}</td>
                 <td class="text-end">{{ individ.age() }}</td>
                 <td class="text-end">{{ individ.sex.sex }}</td>
                 <td class="text-end">{{ individ.type }}</td>
-                <td class="text-end">{{ individ.site.regions.name }}</td>
-                <td class="text-end">{{ individ.epoch }}</td>
-                <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
-                <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>
+                <td class="text-end">{{ individ.epoch if individ.epoch else '' }}</td>
+                <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
+                
             </tr>
 
 
 {% with individ=individ %}
+
 {% include "_modal_table.html" %}
+{% if individ.file %}
 {% include "_modal_file.html" %}
+{% endif %}
 {% endwith %}
 {% endfor %}
         </tbody>

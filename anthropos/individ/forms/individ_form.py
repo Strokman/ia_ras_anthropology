@@ -26,7 +26,7 @@ class IndividForm(FlaskForm):
     age_max = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
     sex = QuerySelectField('Пол', allow_blank=True, blank_text='Выберите пол', validators=[DataRequiredImproved()])
     preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
-    epoch = QuerySelectField('Эпоха', allow_blank=True, blank_text='Выберите эпоху', validators=[DataRequiredImproved()])
+    epoch = QuerySelectField('Эпоха', allow_blank=True, blank_text='Выберите эпоху', validators=[Optional()])
     
     grave_type = SelectField(label='Тип погребения', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])

@@ -140,7 +140,8 @@ def edit_individ(individ_id):
                 file.save_to_db(db.session)
 
                 individ.file = file
-
+        if epoch := form.epoch.data:
+            epoch.individ.append(individ)
         db.session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(request.referrer)
@@ -174,18 +175,4 @@ def edit_individ(individ_id):
             form.comment.data = individ.comment.text
         except AttributeError:
             pass
-    # print(type(individ.site))
-    # form.site.data=individ.site,
-    # form.year.data=individ.year,
-    # form.age_min.data=individ.age_min
-    # print(form.site)
-    # print()
-    # stmt = delete(Individ).where(Individ.id==individ_id)
-    # db.session.execute(stmt)
-    # db.session.commit()
     return render_template('individ/submit_individ.html', form=form)
-
-
-@bp.route('/file/<filename>')
-def file(filename):
-    return send_file(path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename))

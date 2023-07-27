@@ -5,15 +5,15 @@
 {% endblock %}
 {% block app_content %}
 <div class="row text-center">
-    <h1>Sign In</h1>
+    <h1>{{ title }}</h1>
 </div> 
 
 {% include "_form.html" %}
 <div class=row>
-<p>New User? <a href="{{ url_for('auth.register') }}">Click to Register!</a></p>
+<p>Новый пользователь? Для регистрации <a href="{{ url_for('auth.register') }}">нажмите здесь</a></p>
     <p>
-        Forgot Your Password?
-        <a href="{{ url_for('auth.reset_password_request') }}">Click to Reset It</a>
+        Забыли пароль? Для восстановления пароля
+        <a href="{{ url_for('auth.reset_password_request') }}">нажмите здесь</a>
     </p>
 </div>
 {% endblock %}

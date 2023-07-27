@@ -40,7 +40,6 @@ from anthropos.models import *
 # app = Flask(__name__)
 # app.config.from_object(Config)
 
-
 mail = Mail()
 # db = SQLAlchemy()
 bootstrap = Bootstrap5()

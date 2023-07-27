@@ -4,7 +4,7 @@ from wtforms.validators import DataRequired, EqualTo
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Новый пароль', validators=[DataRequired()])
     password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Request Password Reset')
+        'Подтверждение пароля', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Изменить пароль')

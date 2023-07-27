@@ -1,7 +1,6 @@
 from anthropos import db
 from .base_model import BaseModel
-from .grave import Grave
-from sqlalchemy.orm import Mapped
+from flask_moment import moment
 
 
 class Individ(db.Model, BaseModel):
@@ -60,11 +59,14 @@ class Individ(db.Model, BaseModel):
             'Долгота': self.site.long,
             'Широта': self.site.lat,
             'Автор': self.site.researcher,
+            'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
             'Возраст': self.age(),
             'Пол': self.sex.sex,
             'Сохранность': self.preservation.description,
             'Примечание': self.comment.text,
             'Кем создано': self.creator,
-            'Кем изменено': self.editor
+            'Когда создано': moment(self.created_at).format('L'),
+            'Кем изменено': self.editor,
+            'Когда изменено': moment(self.edited_at).format('L')
         }

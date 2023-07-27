@@ -27,7 +27,9 @@
           
         </div>
         <div class="modal-footer">
+          {% if individ.file %}
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#file{{individ.file.id}}">Файл</button>
+          {% endif %}
           <a href="{{url_for('individ.edit_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Редактировать</a>
           <a href="{{url_for('individ.delete_individ', individ_id=individ.id)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
         </div>
