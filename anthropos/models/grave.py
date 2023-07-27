@@ -30,3 +30,6 @@ class Grave(db.Model, BaseModel):
         if self.kurgan_number:
             return f'к.{self.kurgan_number}/п.{self.grave_number}'
         return f'п.{self.grave_number}'
+    
+    def full_data_russian(self):
+        pass

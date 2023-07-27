@@ -12,6 +12,7 @@
     {{ render_field(form.year) }}
     
     {{ render_field(form.type) }}
+    {{ render_field(form.epoch) }}
     {{ render_field(form.preservation) }}
        
 
@@ -20,9 +21,15 @@
                     <p>Возраст</p>
                     <div class="input-group">
                         <span class="input-group-text">мин</span>
-                        {{ form.age_min(class='form-control') }} 
+                        {{ form.age_min(class='form-control') }}
+                        {% for error in form.age_min.errors %}
+                        <div class="invalid-feedback d-block">{{error}}</div>
+                        {% endfor %}
                         <span class="input-group-text">макс</span>
                         {{ form.age_max(class='form-control') }}
+                        {% for error in form.age_max.errors %}
+                        <div class="invalid-feedback d-block">{{error}}</div>
+                        {% endfor %}
                     </div>
     {{ render_field(form.sex) }}        
     {{ render_field(form.file) }} 

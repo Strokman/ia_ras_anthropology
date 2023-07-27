@@ -51,7 +51,6 @@ def individ():
             edited_by=current_user.id,
         )
         individ.save_to_db(db.session)
-
         individ.grave = grave
         individ.comment = comment
 
@@ -68,6 +67,7 @@ def individ():
             file.save_to_db(db.session)
 
             individ.file = file
+        form.epoch.data.individ.append(individ)
 
         db.session.commit()
 
@@ -154,6 +154,7 @@ def edit_individ(individ_id):
             form.age_max.data = individ.age_max
             form.year.data = individ.year
             form.preservation.data = individ.preservation.id
+            form.epoch.data = individ.epoch
             form.grave_type.data = individ.grave.grave_type
             form.kurgan_number.data = individ.grave.kurgan_number
             form.grave_number.data = individ.grave.grave_number
