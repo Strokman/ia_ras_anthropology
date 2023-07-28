@@ -26,6 +26,7 @@ def login():
         user.last_login = datetime.utcnow()
         db.session.commit()
         session['user_role'] = user.role
+        session['login_time'] = user.last_login
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index.index')
@@ -84,7 +85,7 @@ def reset_password_request():
             send_password_reset_email(user)
         flash('Check your email for the instructions to reset your password', 'info')
         return redirect(url_for('auth.login'))
-    return render_template('auth/reset_password_request.html',
+    return render_template('auth/reset_password.html',
                            title='Восстановление пароля', form=form)
 
 

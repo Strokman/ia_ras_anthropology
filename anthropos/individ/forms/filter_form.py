@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DecimalField, SelectField, IntegerField, SelectMultipleField
+from wtforms import StringField, SubmitField, IntegerField, SelectMultipleField
 from wtforms.validators import Optional
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from anthropos.models import FederalDistrict, Epoch, Researcher, Sex, Preservation, DatabaseUser, ArchaeologicalSite

@@ -20,4 +20,10 @@ def submit_researcher():
         db.session.commit()
         flash('Исследователь добавлен', 'success')
         return redirect(url_for('researcher.submit_researcher'))
-    return render_template('researcher/submit_researcher.html', title='Submit researcher form', form=form)
+    return render_template('researcher/submit_researcher.html', title='Добавление исследователя', form=form)
+
+
+@bp.route('/researcher_table', methods=['GET', 'POST'])
+@login_required
+def researcher_table():
+    return 'LULKA'

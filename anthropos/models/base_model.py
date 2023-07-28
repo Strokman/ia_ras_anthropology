@@ -1,15 +1,15 @@
-from flask_sqlalchemy.session import Session
 from sqlalchemy import select
+from sqlalchemy.orm.scoping import scoped_session
 
 
 class BaseModel:
 
     @classmethod
-    def get_all(cls, session: Session):
+    def get_all(cls, session: scoped_session):
         return session.execute(select(cls)).scalars().all()
         # return session.scalars(select(cls))
 
-    def save_to_db(self, session: Session):
+    def save_to_db(self, session: scoped_session):
         session.add(self)
         session.commit()
 

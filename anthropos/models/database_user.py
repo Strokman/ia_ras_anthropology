@@ -35,7 +35,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     """
     sites_created = db.relationship('ArchaeologicalSite',
                                     foreign_keys='ArchaeologicalSite.creator_id',
-                                    back_populates='owner')
+                                    back_populates='creator')
     sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.editor_id',
                                     back_populates='editor')
 

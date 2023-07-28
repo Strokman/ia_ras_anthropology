@@ -8,27 +8,17 @@ from anthropos.site.forms import ArchaeologicalSiteForm
 from anthropos.user import bp
 from datetime import datetime
 
+
 @bp.route('/user/<username>', methods=['GET'])
 @login_required
 def user(username):
     user = db.session.query(DatabaseUser).filter_by(username=username).first_or_404()
-    sites = db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all()
+    sites = enumerate(db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all())
     profile_form = EditProfileForm(current_user.username, current_user.email)
     site_form = ArchaeologicalSiteForm()
     site_form.epoch.query = Epoch.get_all(db.session)
     site_form.researcher.query = Researcher.get_all(db.session)
     site_form.federal_district.query = FederalDistrict.get_all(db.session)
-    # if form.validate_on_submit():
-    #     current_user.username = form.username.data
-    #     current_user.first_name = form.first_name.data
-    #     current_user.last_name = form.last_name.data
-    #     current_user.middle_name = form.middle_name.data
-    #     current_user.affiliation = form.affiliation.data
-    #     current_user.email = form.email.data
-    #     db.session.commit()
-    #     flash('Your changes have been saved.', 'success')
-    #     return redirect(url_for('main.user', username=user.username))
-    # elif request.method == 'GET':
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name
     profile_form.last_name.data = current_user.last_name

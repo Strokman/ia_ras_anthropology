@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+
+{{ super() }}
+
+{% block app_content %}
+<div class="row">
+    <h2>{{ title }}</h2>
+</div>
+<div class="container">
+<div class="col">
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-start">Nr</th>
+            <th class="text-end">Название</th>
+            <th class="text-end">Регион</th>
+            <th class="text-end">Эпохи</th>
+            <th class="text-end">Исследователь</th>
+            <th class="text-end">Кем создано</th>
+            <th class="text-end">Кем редактировано</th>
+            <th class="text-end"></th>
+        </tr>
+    </thead>
+   
+    
+    <tbody>
+        {% for num, site in sites %}
+            <tr class="clickable-row">
+                <td class="text-start">{{ num + 1 }}</td>
+                <td class="text-end">{{ site.name }}</td>
+                <td class="text-end">{{ site.regions }}</td>
+                <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
+                <td class="text-end">{{ site.researcher }}</td>
+                <td class="text-end">{{ site.creator }}</td>
+                <td class="text-end">{{ site.editor }}</td>
+                <td class="text-end"><a href="{{ url_for('site.edit_site', site_id=site.id) }}" class="btn btn-primary" tabindex="-1" role="button">Ред.</a></td>
+            </tr>
+            {% endfor %}
+
+    </tbody>
+</table>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='sort_table.js')}}"></script>
+{% endblock %}

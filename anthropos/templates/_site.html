@@ -1,13 +1,13 @@
-    <table class="table table-light table-striped">
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th class="text-start">ID</th>
-                <th class="text-end">Name</th>
-                <th class="text-end">Location</th>
-                <th class="text-end">Epoch</th>
-                <th class="text-end">Researcher</th>
-                <th class="text-end">Edit</th>
-                
+                <th class="text-end">Название</th>
+                <th class="text-end">Расположение</th>
+                <th class="text-end">Эпохи</th>
+                <th class="text-end">Исследователь</th>
+                <th class="text-end">Кем создано</th>
+                <th class="text-end">Кем редактировано</th>
             </tr>
         </thead>
        
@@ -17,13 +17,12 @@
                 <tr>
                     <td class="text-start">{{ site.id }}</td>
                     <td class="text-end">{{ site.name }}</td>
-                    <td class="text-end">{{ site.regions.name }}</td>
+                    <td class="text-end">{{ site.regions.federal_district }},<br>{{ site.regions }}</td>
                     <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
-                    <td class="text-end">{{ site.researcher.__str__() }}</td>
-                    <td class="text-end">{% with form=site_form, action=url_for("main.edit_site", site_id=site.id), task="Редактировать памятник", id="editSite" %}
-                        {include "_modal.html"}
-                        {% endwith %}
-                    </td>
+                    <td class="text-end">{{ site.researcher }}</td>
+                    <td class="text-end">{{ site.creator }}</td>
+                    <td class="text-end">{{ site.editor }}</td>
+                    <td class="text-end">{{ url_for('site.edit_site', site_id=site.id) }}</td>
                 </tr>
                 {% endfor %}
     

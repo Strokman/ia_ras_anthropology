@@ -9,7 +9,7 @@
       <a class="nav-link" data-bs-toggle="offcanvas" aria-current="page" href="#searchFilter" aria-controls="searchFilter">Фильтр</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('data.individ_data') }}">Сбросить фильтры</a>
+      <a class="nav-link" href="{{ url_for('individ.individ_table') }}">Сбросить фильтры</a>
     </li>
     <li class="nav-item">
       <form method="post", action="{{ action }}">
@@ -27,7 +27,7 @@
         </div>
         <div class="offcanvas-body">
           <div>
-            {{render_form(form, action=url_for('data.search'), method='get')}}
+            {{render_form(form, action=url_for('individ.search'), method='get')}}
           </div>
         </div>
       </div>

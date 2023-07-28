@@ -16,7 +16,7 @@ class ArchaeologicalSite(db.Model, BaseModel):
     researcher_id = db.Column(db.Integer, db.ForeignKey("researchers.id", ondelete='CASCADE'))
     region_id = db.Column(db.Integer, db.ForeignKey('regions.id'))
 
-    owner = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.creator_id", back_populates='sites_created')
+    creator = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.creator_id", back_populates='sites_created')
     editor = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.editor_id", back_populates='sites_edited')
     epochs = db.relationship("Epoch", secondary=sites_epochs,
                              primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
