@@ -5,9 +5,11 @@
 <div class="row">
   <div class="col">
   <ul class="nav nav-pills justify-content-center">
+    {% if form %}
     <li class="nav-item">
       <a class="nav-link" data-bs-toggle="offcanvas" aria-current="page" href="#searchFilter" aria-controls="searchFilter">Фильтр</a>
     </li>
+    {% endif %}
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('individ.individ_table') }}">Сбросить фильтры</a>
     </li>
@@ -20,6 +22,7 @@
   </div>
 
     </div>
+    {% if form %}
       <div class="offcanvas offcanvas-start" tabindex="-1" id="searchFilter" aria-labelledby="searchFilterLabel">
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="searchFilterLabel">Поисковый фильтр</h5>
@@ -31,12 +34,13 @@
           </div>
         </div>
       </div>
+      {% endif %}
       <div class="row">
         <h2>{{ title }}</h2>
       </div>
       <div class="row">
 <div class="col">
-    
+  
 <table class="table table-bordered table-hover">
     <thead>
         <tr>

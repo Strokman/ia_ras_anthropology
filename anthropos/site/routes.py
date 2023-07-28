@@ -37,7 +37,7 @@ def region(fd_id):
     return jsonify({'regions': regionArray})
 
 
-@bp.route('/sites')
+@bp.route('/site_table')
 def site_table():
     sites = enumerate(sorted(ArchaeologicalSite.get_all(db.session), key=lambda x: x.name))
     return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
@@ -48,9 +48,24 @@ def site_table():
 def edit_site(site_id):
     site = db.session.get(ArchaeologicalSite, site_id)
     form = ArchaeologicalSiteForm()
-    if request.method == 'GET':
+    if request.method == 'POST' and form.validate_on_submit():
+        site.name = form.name.data
+        site.long = form.long.data
+        site.lat = form.lat.data
+        site.epochs = form.epoch.data
+        site.researcher = form.researcher.data
+        region = db.session.get(Region, int(form.region.data))
+        region.sites.append(site)
+        db.session.commit()
+        flash('Изменения сохранены', 'success')
+        return redirect(url_for('site.site_table'))
+    elif request.method == 'GET':
+        form.submit.label.text = 'Редактировать'
         form.name.data = site.name
         form.long.data = site.long
         form.lat.data = site.lat
-    print(site)
+        form.epoch.data = site.epochs
+        form.researcher.data = site.researcher
+        form.federal_district.data = site.regions.federal_district
+        form.region.choices = [(site.regions.id, site.regions)]
     return render_template('site/site_input.html', title='Редактировать памятник', form=form)

@@ -12,7 +12,5 @@ class Region(db.Model, BaseModel):
     federal_district = db.relationship('FederalDistrict', back_populates='region')
     sites = db.relationship('ArchaeologicalSite', back_populates='regions')
 
-    # individ = relationship('Individ', back_populates='region')
-
     def __repr__(self):
         return f'{self.name}'

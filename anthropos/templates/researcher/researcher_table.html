@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form, render_field %}
+
+{{ super() }}
+
+{% block app_content %}
+<div class="row">
+    <h2>{{ title }}</h2>
+</div>
+<div class="container">
+<div class="col">
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="text-end">Фамилия</th>
+            <th class="text-end">Имя</th>
+            <th class="text-end">Отчество</th>
+            <th class="text-end">Место работы</th>
+            <th class="text-end">Памятники</th>
+            <th class="text-end"></th>
+        </tr>
+    </thead>
+   
+    
+    <tbody>
+        {% for researcher in researchers %}
+            <tr class="clickable-row">
+                <td class="text-end">{{ researcher.last_name }}</td>
+                <td class="text-end">{{ researcher.first_name }}</td>
+                <td class="text-end">{% if researcher.middle_name %}{{ researcher.middle_name }}{% endif %}</td>
+                <td class="text-end">{{ researcher.affiliation }}</td>
+                <td class="text-end">{% for site in researcher.sites %}{{ site.name }}<br>{% endfor %}</td>
+                <td class="text-end"><a href="{{ url_for('researcher.edit_researcher', researcher_id=researcher.id) }}" class="btn btn-primary" tabindex="-1" role="button">Ред.</a></td>
+            </tr>
+            {% endfor %}
+
+    </tbody>
+</table>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script src="{{url_for('static', filename='sort_table.js')}}"></script>
+{% endblock %}

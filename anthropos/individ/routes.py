@@ -8,7 +8,6 @@ from sqlalchemy import select
 from os import path, remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
-from sqlalchemy import select
 from anthropos.export_data import export_xls
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
