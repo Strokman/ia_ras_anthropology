@@ -5,6 +5,16 @@
 {% if current_user.is_authenticated %}
 <div class="row">
 <h3>Добрый день, {{current_user.first_name}} {{current_user.middle_name}}!</h3>
+<div class="col">
+    <p>Из того, что забыл сказать на видео - интерфейс программы пока примитивный, простой<br>. Также при изменении размера экрана могут быть ошибки, где-то что-то расплывется, в дальнейшем буду дорабатывать.<br>На функционал почти не влияет. Если есть пожелания - пишите <br> </p>
+    <p>Кратко о программе</p>
+<iframe width="800" height="500" src="https://www.youtube.com/embed/DIzgtJ4XBjA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<p>О структуре базы данных</p>
+<iframe width="800" height="500" src="https://www.youtube.com/embed/HxW4VEs6544" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<p>Инструкция по эксплуатации</p>
+<iframe width="800" height="500" src="https://www.youtube.com/embed/bBcR9sNdrMQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+</div>
 </div>
 {% else %}
 <div class="row">
