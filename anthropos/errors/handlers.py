@@ -1,17 +1,52 @@
 from flask import render_template, current_app
 from anthropos.errors import bp
 from anthropos.lib import MailgunEngine
-from werkzeug.exceptions import InternalServerError, NotFound
-
+from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed
+import traceback
 
 @bp.app_errorhandler(404)
 def not_found_error(error: NotFound):
-    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], error)
-    return render_template('errors/404.html', error=error), 404
+    response = {
+        'code': error.code,
+        'message': 'Страница не существует',
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    return render_template('errors/base.html', response=response), 404
 
 
 @bp.app_errorhandler(500)
 def internal_error(error: InternalServerError):
-    txt = 'Next error occured' +'\n' + str(error.code) + '\n' + str(error) + '\n' + str(error.original_exception)
+    response = {
+        'code': error.code,
+        'message': 'Ошибка сервера, администратор уведомлен',
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
-    return render_template('errors/500.html'), 500
+    return render_template('errors/base.html', response=response), 500
+
+
+@bp.app_errorhandler(502)
+def internal_error(error: BadGateway):
+    response = {
+        'code': error.code,
+        'message': 'Ошибка сервера, администратор уведомлен',
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    return render_template('errors/base.html', response=response), 502
+
+
+@bp.app_errorhandler(405)
+def internal_error(error: MethodNotAllowed):
+    response = {
+        'code': error.code,
+        'message': 'Ошибка сервера, администратор уведомлен',
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    return render_template('errors/base.html', response=response), 405

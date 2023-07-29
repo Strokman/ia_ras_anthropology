@@ -10,6 +10,7 @@ from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
 from anthropos.export_data import export_xls
 
+
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
 def individ():
@@ -204,7 +205,7 @@ def search():
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researcher).join(Individ.sex).join(ArchaeologicalSite.regions)
         if a := filters.get('epoch'):
-            stmt = stmt.join(ArchaeologicalSite.epochs).where(getattr(Epoch, 'id').in_(a))
+            stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(a))
         if b := filters.get('researcher'):
             stmt = stmt.where(getattr(Researcher, 'id').in_(b))
         if c := filters.get('federal_district'):
@@ -231,7 +232,7 @@ def search():
         global individs
         individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all() 
         return render_template('data_output.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.search'))
-    if request.method == 'POST':
+    if request.method == 'POST':   
         file = export_xls(individs, current_app, export_name='filtered_individs')
         return send_file(file, as_attachment=True)
     return redirect(url_for('individ.individ_table'))

@@ -11,7 +11,7 @@ def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='d
     export_data.setdefault('Индекс', [individ.index for individ in individs])
     export_data.setdefault('Памятник', [individ.site for individ in individs])
     export_data.setdefault('Погребение', [individ.grave for individ in individs])
-    export_data.setdefault('Эпохи', [", ".join([f'{epoch}'for epoch in individ.site.epochs]) for individ in individs])
+    export_data.setdefault('Эпоха', [individ.epoch for individ in individs])
     export_data.setdefault('Исследователь', [individ.site.researcher for individ in individs])
     export_data.setdefault('Федеральный округ', [individ.site.regions.federal_district for individ in individs])
     export_data.setdefault('Регион', [individ.site.regions for individ in individs])
