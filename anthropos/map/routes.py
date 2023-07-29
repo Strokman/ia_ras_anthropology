@@ -17,5 +17,5 @@ def map():
 @login_required
 def individs_by_map(site_id):
     stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
-    individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all() 
-    return render_template('data_output.html', title='Таблица индивидов', individs=individs)
+    individs = enumerate(db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all(), 1)
+    return render_template('individ/individ_table.html', title='Таблица индивидов', individs=individs)

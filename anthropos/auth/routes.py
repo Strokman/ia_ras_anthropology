@@ -78,8 +78,8 @@ def reset_password_request():
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
-                                        form.email.data,
-                                        db.session)
+                                            form.email.data,
+                                            db.session)
         send_password_reset_email(user)
         flash('Проверьте свой почтовый ящик для дальнейших инструкций', 'info')
         return redirect(url_for('auth.login'))
