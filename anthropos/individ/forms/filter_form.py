@@ -12,14 +12,14 @@ class FilterForm(FlaskForm):
 
     def __init__(self):
         super().__init__()
-        self.federal_district.query = sorted(FederalDistrict.get_all(db.session), key=lambda x: x.name)
-        self.researcher.query = sorted(Researcher.get_all(db.session), key=lambda x: x.last_name)
+        self.federal_district.query = FederalDistrict.get_all(db.session)
+        self.researcher.query = Researcher.get_all(db.session, Researcher.last_name)
         self.epoch.query = Epoch.get_all(db.session)
-        self.sex.query = Sex.get_all(db.session)
-        self.preservation.query = Preservation.get_all(db.session)
+        self.sex.query = Sex.get_all(db.session, Sex.sex)
+        self.preservation.query = Preservation.get_all(db.session, Preservation.id)
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
-        self.creator.query = sorted(DatabaseUser.get_all(db.session), key=lambda x: x.last_name)
-        self.site.query = sorted(ArchaeologicalSite.get_all(db.session), key=lambda x: x.name)
+        self.creator.query = DatabaseUser.get_all(db.session, DatabaseUser.last_name)
+        self.site.query = ArchaeologicalSite.get_all(db.session)
 
     site = QuerySelectMultipleField('Памятник')
     epoch = QuerySelectMultipleField('Эпоха')

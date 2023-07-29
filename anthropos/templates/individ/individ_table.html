@@ -44,7 +44,8 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th class="text-start" click>Индекс индивида</th>
+          <th class="text-end" click>Nr</th>
+            <th class="text-end" click>Индекс индивида</th>
             <th class="text-end" click>Памятник</th>
             <th class="text-end" click>Автор раскопок</th>
             <th class="text-end" click>Регион</th>
@@ -59,8 +60,9 @@
         </tr>
     </thead>
     <tbody>
-        {% for individ in individs %}
+        {% for num, individ in individs %}
             <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#individ{{individ.id}}">
+              <td class="text-start">{{ num }}</td>
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>
                 <td class="text-end">{{ individ.site.researcher.__str__() }}</td>

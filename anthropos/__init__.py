@@ -97,6 +97,9 @@ def create_app(config_class=Config):
     app.register_blueprint(user_bp, url_prefix='/user')
 
     from anthropos.map import bp as map_bp
-    app.register_blueprint(map_bp, url_prefix='/map')
+    app.register_blueprint(map_bp)
+
+    from anthropos.file import bp as file_bp
+    app.register_blueprint(file_bp)
 
     return app

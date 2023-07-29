@@ -11,11 +11,11 @@ class IndividForm(FlaskForm):
 
     def __init__(self):
         super().__init__()
-        self.site.query = sorted(ArchaeologicalSite.get_all(db.session), key=lambda x: x.name)
-        self.sex.query = Sex.get_all(db.session)
+        self.site.query = ArchaeologicalSite.get_all(db.session)
+        self.sex.query = Sex.get_all(db.session, Sex.sex)
         self.type.choices = ['ингумация', 'кремация']
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
-        self.epoch.query = Epoch.get_all(db.session)
+        self.epoch.query = Epoch.get_all(db.session, Epoch.id)
 
 
     site = QuerySelectField('Памятник', allow_blank=True, blank_text='Выберите памятник', validators=[DataRequiredImproved()])

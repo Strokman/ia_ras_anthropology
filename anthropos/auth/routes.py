@@ -3,10 +3,10 @@ from flask import redirect, render_template, url_for, flash, request, session
 from flask_login import current_user, login_user, logout_user
 from datetime import datetime
 from urllib.parse import urlsplit
-from .forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
+from anthropos.auth.forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
 from anthropos.models import DatabaseUser
 from anthropos import db
-from .reset_email import send_password_reset_email
+from anthropos.auth.reset_email import send_password_reset_email
 
 
 @bp.route('/login', methods=['GET', 'POST'])

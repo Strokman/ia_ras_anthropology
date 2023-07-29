@@ -8,7 +8,7 @@ from sqlalchemy import select
 from os import path, remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
-from anthropos.export_data import export_xls
+from anthropos.helpers import export_xls
 
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
@@ -182,13 +182,13 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET', 'POST'])
 @login_required
 def individ_table():
-    individs = sorted(Individ.get_all(db.session), key=lambda x: x.index)
+    individs = enumerate(Individ.get_all(db.session, Individ.index), 1)
     form = FilterForm()
 
     if request.method == 'POST':
         file = export_xls(individs, current_app, export_name='all_individs')
         return send_file(file, as_attachment=True)
-    return render_template('data_output.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.individ_table'))
+    return render_template('individ/individ_table.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.individ_table'))
 
 
 @bp.route('/individ_filter', methods=['GET', 'POST'])
@@ -230,19 +230,11 @@ def search():
         # if h := filters.get('age_max'):
         #     stmt = stmt.where(Individ.age_max <= h)
         global individs
-        individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all() 
-        return render_template('data_output.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.search'))
+        individs = enumerate(db.session.execute(stmt.group_by(Individ.id).order_by(Individ.index)).scalars().all(), 1)
+        return render_template('individ/individ_table.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.search'))
     if request.method == 'POST':   
         file = export_xls(individs, current_app, export_name='filtered_individs')
         return send_file(file, as_attachment=True)
     return redirect(url_for('individ.individ_table'))
 
 
-@bp.route('/file/<filename>')
-def file(filename):
-    path_to_file = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
-    if path.isfile(path_to_file):
-        return send_file(path_to_file)
-    else:
-        flash('Файл не существует', 'warning')
-        return redirect(url_for('data.individ_data'))

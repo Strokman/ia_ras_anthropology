@@ -1,13 +1,18 @@
 from sqlalchemy import select
 from sqlalchemy.orm.scoping import scoped_session
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 
 class BaseModel:
 
     @classmethod
-    def get_all(cls, session: scoped_session):
-        return session.execute(select(cls)).scalars().all()
-        # return session.scalars(select(cls))
+    def get_all(cls, session: scoped_session, attr: InstrumentedAttribute=None):
+        if attr:
+            stmt = select(cls).order_by(attr)
+        else:
+            stmt = select(cls).order_by(cls.name)
+        res = session.execute(stmt).scalars().all()
+        return res
 
     def save_to_db(self, session: scoped_session):
         session.add(self)

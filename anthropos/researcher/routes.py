@@ -25,7 +25,7 @@ def submit_researcher():
 @bp.route('/researcher_table', methods=['GET', 'POST'])
 @login_required
 def researcher_table():
-    researchers = Researcher.get_all(db.session)
+    researchers = Researcher.get_all(db.session, Researcher.last_name)
     return render_template('researcher/researcher_table.html', title='Таблица исследователей', researchers=researchers)
 
 @bp.route('/edit_researcher/<researcher_id>', methods=['GET', 'POST'])

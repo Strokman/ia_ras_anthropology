@@ -16,8 +16,8 @@ def user(username):
     sites = enumerate(db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all())
     profile_form = EditProfileForm(current_user.username, current_user.email)
     site_form = ArchaeologicalSiteForm()
-    site_form.epoch.query = Epoch.get_all(db.session)
-    site_form.researcher.query = Researcher.get_all(db.session)
+    site_form.epoch.query = Epoch.get_all(db.session, Epoch.id)
+    site_form.researcher.query = Researcher.get_all(db.session, Researcher.last_name)
     site_form.federal_district.query = FederalDistrict.get_all(db.session)
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name

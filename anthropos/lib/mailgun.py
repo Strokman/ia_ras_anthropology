@@ -13,7 +13,7 @@ class MailgunEngine:
                     data={
                         'from': f'Anton Strokov <mailgun@{current_app.config["MAILGUN_DOMAIN"]}>',
                         'to': email,
-                        'subject': 'Registration confirmation',
+                        'subject': 'Registration confirmation - BaseHabilis',
                         'html': render_template('email/mail_confirmation.html', url=link)
                     })
 
@@ -24,7 +24,7 @@ class MailgunEngine:
                     data={
                         'from': f'Anton Strokov <mailgun@{current_app.config["MAILGUN_DOMAIN"]}>',
                         'to': email,
-                        'subject': 'Error message',
+                        'subject': 'Error in BaseHabilis app',
                         'text': text
                     })
 

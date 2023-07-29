@@ -1,5 +1,4 @@
 from anthropos.models import Individ
-# from typing import List
 from os import path, remove
 from flask import Flask
 import pandas as pd
