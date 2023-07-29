@@ -13,6 +13,12 @@ class BaseModel:
             stmt = select(cls).order_by(cls.name)
         res = session.execute(stmt).scalars().all()
         return res
+    
+    @classmethod
+    def get_one_by_attr(cls, attr, value, session):
+        stmt = select(cls).where(attr==value)
+        res = session.scalar(stmt)
+        return res
 
     def save_to_db(self, session: scoped_session):
         session.add(self)

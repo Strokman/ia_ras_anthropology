@@ -59,6 +59,12 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
         self.last_login = last_login
         self.middle_name: str = middle_name
 
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
     def send_confirmation_email(self):
         link = request.url_root[:-1] + url_for('auth.user_confirmation', username=self.username, token=self.token)
         MailgunEngine.send_confirmation_email(self.email, link)
@@ -87,7 +93,10 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        return db.session.query(DatabaseUser).filter_by(id=id)
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.id,
+                                     id,
+                                     db.session)
+        return user
 
     def __str__(self):
         if self.middle_name:

@@ -12,9 +12,9 @@ def submit_researcher():
     form = ResearcherForm(url_for('researcher.submit_researcher'))
     if form.validate_on_submit():
         researcher = Researcher()
-        for k, v in form.data.items():
-            if hasattr(researcher, k) and v is not None:
-                setattr(researcher, k, v)
+        for key, value in form.data.items():
+            if hasattr(researcher, key) and value is not None:
+                setattr(researcher, key, value)
         db.session.add(researcher)
         db.session.commit()
         flash('Исследователь добавлен', 'success')
@@ -25,7 +25,7 @@ def submit_researcher():
 @bp.route('/researcher_table', methods=['GET', 'POST'])
 @login_required
 def researcher_table():
-    researchers = Researcher.get_all(db.session, Researcher.last_name)
+    researchers = enumerate(Researcher.get_all(db.session, Researcher.last_name), 1)
     return render_template('researcher/researcher_table.html', title='Таблица исследователей', researchers=researchers)
 
 @bp.route('/edit_researcher/<researcher_id>', methods=['GET', 'POST'])

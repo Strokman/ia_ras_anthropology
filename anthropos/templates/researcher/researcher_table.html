@@ -12,6 +12,7 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th class="text-end">Nr</th>
             <th class="text-end">Фамилия</th>
             <th class="text-end">Имя</th>
             <th class="text-end">Отчество</th>
@@ -23,8 +24,9 @@
    
     
     <tbody>
-        {% for researcher in researchers %}
+        {% for num, researcher in researchers %}
             <tr class="clickable-row">
+                <td class="text-end">{{ num }}</td>
                 <td class="text-end">{{ researcher.last_name }}</td>
                 <td class="text-end">{{ researcher.first_name }}</td>
                 <td class="text-end">{% if researcher.middle_name %}{{ researcher.middle_name }}{% endif %}</td>

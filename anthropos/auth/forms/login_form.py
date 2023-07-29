@@ -1,10 +1,28 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired
+from anthropos.lib.validators import DataRequiredImproved
+from wtforms.validators import ValidationError
+from anthropos import db
+from anthropos.models import DatabaseUser
+from werkzeug.security import check_password_hash
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Никнейм', validators=[DataRequired()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
+    username = StringField('Логин', validators=[DataRequiredImproved()])
+    password = PasswordField('Пароль', validators=[DataRequiredImproved()])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+    def validate_username(self, username):
+        global user
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
+                                               username.data,
+                                               db.session)
+        if user is None:
+            raise ValidationError('Неверный логин!')
+        elif not user.activated:
+            raise ValidationError('Email не подтвержден!')
+
+    def validate_password(self, password):
+        if not user.check_password(password.data):
+            raise ValidationError('Неверный пароль!')

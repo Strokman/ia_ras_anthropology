@@ -15,18 +15,13 @@ def login():
         return redirect(url_for('index.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session.query(DatabaseUser).filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password', category='danger')
-            return redirect(url_for('auth.login'))
-        elif not user.activated:
-            flash('Email is not confirmed', 'warning')
-            return redirect(url_for('auth.login'))
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
+                                            form.username.data,
+                                            db.session)
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
         session['user_role'] = user.role
-        session['login_time'] = user.last_login
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index.index')
@@ -58,19 +53,21 @@ def register():
                             )
         user.save_to_db(db.session)
         user.send_confirmation_email()
-        flash(f'Congratulations, {user.username} is now a registered user!', 'success')
-        flash(f'Please confirm your account - check your mail', 'info')
+        flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
+        flash(f'Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Регистрация', form=form)
 
 
 @bp.route('/user_confirmation/<username>/<token>')
 def user_confirmation(username, token):
-    user = db.session.query(DatabaseUser).filter_by(username=username).first()
+    user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
+                                        username,
+                                        db.session)
     if str(user.token) == token:
         user.activated = True
         db.session.commit()
-        flash('Email confirmed', 'success')
+        flash('Email подтвержден', 'success')
     return redirect(url_for('auth.login'))
 
 
@@ -80,10 +77,11 @@ def reset_password_request():
         return redirect(url_for('index.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        user = DatabaseUser.query.filter_by(email=form.email.data).first()
-        if user:
-            send_password_reset_email(user)
-        flash('Check your email for the instructions to reset your password', 'info')
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
+                                        form.email.data,
+                                        db.session)
+        send_password_reset_email(user)
+        flash('Проверьте свой почтовый ящик для дальнейших инструкций', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html',
                            title='Восстановление пароля', form=form)
@@ -92,14 +90,15 @@ def reset_password_request():
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     if current_user.is_authenticated:
-        return redirect(url_for('index.index'))
+        # return redirect(url_for('index.index'))
+        logout_user()
     user = DatabaseUser.verify_reset_password_token(token)
     if not user:
         return redirect(url_for('index.index'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user.password = form.password.data
+        user.set_password(form.password.data)
         db.session.commit()
-        flash('Your password has been reset.', 'success')
+        flash('Ваш пароль изменен.', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', title='Восстановление пароля', form=form)

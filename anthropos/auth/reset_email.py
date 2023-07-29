@@ -1,7 +1,6 @@
 from flask import render_template
 from anthropos import mail
 from flask_mail import Message
-
 from threading import Thread
 from flask import current_app
 
