@@ -45,6 +45,8 @@ class Individ(db.Model, BaseModel):
             return f'{self.age_min}-{self.age_max}'
         if self.age_min:
             return f'{self.age_min}+'
+        if self.age_max and not self.age_min:
+            return f'до {self.age_max}'
         return ''
     
     def table_view_russian(self):
@@ -58,7 +60,7 @@ class Individ(db.Model, BaseModel):
             'Область': self.site.regions,
             'Долгота': self.site.long,
             'Широта': self.site.lat,
-            'Автор': self.site.researcher,
+            'Автор раскопок': self.site.researcher,
             'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
             'Возраст': self.age(),

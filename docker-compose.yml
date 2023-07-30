@@ -1,0 +1,38 @@
+version: '3.6'
+
+services:
+  db:
+    environment:
+      POSTGRES_USER: basehabilis
+      POSTGRES_PASSWORD: '04020051'
+      POSTGRES_DB: basehabilis
+    image: postgres:latest
+    networks:
+      - default
+    ports:
+      - 5600:5432
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "basehabilis" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    restart: always
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+
+  basehabilis:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://basehabilis:04020051@db:5432/basehabilis
+      FLASK_DEBUG: False
+    networks:
+      - default
+    ports:
+      - 5100:5100
+    restart: always
+    command: python create_tables.py && gunicorn -w 5 -b 0.0.0.0:5100 app:app

@@ -3,12 +3,12 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
 from anthropos.models import DatabaseUser
 from anthropos import db
-from anthropos.lib import CleanName, OnlyCharsValidator, DataRequiredImproved
+from anthropos.lib import CleanName, OnlyCharsValidator, DataRequiredImproved, CleanString
 from sqlalchemy import select
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(label='Логин', validators=[Length(min=2, max=50), DataRequiredImproved()])
+    username = StringField(label='Логин', validators=[Length(min=2, max=50), CleanString(), DataRequiredImproved()])
     first_name = StringField(label='Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     last_name = StringField(label='Фамилия', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     middle_name = StringField(label='Отчество', validators=[Length(min=0, max=50), CleanName(), OnlyCharsValidator()])

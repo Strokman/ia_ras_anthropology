@@ -34,6 +34,7 @@
     {{ render_field(form.sex) }}        
     {{ render_field(form.file) }} 
     {{ render_field(form.comment) }} 
+    {{ render_field(form.submit) }}
         </div>
         <div class="col">
             
@@ -41,9 +42,13 @@
           
             {{ render_field(form.grave_type) }}
             <p>Параметры погребения</p>
+            {% for error in form.grave_number.errors %}
+                        <div class="invalid-feedback d-block">{{error}}: погребение</div>
+                        {% endfor %}
             <tr>
                 <td class="text-center">{{ form.kurgan_number }}</td>
                 <td class="text-center">{{ form.grave_number }}</td>
+                
                 <td class="text-center">{{ form.catacomb }}</td>
                 <td class="text-center">{{ form.chamber }}</td>
                 <td class="text-center">{{ form.trench }}</td>
@@ -57,12 +62,7 @@
             </tr>
             
         </div>
-        <div class="row">
- 
-
-                {{ render_field(form.submit) }}
-           
-        </div>
+        
         
 </div>
 </div>

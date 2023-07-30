@@ -64,4 +64,16 @@ th {
 }
 
 
+.img-embed {
+  max-width: max-content !important;
+}
+
+.img-embed {
+  display: flex;
+}
+
+.img-embed {
+  object-fit: contain;
+}
+
 

@@ -36,7 +36,7 @@ def individ():
         if site := form.site.data:
             site.graves.append(grave)
         comment = Comment(text=form.comment.data)
-        comment.save_to_db(db.session)
+        comment.save_to_db()
 
 
         individ = Individ(
@@ -73,7 +73,7 @@ def individ():
 
         db.session.commit()
 
-        flash('Успешно', 'success')
+        flash('Успешно добавлено', 'success')
         return redirect(url_for('individ.individ'))
     return render_template('individ/submit_individ.html', form=form)
 
@@ -182,13 +182,17 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET', 'POST'])
 @login_required
 def individ_table():
-    individs = enumerate(Individ.get_all(Individ.index), 1)
+    individs = Individ.get_all(Individ.index)
     form = FilterForm()
 
     if request.method == 'POST':
         file = export_xls(individs, current_app, export_name='all_individs')
         return send_file(file, as_attachment=True)
-    return render_template('individ/individ_table.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.individ_table'))
+    return render_template('individ/individ_table.html',
+                           title='Таблица индивидов',
+                           individs=enumerate(individs, 1),
+                           form=form,
+                           action=url_for('individ.individ_table'))
 
 
 @bp.route('/individ_filter', methods=['GET', 'POST'])
@@ -224,14 +228,20 @@ def search():
             stmt = stmt.join(Individ.creator).where(getattr(DatabaseUser, 'id').in_(f))
         if i := filters.get('site'):
             stmt = stmt.join(Individ.site).where(getattr(ArchaeologicalSite, 'id').in_(i))
+        if s := filters.get('type'):
+            stmt = stmt.where(getattr(Individ, 'type').in_(s))
         # if g := filters.get('age_min'):
         #     stmt = stmt.where(Individ.age_min >= g)
         #     stmt = stmt.where(Individ.age_max >= g)
         # if h := filters.get('age_max'):
         #     stmt = stmt.where(Individ.age_max <= h)
         global individs
-        individs = enumerate(db.session.execute(stmt.group_by(Individ.id).order_by(Individ.index)).scalars().all(), 1)
-        return render_template('individ/individ_table.html', title='Таблица индивидов', individs=individs, form=form, action=url_for('individ.search'))
+        individs = db.session.execute(stmt.group_by(Individ.id).order_by(Individ.index)).scalars().all()
+        return render_template('individ/individ_table.html',
+                               title='Таблица индивидов',
+                               individs=enumerate(individs, 1),
+                               form=form,
+                               action=url_for('individ.search'))
     if request.method == 'POST':   
         file = export_xls(individs, current_app, export_name='filtered_individs')
         return send_file(file, as_attachment=True)

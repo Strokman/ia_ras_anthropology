@@ -2,15 +2,15 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
 from wtforms.validators import Length, Email
 from anthropos.models import DatabaseUser
-from anthropos.lib.validators import CleanName, OnlyCharsValidator, DataRequiredImproved
+from anthropos.lib.validators import CleanName, OnlyCharsValidator, DataRequiredImproved, CleanString
 
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Имя пользователя', validators=[Length(min=2, max=50), DataRequiredImproved()])
+    username = StringField('Имя пользователя', validators=[Length(min=2, max=50), CleanString(), DataRequiredImproved()])
     first_name = StringField('Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     last_name = StringField('Фамилия', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     middle_name = StringField('Отчество', validators=[Length(min=0, max=50), CleanName(), OnlyCharsValidator()])
-    affiliation = StringField('Место работы', validators=[Length(min=0, max=100)])
+    affiliation = StringField('Место работы', validators=[Length(min=0, max=100), CleanString(), DataRequiredImproved()])
     email = StringField(label='E-Mail', validators=[Email('Введите корректный адрес электронной почты'), DataRequiredImproved()])
     submit = SubmitField('Редактировать')
 

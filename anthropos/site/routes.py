@@ -19,7 +19,7 @@ def submit_site():
                                   int(site_form.region.data)
                                   )
         site.epochs.extend(site_form.epoch.data)
-        site.save_to_db(db.session)
+        site.save_to_db()
         flash('Памятник добавлен', 'success')
         return redirect(url_for('site.submit_site'))
     return render_template('site/site_input.html', title='Добавить памятник', form=site_form)

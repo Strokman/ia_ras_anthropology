@@ -20,9 +20,9 @@ class IndividForm(FlaskForm):
 
     site = QuerySelectField('Памятник', allow_blank=True, blank_text='Выберите памятник', validators=[DataRequiredImproved()])
     
-    year = IntegerField(label='Год')
-    type = SelectField(label='Обряд')
-    age_min = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
+    year = IntegerField(label='Год', validators=[DataRequiredImproved()])
+    type = SelectField(label='Обряд', validators=[DataRequiredImproved()])
+    age_min = IntegerField(validators=[NumberRange(message='Только число', min=0, max=150), Optional()])
     age_max = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
     sex = QuerySelectField('Пол', allow_blank=True, blank_text='Выберите пол', validators=[DataRequiredImproved()])
     preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
@@ -30,7 +30,7 @@ class IndividForm(FlaskForm):
     
     grave_type = SelectField(label='Тип погребения', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])
-    grave_number = StringField(render_kw={'placeholder': 'номер погребения'} , validators=[CleanString()])
+    grave_number = StringField(render_kw={'placeholder': 'номер погребения'}, validators=[CleanString(), DataRequiredImproved()])
     catacomb = StringField(render_kw={'placeholder': 'катакомба'} , validators=[CleanString()])
     chamber = StringField(render_kw={'placeholder': 'камера'}, validators=[CleanString()])
     trench = StringField(render_kw={'placeholder': 'раскоп'}, validators=[CleanString()])
@@ -45,6 +45,6 @@ class IndividForm(FlaskForm):
     
 
     comment = TextAreaField(label='Примечание')
-    file = FileField(label='Файл')
+    file = FileField(label='Файл: pdf, jpeg')
 
     submit = SubmitField(label='Добавить индивида')

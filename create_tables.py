@@ -28,7 +28,7 @@ with app.app_context():
         """ДОБАВЛЕНИЕ РЕГИОНОВ И ФО"""
         fo = set()
         reg = dict()
-        with open('/Users/antonstrokov/PycharmProjects/ia_ras_anthropology/region.csv', 'r') as f:
+        with open('regions.csv', 'r') as f:
             a = DictReader(f, delimiter=',')
             for i in a:
                 if i['federal_district']:
@@ -51,7 +51,7 @@ with app.app_context():
         sex = ('не определен', 'мужской', 'женский')
         for i in sex:
             b = Sex(sex=i)
-            b.save_to_db(db.session)
+            b.save_to_db()
 
 
         """ДОБАВЛЕНИЕ СОХРАННОСТИ"""

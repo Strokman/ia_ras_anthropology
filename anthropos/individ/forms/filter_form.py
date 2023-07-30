@@ -15,6 +15,7 @@ class FilterForm(FlaskForm):
         self.researcher.query = Researcher.get_all(Researcher.last_name)
         self.epoch.query = Epoch.get_all()
         self.sex.query = Sex.get_all(Sex.sex)
+        self.type.choices = ['ингумация', 'кремация']
         self.preservation.query = Preservation.get_all(Preservation.id)
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
         self.creator.query = DatabaseUser.get_all(DatabaseUser.last_name)
@@ -25,6 +26,7 @@ class FilterForm(FlaskForm):
     year_min = IntegerField(label='Год исследования: от', validators=[Optional()])
     year_max = IntegerField(label='до', validators=[Optional()])
     sex = QuerySelectMultipleField(label='Пол')
+    type = SelectMultipleField(label='Обряд')
     # age_min = IntegerField(label='Возраст: от', validators=[Optional()])
     # age_max = IntegerField(label='до', validators=[Optional()])
     preservation = QuerySelectMultipleField(label='Сохранность')

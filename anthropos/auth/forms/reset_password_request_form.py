@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Email, ValidationError
-from anthropos import db
+
 from anthropos.models import DatabaseUser
 from anthropos.lib.validators import DataRequiredImproved
 
@@ -11,7 +11,7 @@ class ResetPasswordRequestForm(FlaskForm):
 
     def validate_email(self, email):
         user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
-                                        email.data,
-                                        db.session)
+                                        email.data
+                                        )
         if user is None:
             raise ValidationError("Такого пользователя не существует!")

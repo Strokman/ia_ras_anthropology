@@ -93,15 +93,13 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.id,
-                                     id,
-                                     db.session)
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.id, id)
         return user
 
     def __str__(self):
         if self.middle_name:
-            return f'{self.last_name} {self.first_name.capitalize()[0]}.{self.middle_name.capitalize()[0]}.'
-        return f'{self.last_name} {self.first_name.capitalize()[0]}.'
+            return f'{self.last_name} {self.first_name[0]}.{self.middle_name[0]}.'
+        return f'{self.last_name} {self.first_name[0]}.'
 
     def __repr__(self):
         return f'{self.id}: {self.username}'

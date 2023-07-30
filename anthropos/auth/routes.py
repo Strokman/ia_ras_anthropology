@@ -16,8 +16,8 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
-                                            form.username.data,
-                                            db.session)
+                                            form.username.data
+                                            )
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
@@ -51,7 +51,7 @@ def register():
                             datetime.utcnow(),
                             form.middle_name.data
                             )
-        user.save_to_db(db.session)
+        user.save_to_db()
         user.send_confirmation_email()
         flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
         flash(f'Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')
@@ -62,8 +62,8 @@ def register():
 @bp.route('/user_confirmation/<username>/<token>')
 def user_confirmation(username, token):
     user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
-                                        username,
-                                        db.session)
+                                        username
+                                        )
     if str(user.token) == token:
         user.activated = True
         db.session.commit()
@@ -78,8 +78,8 @@ def reset_password_request():
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
-                                            form.email.data,
-                                            db.session)
+                                            form.email.data
+                                            )
         send_password_reset_email(user)
         flash('Проверьте свой почтовый ящик для дальнейших инструкций', 'info')
         return redirect(url_for('auth.login'))
