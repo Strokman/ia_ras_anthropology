@@ -9,7 +9,7 @@ from sqlalchemy import select
 @bp.route('/map', methods=['GET', 'POST'])
 @login_required
 def map():
-    sites = ArchaeologicalSite.get_all(db.session)
+    sites = ArchaeologicalSite.get_all()
     return render_template('map/map.html', title='Карта', sites=sites)
 
 

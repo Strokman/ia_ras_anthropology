@@ -1,12 +1,10 @@
 from flask_login import current_user, login_required
-from flask import redirect, url_for, flash, render_template, jsonify, request
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, Region, FederalDistrict, Sex, Grave, Individ, admin_required, Epoch
+from flask import redirect, url_for, flash, render_template
+from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, FederalDistrict, Epoch
 from anthropos import db
 from anthropos.user.forms import EditProfileForm
-from anthropos.individ.forms import IndividForm
 from anthropos.site.forms import ArchaeologicalSiteForm
 from anthropos.user import bp
-from datetime import datetime
 
 
 @bp.route('/user/<username>', methods=['GET'])
@@ -16,9 +14,9 @@ def user(username):
     sites = enumerate(db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all())
     profile_form = EditProfileForm(current_user.username, current_user.email)
     site_form = ArchaeologicalSiteForm()
-    site_form.epoch.query = Epoch.get_all(db.session, Epoch.id)
-    site_form.researcher.query = Researcher.get_all(db.session, Researcher.last_name)
-    site_form.federal_district.query = FederalDistrict.get_all(db.session)
+    site_form.epoch.query = Epoch.get_all(Epoch.id)
+    site_form.researcher.query = Researcher.get_all(Researcher.last_name)
+    site_form.federal_district.query = FederalDistrict.get_all()
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name
     profile_form.last_name.data = current_user.last_name

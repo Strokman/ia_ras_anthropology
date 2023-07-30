@@ -39,7 +39,7 @@ def region(fd_id):
 
 @bp.route('/site_table')
 def site_table():
-    sites = enumerate(ArchaeologicalSite.get_all(db.session))
+    sites = enumerate(ArchaeologicalSite.get_all())
     return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
 
 

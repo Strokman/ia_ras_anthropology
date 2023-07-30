@@ -32,7 +32,7 @@ def individ():
             tachymeter_point=form.data.get('tachymeter_point', None),
             skeleton=form.data.get('skeleton', None)
         )
-        grave.save_to_db(db.session)
+        grave.save_to_db()
         if site := form.site.data:
             site.graves.append(grave)
         comment = Comment(text=form.comment.data)
@@ -52,7 +52,7 @@ def individ():
             edited_at=datetime.utcnow(),
             edited_by=current_user.id,
         )
-        individ.save_to_db(db.session)
+        individ.save_to_db()
         individ.grave = grave
         individ.comment = comment
 
@@ -66,7 +66,7 @@ def individ():
                 saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
                 file.save(saving_path)
             file = File(path=saving_path, filename=filename)
-            file.save_to_db(db.session)
+            file.save_to_db()
 
             individ.file = file
         form.epoch.data.individ.append(individ)
@@ -139,7 +139,7 @@ def edit_individ(individ_id):
                     saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
                     file.save(saving_path)
                 file = File(path=saving_path, filename=filename)
-                file.save_to_db(db.session)
+                file.save_to_db()
 
                 individ.file = file
         if epoch := form.epoch.data:
@@ -182,7 +182,7 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET', 'POST'])
 @login_required
 def individ_table():
-    individs = enumerate(Individ.get_all(db.session, Individ.index), 1)
+    individs = enumerate(Individ.get_all(Individ.index), 1)
     form = FilterForm()
 
     if request.method == 'POST':
