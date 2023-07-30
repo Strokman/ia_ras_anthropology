@@ -32,7 +32,7 @@ class Individ(db.Model, BaseModel):
     grave = db.relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')
 
     def create_index(self):
-        if self.grave.grave_type == 'курганный':
+        if self.grave.grave_type == 'курганный' and self.grave.kurgan_number:
             self.index = f'{self.site.name}-{self.year}-{self.grave.kurgan_number}-{self.grave.grave_number}'
         else:
             self.index = f'{self.site.name}-{self.year}-{self.grave.grave_number}'

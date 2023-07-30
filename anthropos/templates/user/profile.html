@@ -8,7 +8,7 @@
 <h4>Создан - {{ moment(user.created).format('L') }}</h4>
 </div>
 <div class="row">
-<h4>Last login - {{ moment(user.last_login).format('L') }}</h4>
+<h4>Последний вход - {{ moment(user.last_login).format('L') }}</h4>
 </div>
     {% if user == current_user %}
 

@@ -69,7 +69,10 @@ def individ():
             file.save_to_db()
 
             individ.file = file
-        form.epoch.data.individ.append(individ)
+        try:
+            form.epoch.data.individ.append(individ)
+        except:
+            pass
 
         db.session.commit()
 
@@ -230,6 +233,8 @@ def search():
             stmt = stmt.join(Individ.site).where(getattr(ArchaeologicalSite, 'id').in_(i))
         if s := filters.get('type'):
             stmt = stmt.where(getattr(Individ, 'type').in_(s))
+        if z := filters.get('grave'):
+            stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(z))
         # if g := filters.get('age_min'):
         #     stmt = stmt.where(Individ.age_min >= g)
         #     stmt = stmt.where(Individ.age_max >= g)

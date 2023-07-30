@@ -9,8 +9,8 @@ from sqlalchemy import select
 
 class RegistrationForm(FlaskForm):
     username = StringField(label='Логин', validators=[Length(min=2, max=50), CleanString(), DataRequiredImproved()])
-    first_name = StringField(label='Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     last_name = StringField(label='Фамилия', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
+    first_name = StringField(label='Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     middle_name = StringField(label='Отчество', validators=[Length(min=0, max=50), CleanName(), OnlyCharsValidator()])
     email = StringField(label='E-Mail', validators=[Email(message='Введите корректный адрес электронной почты'), DataRequiredImproved()])
     affiliation = StringField(label='Место работы', validators=[Length(max=100), DataRequiredImproved()])

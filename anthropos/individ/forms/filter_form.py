@@ -30,6 +30,7 @@ class FilterForm(FlaskForm):
     # age_min = IntegerField(label='Возраст: от', validators=[Optional()])
     # age_max = IntegerField(label='до', validators=[Optional()])
     preservation = QuerySelectMultipleField(label='Сохранность')
+    grave = IntegerField(label='Номер погребения')
     grave_type = SelectMultipleField(label='Тип погребения')
     researcher = QuerySelectMultipleField('Исследователи')
     federal_district = QuerySelectMultipleField('Федеральный округ')

@@ -4,7 +4,6 @@ from anthropos.lib.validators import DataRequiredImproved
 from wtforms.validators import ValidationError
 
 from anthropos.models import DatabaseUser
-from werkzeug.security import check_password_hash
 
 
 class LoginForm(FlaskForm):
@@ -24,5 +23,5 @@ class LoginForm(FlaskForm):
             raise ValidationError('Email не подтвержден!')
 
     def validate_password(self, password):
-        if user and user.check_password(password.data):
+        if user and not user.check_password(password.data):
             raise ValidationError('Неверный пароль!')

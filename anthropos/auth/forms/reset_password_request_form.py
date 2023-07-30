@@ -6,7 +6,7 @@ from anthropos.models import DatabaseUser
 from anthropos.lib.validators import DataRequiredImproved
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequiredImproved(), Email(message='Введите корректный адрес электронной почты')])
+    email = StringField('Email', validators=[Email(message='Введите корректный адрес электронной почты')])
     submit = SubmitField('Запросить изменение пароля')
 
     def validate_email(self, email):

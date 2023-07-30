@@ -13,8 +13,13 @@
     
     {{ render_field(form.type) }}
     {{ render_field(form.epoch) }}
-    {{ render_field(form.preservation) }}
-       
+    {{ render_field(form.preservation, list='steplist') }}
+    <datalist id="steplist">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+    </datalist>
 
         </div>
                 <div class="col">
@@ -69,14 +74,6 @@
 
 </form>
 
-<!--{% for field in form %}-->
-<!--{% if field.name == 'preservation' %}-->
-<!--{{ field.label}}-->
-<!--{{ field(min=1, max=4, action='/main/individ' ) }}-->
-<!--{% else %}-->
-<!--{{render_field(field)}}-->
-<!--{% endif %}-->
-<!--{% endfor %}-->
 
 {% endblock %}
 {% block scripts %}
