@@ -85,7 +85,10 @@ def individ():
 @login_required
 def delete_individ(individ_id):
     individ = db.session.scalars(select(Individ).where(Individ.id==individ_id)).first()
-    remove(individ.file.path)
+    try:
+        remove(individ.file.path)
+    except AttributeError as e:
+        print(e)
     db.session.delete(individ)
     db.session.commit()
     flash('Запись удалена', 'warning')
@@ -208,7 +211,7 @@ def search():
             value = request.args.get(argument)
             if argument in ('year_min', 'year_max', 'age_min', 'age_max'):
                 filters.setdefault(argument, value)
-            if value != '__None':
+            if value != '__None' and value != '':
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researcher).join(Individ.sex).join(ArchaeologicalSite.regions)
         if a := filters.get('epoch'):

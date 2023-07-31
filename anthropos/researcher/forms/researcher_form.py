@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from flask import url_for, request
 from flask_wtf.form import _Auto
 from wtforms import StringField, SubmitField
-from wtforms.validators import Length
 from anthropos.models import Researcher
 from anthropos import db
 from sqlalchemy import and_
@@ -15,10 +14,10 @@ class ResearcherForm(FlaskForm):
         super().__init__()
         self.endpoint = endpoint
 
-    last_name = StringField(label='Фамилия', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
-    first_name = StringField(label='Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
+    last_name = StringField(label='Фамилия', validators=[DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
+    first_name = StringField(label='Имя', validators=[DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     middle_name = StringField(label='Отчество', validators=[CleanName(), OnlyCharsValidator()])
-    affiliation = StringField(label='Место работы', validators=[Length(min=2, max=50), DataRequiredImproved()])
+    affiliation = StringField(label='Место работы', validators=[DataRequiredImproved()])
     submit = SubmitField(label='Добавить исследователя')
 
     def validate(self, extra_validators=None):

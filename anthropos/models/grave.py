@@ -31,5 +31,24 @@ class Grave(db.Model, BaseModel):
             return f'к.{self.kurgan_number}/п.{self.grave_number}'
         return f'п.{self.grave_number}'
     
-    def full_data_russian(self):
-        pass
+    def __str__(self):
+        desc = ', '.join([f'{k} {v}' for k, v in self.dict_russian().items() if v is not None])
+        return desc
+    
+    def dict_russian(self):
+        attrs = {
+            'к.': self.kurgan_number,
+            'п.': self.grave_number,
+            'катакомба': self.catacomb,
+            'камера': self.chamber,
+            'раскоп': self.trench,
+            'участок': self.area,
+            'объект': self.object,
+            'слой': self.layer,
+            'кв.': self.square,
+            'сектор': self.sector,
+            'нив. отметка': self.niveau_point,
+            'тах. отметка': self.tachymeter_point,
+            'скелет': self.skeleton
+        }
+        return attrs

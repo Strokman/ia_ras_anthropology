@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import PasswordField, SubmitField
-from wtforms.validators import EqualTo
+from wtforms.validators import EqualTo, Length
 from anthropos.lib import DataRequiredImproved
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Новый пароль', validators=[DataRequiredImproved()])
-    password2 = PasswordField(
-        'Подтверждение пароля', validators=[DataRequiredImproved(), EqualTo('password')])
+    password = PasswordField('Новый пароль', validators=[Length(min=8, message='Пароль должен иметь длину минимум 8 символов'), DataRequiredImproved()])
+    confirm_password = PasswordField(
+        'Подтверждение пароля', validators=[EqualTo('password', message='Пароли не совпадают')])
     submit = SubmitField('Изменить пароль')

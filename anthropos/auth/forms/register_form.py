@@ -14,7 +14,7 @@ class RegistrationForm(FlaskForm):
     middle_name = StringField(label='Отчество', validators=[Length(min=0, max=50), CleanName(), OnlyCharsValidator()])
     email = StringField(label='E-Mail', validators=[Email(message='Введите корректный адрес электронной почты'), DataRequiredImproved()])
     affiliation = StringField(label='Место работы', validators=[Length(max=100), DataRequiredImproved()])
-    password = PasswordField(label='Пароль', validators=[Length(min=8), DataRequiredImproved()])
+    password = PasswordField(label='Пароль', validators=[Length(min=8, message='Пароль должен иметь длину минимум 8 символов'), DataRequiredImproved()])
     confirm_password = PasswordField(label='Подтверждение пароля', validators=[EqualTo('password', message='Пароли не совпадают'), DataRequiredImproved()])
     submit = SubmitField(label='Создать учетную запись')
 

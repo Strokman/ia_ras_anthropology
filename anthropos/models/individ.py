@@ -33,9 +33,9 @@ class Individ(db.Model, BaseModel):
 
     def create_index(self):
         if self.grave.grave_type == 'курганный' and self.grave.kurgan_number:
-            self.index = f'{self.site.name}-{self.year}-{self.grave.kurgan_number}-{self.grave.grave_number}'
+            self.index = f'{self.site.name}-{self.year}-к{self.grave.kurgan_number}-п{self.grave.grave_number}'
         else:
-            self.index = f'{self.site.name}-{self.year}-{self.grave.grave_number}'
+            self.index = f'{self.site.name}-{self.year}-п{self.grave.grave_number}'
 
     def __repr__(self):
         return f'{self.index}'
@@ -49,13 +49,13 @@ class Individ(db.Model, BaseModel):
             return f'до {self.age_max}'
         return ''
     
-    def table_view_russian(self):
+    def dict_russian(self):
         return {
             'ID': self.id,
             'Индекс': self.index,
             'Год раскопок': self.year,
             'Памятник': self.site,
-            'Погребение': self.grave,
+            'Погребение': self.grave.__str__(),
             'Федеральный округ': self.site.regions.federal_district,
             'Область': self.site.regions,
             'Долгота': self.site.long,

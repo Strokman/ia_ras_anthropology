@@ -13,7 +13,7 @@ def not_found_error(error: NotFound):
     }
     txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
-    return render_template('errors/base.html', response=response), 404
+    return render_template('errors/base_error.html', response=response), 404
 
 
 @bp.app_errorhandler(500)
@@ -25,7 +25,7 @@ def internal_error(error: InternalServerError):
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
-    return render_template('errors/base.html', response=response), 500
+    return render_template('errors/base_error.html', response=response), 500
 
 
 @bp.app_errorhandler(502)
@@ -37,7 +37,7 @@ def internal_error(error: BadGateway):
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
-    return render_template('errors/base.html', response=response), 502
+    return render_template('errors/base_error.html', response=response), 502
 
 
 @bp.app_errorhandler(405)
@@ -49,4 +49,4 @@ def internal_error(error: MethodNotAllowed):
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
     MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
-    return render_template('errors/base.html', response=response), 405
+    return render_template('errors/base_error.html', response=response), 405
