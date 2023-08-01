@@ -15,7 +15,7 @@ RUN venv/bin/pip install gunicorn
 # copy every content from the local directory to the image
 COPY anthropos anthropos
 COPY migrations migrations
-COPY base_habilis.py config.py boot.sh regions.csv create_tables.py ./
+COPY base_habilis.py config.py boot.sh regions.csv .env create_tables.py ./
 RUN chmod +x boot.sh
 
 ENV FLASK_APP base_habilis.py
