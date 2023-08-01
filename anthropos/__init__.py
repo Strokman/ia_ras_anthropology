@@ -1,5 +1,5 @@
 from flask import Flask
-from config import Config
+from anthropos.config import Config
 from flask_migrate import Migrate
 from flask_mail import Mail
 # from flask_session import Session
