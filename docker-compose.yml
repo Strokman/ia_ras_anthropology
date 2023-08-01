@@ -3,16 +3,17 @@ version: '3.6'
 services:
   db:
     environment:
-      POSTGRES_USER: basehabilis
-      POSTGRES_PASSWORD: '04020051'
-      POSTGRES_DB: basehabilis
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    user: postgres
     image: postgres:latest
     networks:
       - default
     ports:
       - 5600:5432
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "basehabilis" ]
+      test: [ "CMD", "pg_isready", "-U", "test" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -28,11 +29,11 @@ services:
       db:
         condition: service_healthy
     environment:
-      SQLALCHEMY_DATABASE_URI: postgresql://basehabilis:04020051@db:5432/basehabilis
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://test:test@db:5432/test
       FLASK_DEBUG: False
     networks:
       - default
     ports:
       - 5100:5100
     restart: always
-    command: python create_tables.py && gunicorn -w 5 -b 0.0.0.0:5100 app:app
+    command: flask db init && flask db migrate && flask db upgrade && python create_tables.py && gunicorn -w 5 -b 0.0.0.0:5100 base_habilis:app
