@@ -33,9 +33,9 @@ class Individ(db.Model, BaseModel):
 
     def create_index(self):
         if self.grave.grave_type == 'курганный' and self.grave.kurgan_number:
-            self.index = f'{self.site.name}-{self.year}-к{self.grave.kurgan_number}-п{self.grave.grave_number}'
+            self.index = f'{self.site.name}-{self.year}-к{self.grave.kurgan_number}-п{self.grave.grave_number}'.replace(' ', '-').replace('/', '-').replace('\\', '-')
         else:
-            self.index = f'{self.site.name}-{self.year}-п{self.grave.grave_number}'
+            self.index = f'{self.site.name}-{self.year}-п{self.grave.grave_number}'.replace(' ', '-').replace('/', '-').replace('\\', '-')
 
     def __repr__(self):
         return f'{self.index}'

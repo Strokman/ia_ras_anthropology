@@ -13,7 +13,7 @@ class FilterForm(FlaskForm):
         super().__init__()
         self.federal_district.query = FederalDistrict.get_all()
         self.researcher.query = Researcher.get_all(Researcher.last_name)
-        self.epoch.query = Epoch.get_all()
+        self.epoch.query = Epoch.get_all(Epoch.id)
         self.sex.query = Sex.get_all(Sex.sex)
         self.type.choices = ['ингумация', 'кремация']
         self.preservation.query = Preservation.get_all(Preservation.id)

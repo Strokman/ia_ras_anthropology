@@ -15,7 +15,7 @@ class CleanString(object):
                 return field.data
             elif field.data == None:
                 return   
-            field.data = field.data.replace('.', '').replace('/', '-').strip()
+            field.data = field.data.replace('.', '').replace('/', '-').replace('\\', '-').strip()
             return field.data
         except:
             pass
@@ -28,7 +28,7 @@ class CleanName(object):
                 return field.data
             elif field.data == None:
                 return   
-            field.data = field.data.replace('.', '').replace('/', '-').strip().lower().capitalize()
+            field.data = field.data.replace('.', '').replace('/', '-').replace('\\', '-').strip().lower().capitalize()
             return field.data
         except:
             pass

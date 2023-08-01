@@ -152,7 +152,7 @@ def edit_individ(individ_id):
             epoch.individ.append(individ)
         db.session.commit()
         flash('Изменения сохранены', 'success')
-        return redirect(request.referrer)
+        return redirect(url_for('individ.individ_table'))
     elif request.method == 'GET':
         try:
             form.submit.label.text = 'Редактировать'
@@ -192,8 +192,11 @@ def individ_table():
     form = FilterForm()
 
     if request.method == 'POST':
-        file = export_xls(individs, current_app, export_name='all_individs')
-        return send_file(file, as_attachment=True)
+        try:
+            file = export_xls(individs, current_app, export_name='all_individs')
+            return send_file(file, as_attachment=True)
+        except:
+            flash('Нет данных для экспорта', 'warning')
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
                            individs=enumerate(individs, 1),
@@ -251,8 +254,11 @@ def search():
                                form=form,
                                action=url_for('individ.search'))
     if request.method == 'POST':   
-        file = export_xls(individs, current_app, export_name='filtered_individs')
-        return send_file(file, as_attachment=True)
+        try:
+            file = export_xls(individs, current_app, export_name='filtered_individs')
+            return send_file(file, as_attachment=True)
+        except:
+            flash('Нет данных для экспорта', 'warning')
     return redirect(url_for('individ.individ_table'))
 
 
