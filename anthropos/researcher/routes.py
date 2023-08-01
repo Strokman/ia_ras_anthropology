@@ -1,15 +1,22 @@
 from flask import redirect, url_for, render_template, flash, request
 from flask_login import login_required
 from anthropos import db
-from .forms import ResearcherForm
+from .forms import ResearcherForm, EditResearcherForm
 from anthropos.researcher import bp
 from anthropos.models import Researcher
+
+
+@bp.route('/researcher_table', methods=['GET', 'POST'])
+@login_required
+def researcher_table():
+    researchers = enumerate(Researcher.get_all(Researcher.last_name), 1)
+    return render_template('researcher/researcher_table.html', title='Таблица исследователей', researchers=researchers)
 
 
 @bp.route('/submit_researcher', methods=['GET', 'POST'])
 @login_required
 def submit_researcher():
-    form = ResearcherForm(url_for('researcher.submit_researcher'))
+    form = ResearcherForm()
     if form.validate_on_submit():
         researcher = Researcher()
         for key, value in form.data.items():
@@ -22,17 +29,11 @@ def submit_researcher():
     return render_template('researcher/submit_researcher.html', title='Добавление исследователя', form=form)
 
 
-@bp.route('/researcher_table', methods=['GET', 'POST'])
-@login_required
-def researcher_table():
-    researchers = enumerate(Researcher.get_all(Researcher.last_name), 1)
-    return render_template('researcher/researcher_table.html', title='Таблица исследователей', researchers=researchers)
-
 @bp.route('/edit_researcher/<researcher_id>', methods=['GET', 'POST'])
 @login_required
 def edit_researcher(researcher_id):
     researcher = db.session.get(Researcher, researcher_id)
-    form = ResearcherForm()
+    form = EditResearcherForm()
     if request.method == 'POST' and form.validate_on_submit():
         researcher.last_name = form.last_name.data
         researcher.first_name = form.first_name.data
