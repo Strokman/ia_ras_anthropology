@@ -31,6 +31,7 @@ services:
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://test:test@db:5432/test
       FLASK_DEBUG: False
+      FLASK_APP: base_habilis.py
     networks:
       - default
     ports:
