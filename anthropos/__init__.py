@@ -1,5 +1,5 @@
 from flask import Flask
-from anthropos.config import Config
+from config import Config
 from flask_migrate import Migrate
 from flask_mail import Mail
 # from flask_session import Session
@@ -11,7 +11,7 @@ from anthropos.models import *
 
 # import logging
 # from logging.config import dictConfig
-#
+
 # dictConfig({
 #     'version': 1,
 #     'formatters': {'default': {
@@ -30,11 +30,11 @@ from anthropos.models import *
 #                 "formatter": "default",
 #             },},
 #     'root': {
-#         'level': 'ERROR',
+#         'level': 'INFO',
 #         'handlers': ['wsgi', 'file']
 #     }
 # })
-#
+
 # root = logging.getLogger("root")
 
 # app = Flask(__name__)
