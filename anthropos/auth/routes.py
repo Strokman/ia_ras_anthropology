@@ -6,7 +6,6 @@ from urllib.parse import urlsplit
 from anthropos.auth.forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
 from anthropos.models import DatabaseUser
 from anthropos import db
-from anthropos.auth.reset_email import send_password_reset_email
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -80,7 +79,7 @@ def reset_password_request():
         user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
                                             form.email.data
                                             )
-        send_password_reset_email(user)
+        user.send_password_reset_email()
         flash('Проверьте свой почтовый ящик для дальнейших инструкций', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html',

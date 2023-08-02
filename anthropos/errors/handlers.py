@@ -1,6 +1,6 @@
 from flask import render_template, current_app
 from anthropos.errors import bp
-from anthropos.lib import MailgunEngine
+from anthropos.lib.email import send_email
 from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed
 import traceback
 
@@ -12,7 +12,11 @@ def not_found_error(error: NotFound):
         'tb': traceback.format_exc()
     }
     txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+            sender=current_app.config['ADMIN_EMAIL'],
+            recipients=[current_app.config['BACKUP_EMAIL']],
+            text_body=txt
+            )
     return render_template('errors/base_error.html', response=response), 404
 
 
@@ -24,7 +28,11 @@ def internal_error(error: InternalServerError):
         'tb': traceback.format_exc()
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+               sender=current_app.config['ADMIN_EMAIL'],
+               recipients=[current_app.config['BACKUP_EMAIL']],
+               text_body=txt
+               )
     return render_template('errors/base_error.html', response=response), 500
 
 
@@ -36,7 +44,11 @@ def internal_error(error: BadGateway):
         'tb': traceback.format_exc()
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+        sender=current_app.config['ADMIN_EMAIL'],
+        recipients=[current_app.config['BACKUP_EMAIL']],
+        text_body=txt
+        )
     return render_template('errors/base_error.html', response=response), 502
 
 
@@ -48,5 +60,9 @@ def internal_error(error: MethodNotAllowed):
         'tb': traceback.format_exc()
     }
     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    MailgunEngine.send_error_mail(current_app.config['ADMIN_EMAIL'], txt)
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+        sender=current_app.config['ADMIN_EMAIL'],
+        recipients=[current_app.config['BACKUP_EMAIL']],
+        text_body=txt
+        )
     return render_template('errors/base_error.html', response=response), 405

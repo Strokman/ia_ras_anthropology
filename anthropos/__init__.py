@@ -1,11 +1,11 @@
 from flask import Flask
 from config import Config
 from flask_migrate import Migrate
-from flask_mail import Mail
+
 # from flask_session import Session
 from flask_bootstrap import Bootstrap5
 from flask_moment import Moment
-from anthropos.extensions import login, admin, db, sess
+from anthropos.extensions import login, admin, db, sess, mail
 from flask_admin.contrib.sqla import ModelView
 from anthropos.models import *
 
@@ -40,7 +40,7 @@ from anthropos.models import *
 # app = Flask(__name__)
 # app.config.from_object(Config)
 
-mail = Mail()
+
 # db = SQLAlchemy()
 bootstrap = Bootstrap5()
 moment = Moment()

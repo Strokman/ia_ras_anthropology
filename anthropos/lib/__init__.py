@@ -1,3 +1,2 @@
-from .mailgun import MailgunEngine
-from .mail_text import *
-from .validators import *
+from anthropos.lib.email import send_email
+from anthropos.lib.validators import *

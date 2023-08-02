@@ -2,10 +2,10 @@ from anthropos.extensions import login, db
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
-from flask import request, url_for, flash, session, redirect, current_app
+from flask import request, url_for, flash, session, redirect, current_app, render_template
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from anthropos.lib import MailgunEngine
+from anthropos.lib.email import send_email
 import jwt
 from time import time
 from functools import wraps
@@ -30,9 +30,6 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 
     individs_created = db.relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
     individs_edited = db.relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
-    """
-    РЕЛЕЙШЕНЫ ПИСАТЬ КАК ЗДЕСЬ И В КЛАССЕ АРХПАМЯТНИК - ТОГДА РАБОТАЕТ НОРМАЛЬНО
-    """
     sites_created = db.relationship('ArchaeologicalSite',
                                     foreign_keys='ArchaeologicalSite.creator_id',
                                     back_populates='creator')
@@ -67,24 +64,31 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 
     def send_confirmation_email(self):
         link = request.url_root[:-1] + url_for('auth.user_confirmation', username=self.username, token=self.token)
-        MailgunEngine.send_confirmation_email(self.email, link)
+        send_email('BaseHabilis - подтверждение email',
+               sender=current_app.config['ADMIN_EMAIL'],
+               recipients=[self.email],
+               html_body=render_template('email/mail_confirmation.html',
+                                         link=link))
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @classmethod
-    def activate_user(cls, user_id: int):
-        user = db.session.query(cls).filter_by(id=user_id).first()
-        if not user:
-            return f'There is no user {user.username}'
-        user.activated = True
-        db.session.commit()
-        return f'User {user.username} is active'
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
+    
+
+    def send_password_reset_email(self):
+        send_email('BaseHabilis - сброс пароля',
+               sender=current_app.config['ADMIN_EMAIL'],
+               recipients=[self.email],
+               text_body=render_template('email/reset_password.txt',
+                                         user=self, token=self.get_reset_password_token()),
+               html_body=render_template('email/reset_password.html',
+                                         user=self, token=self.get_reset_password_token()))
+        
 
     @staticmethod
     def verify_reset_password_token(token):
@@ -108,10 +112,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 @login.user_loader
 def load_user(user_id):
     user = db.session.query(DatabaseUser).get(int(user_id))
-    if not user:
-        return None
-    elif not user.activated:
-        flash('Email is not confirmed')
+    if not user or not user.activated:
         return None
     return user
 
@@ -120,7 +121,7 @@ def admin_required(f):
     @wraps(f)
     def decorated_view(*args, **kwargs):
         if session['user_role'] != 'admin':
-            flash('Unauthorized access', 'warning')
+            flash('Недостаточно прав', 'warning')
             return redirect(url_for('index.index'))
         else:
             return f(*args, **kwargs)
