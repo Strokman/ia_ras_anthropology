@@ -31,7 +31,7 @@ def edit_profile():
         current_user.last_name = form.last_name.data
         current_user.middle_name = form.middle_name.data
         current_user.affiliation = form.affiliation.data
-        if form.email.data:
+        if form.email.data != current_user.email:
             current_user.email = form.email.data
             current_user.activated = False
             current_user.send_confirmation_email()

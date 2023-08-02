@@ -29,6 +29,7 @@ def submit_site():
 
 
 @bp.route('/site_table')
+@login_required
 def site_table():
     sites = enumerate(ArchaeologicalSite.get_all())
     return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)

@@ -3,6 +3,7 @@ from os import path, remove
 from flask import Flask
 import pandas as pd
 
+
 def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='default') -> str:
 
     export_data: dict = dict()
@@ -11,7 +12,7 @@ def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='d
     export_data.setdefault('Памятник', [individ.site for individ in individs])
     export_data.setdefault('Погребение', [individ.grave for individ in individs])
     export_data.setdefault('Эпоха', [individ.epoch for individ in individs])
-    export_data.setdefault('Исследователь', [individ.site.researcher for individ in individs])
+    export_data.setdefault('Исследователь', [individ.site.researchers for individ in individs])
     export_data.setdefault('Федеральный округ', [individ.site.region.federal_district for individ in individs])
     export_data.setdefault('Регион', [individ.site.region for individ in individs])
     export_data.setdefault('Долгота', [individ.site.long for individ in individs])
