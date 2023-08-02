@@ -2,7 +2,6 @@ from anthropos import db
 from anthropos.models.sites_epochs import sites_epochs
 from anthropos.models.sites_researchers import sites_researchers
 from .base_model import BaseModel
-# from anthropos.models import DatabaseUser, Region, Researcher
 
 
 class ArchaeologicalSite(db.Model, BaseModel):
