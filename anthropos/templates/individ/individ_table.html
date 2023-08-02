@@ -65,8 +65,8 @@
               <td class="text-start">{{ num }}</td>
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>
-                <td class="text-end">{{ individ.site.researcher.__str__() }}</td>
-                <td class="text-end">{{ individ.site.regions}}</td>
+                <td class="text-end">{% for researcher in individ.site.researchers %}{{ researcher }}<br>{% endfor %}</td>
+                <td class="text-end">{{ individ.site.region}}</td>
                 <td class="text-end">{{ individ.age() }}</td>
                 <td class="text-end">{{ individ.sex.sex }}</td>
                 <td class="text-end">{{ individ.type }}</td>

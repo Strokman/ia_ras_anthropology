@@ -24,7 +24,7 @@ class ArchaeologicalSiteForm(FlaskForm):
     lat = DecimalField(places=6, label='Широта', validators=[NumberRange(min=-90, max=90), DataRequired()])
     long = DecimalField(places=6, label='Долгота', validators=[NumberRange(min=-180, max=180, message='Градусы должны быть в пределах -180 - 180'), DataRequiredImproved()])
     epoch = QuerySelectMultipleField('Эпохи')
-    researcher = QuerySelectField('Исследователи', allow_blank=True, blank_text='Выберите исследователя', validators=[DataRequiredImproved()])
+    researcher = QuerySelectMultipleField('Исследователи', validators=[DataRequiredImproved()])
     federal_district = QuerySelectField('Федеральный округ', allow_blank=True, blank_text='Выберите округ', validators=[DataRequiredImproved()])
     region = NonValidatingSelectField(label='Регион', default='Выберите субъект', validators=[DataRequiredImproved(), SelectFieldValidator()])
     submit = SubmitField('Добавить памятник')

@@ -28,12 +28,14 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     created = db.Column(db.DateTime, nullable=False)
     last_login = db.Column(db.DateTime, nullable=False)
 
+    sites_created = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.created_by', back_populates='creator')
+    sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by', back_populates='editor')
     individs_created = db.relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
     individs_edited = db.relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
     sites_created = db.relationship('ArchaeologicalSite',
-                                    foreign_keys='ArchaeologicalSite.creator_id',
+                                    foreign_keys='ArchaeologicalSite.created_by',
                                     back_populates='creator')
-    sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.editor_id',
+    sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by',
                                     back_populates='editor')
 
     def __init__(self,

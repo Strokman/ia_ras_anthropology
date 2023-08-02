@@ -9,10 +9,10 @@ class Epoch(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, index=True)
 
-    sites = db.relationship('ArchaeologicalSite', secondary=sites_epochs,
-                            primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
-        secondaryjoin= 'Epoch.id==sites_epochs.c.epoch_id', back_populates='epochs')
     individ = db.relationship('Individ', back_populates='epoch', cascade='all, delete-orphan')
+    sites = db.relationship('ArchaeologicalSite', secondary=sites_epochs,
+                        primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
+                        secondaryjoin= 'Epoch.id==sites_epochs.c.epoch_id', back_populates='epochs')
 
     def __init__(self, name):
         self.name = name

@@ -1,5 +1,6 @@
-from anthropos import db
-from .base_model import BaseModel
+from anthropos.extensions import db
+from anthropos.models.base_model import BaseModel
+from anthropos.models.sites_researchers import sites_researchers
 
 
 class Researcher(db.Model, BaseModel):
@@ -11,7 +12,10 @@ class Researcher(db.Model, BaseModel):
     affiliation = db.Column(db.String(128), nullable=False)
     middle_name = db.Column(db.String(128))
 
-    sites = db.relationship('ArchaeologicalSite', cascade='all, delete-orphan', back_populates='researcher')
+    sites = db.relationship('ArchaeologicalSite', secondary=sites_researchers,
+                                  primaryjoin='ArchaeologicalSite.id==sites_researchers.c.archaeological_site_id',
+                                  secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
+                                  back_populates='researchers')
 
     def __str__(self):
         if self.middle_name:

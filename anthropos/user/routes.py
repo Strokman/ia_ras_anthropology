@@ -1,9 +1,8 @@
 from flask_login import current_user, login_required
 from flask import redirect, url_for, flash, render_template
-from anthropos.models import DatabaseUser, ArchaeologicalSite, Researcher, FederalDistrict, Epoch
+from anthropos.models import DatabaseUser
 from anthropos import db
 from anthropos.user.forms import EditProfileForm
-from anthropos.site.forms import ArchaeologicalSiteForm
 from anthropos.user import bp
 
 
@@ -11,19 +10,14 @@ from anthropos.user import bp
 @login_required
 def user(username):
     user = db.session.query(DatabaseUser).filter_by(username=username).first_or_404()
-    sites = enumerate(db.session.query(ArchaeologicalSite).filter_by(creator_id=user.id).all())
     profile_form = EditProfileForm(current_user.username, current_user.email)
-    site_form = ArchaeologicalSiteForm()
-    site_form.epoch.query = Epoch.get_all(Epoch.id)
-    site_form.researcher.query = Researcher.get_all(Researcher.last_name)
-    site_form.federal_district.query = FederalDistrict.get_all()
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name
     profile_form.last_name.data = current_user.last_name
     profile_form.middle_name.data = current_user.middle_name
     profile_form.affiliation.data = current_user.affiliation
     profile_form.email.data = current_user.email
-    return render_template('user/profile.html', user=user, sites=sites, profile_form=profile_form, site_form=site_form)
+    return render_template('user/profile.html', user=user, profile_form=profile_form)
 
 
 @bp.route('/edit_profile', methods=['POST'])

@@ -190,7 +190,6 @@ def edit_individ(individ_id):
 def individ_table():
     individs = Individ.get_all(Individ.index)
     form = FilterForm()
-
     if request.method == 'POST':
         try:
             file = export_xls(individs, current_app, export_name='all_individs')
@@ -216,7 +215,7 @@ def search():
                 filters.setdefault(argument, value)
             if value != '__None' and value != '':
                 filters.setdefault(argument, request.args.getlist(argument))
-        stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researcher).join(Individ.sex).join(ArchaeologicalSite.regions)
+        stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
         if a := filters.get('epoch'):
             stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(a))
         if b := filters.get('researcher'):
