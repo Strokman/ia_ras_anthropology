@@ -5,3 +5,6 @@ __pycache__/
 /flask_session
 /.vscode
 *.xlsx
+*.DS_Store
+/postgres-data
+TODO
