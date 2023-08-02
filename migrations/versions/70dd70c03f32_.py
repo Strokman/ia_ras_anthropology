@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 6ba51b15dd14
+Revision ID: 70dd70c03f32
 Revises: 
-Create Date: 2023-07-30 20:00:34.221426
+Create Date: 2023-08-03 00:14:49.482926
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6ba51b15dd14'
+revision = '70dd70c03f32'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -80,14 +80,12 @@ def upgrade():
     sa.Column('name', sa.String(length=50), nullable=False),
     sa.Column('long', sa.Numeric(precision=9, scale=6), nullable=False),
     sa.Column('lat', sa.Numeric(precision=9, scale=6), nullable=False),
-    sa.Column('creator_id', sa.Integer(), nullable=True),
-    sa.Column('editor_id', sa.Integer(), nullable=True),
-    sa.Column('researcher_id', sa.Integer(), nullable=True),
+    sa.Column('created_by', sa.Integer(), nullable=True),
+    sa.Column('edited_by', sa.Integer(), nullable=True),
     sa.Column('region_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['creator_id'], ['database_users.id'], ),
-    sa.ForeignKeyConstraint(['editor_id'], ['database_users.id'], ),
+    sa.ForeignKeyConstraint(['created_by'], ['database_users.id'], ),
+    sa.ForeignKeyConstraint(['edited_by'], ['database_users.id'], ),
     sa.ForeignKeyConstraint(['region_id'], ['regions.id'], ),
-    sa.ForeignKeyConstraint(['researcher_id'], ['researchers.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('archaeological_sites', schema=None) as batch_op:
@@ -121,6 +119,12 @@ def upgrade():
     sa.Column('epoch_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['archaeological_site_id'], ['archaeological_sites.id'], ),
     sa.ForeignKeyConstraint(['epoch_id'], ['epochs.id'], )
+    )
+    op.create_table('sites_researchers',
+    sa.Column('archaeological_site_id', sa.Integer(), nullable=True),
+    sa.Column('researcher_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['archaeological_site_id'], ['archaeological_sites.id'], ),
+    sa.ForeignKeyConstraint(['researcher_id'], ['researchers.id'], )
     )
     op.create_table('comments',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -167,6 +171,7 @@ def downgrade():
     op.drop_table('graves')
     op.drop_table('files')
     op.drop_table('comments')
+    op.drop_table('sites_researchers')
     op.drop_table('sites_epochs')
     op.drop_table('individs')
     with op.batch_alter_table('archaeological_sites', schema=None) as batch_op:
