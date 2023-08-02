@@ -12,10 +12,15 @@
     <link rel="stylesheet" href="{{url_for('static', filename='styles.css')}}">
     <link rel="icon" type="image/png" style="margin:20px" sizes="48x48" href="{{url_for('static', filename='lab_icon.png')}}">
     {% endblock %}
-    <title>{% if title %}
+    <title>
+        {% if title %}
+
         BaseHabilis - {{title}}
+
         {% else %}
+
         BaseHabilis
+        
         {% endif %}
     </title>
         {% endblock %}
