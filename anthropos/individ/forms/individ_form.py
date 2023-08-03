@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import DataRequired, NumberRange, Optional
-from ...lib.validators import CleanString, DataRequiredImproved
+from wtforms.validators import NumberRange, Optional
+from anthropos.lib.validators import CleanString, DataRequiredImproved, FileFieldValidator
 from anthropos.models import ArchaeologicalSite, Sex, Epoch
 from anthropos import db
 
@@ -43,8 +43,7 @@ class IndividForm(FlaskForm):
     tachymeter_point = StringField(render_kw={'placeholder': 'тахеом.отметка'}, validators=[CleanString()])
     skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[CleanString()])
     
-
     comment = TextAreaField(label='Примечание')
-    file = FileField(label='Файл: pdf, jpeg')
+    file = FileField(label='Файл: pdf, jpeg', validators=[Optional(), FileFieldValidator()])
 
     submit = SubmitField(label='Добавить индивида')
