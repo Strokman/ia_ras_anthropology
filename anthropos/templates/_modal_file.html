@@ -11,6 +11,7 @@
         <div class="modal-footer">
       
           <a href="{{url_for('file.file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" role="button">Скачать</a>
+          <a href="{{url_for('file.delete_file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
         </div>
       </div>
     </div>
