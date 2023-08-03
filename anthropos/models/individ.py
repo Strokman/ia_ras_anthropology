@@ -21,7 +21,7 @@ class Individ(db.Model, BaseModel):
     edited_by = db.Column(db.Integer, db.ForeignKey("database_users.id"))
     preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
 
-    site = db.relationship('ArchaeologicalSite', back_populates='individ')
+    site = db.relationship('ArchaeologicalSite', back_populates='individs')
     comment = db.relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
     epoch = db.relationship('Epoch', uselist=False, back_populates='individ')
     creator = db.relationship("DatabaseUser", foreign_keys='Individ.created_by', back_populates='individs_created')
@@ -66,7 +66,7 @@ class Individ(db.Model, BaseModel):
             'Возраст': self.age(),
             'Пол': self.sex.sex,
             'Сохранность': self.preservation.description,
-            'Примечание': self.comment.text,
+            'Примечание': self.comment.text if self.comment else '',
             'Кем создано': self.creator,
             'Когда создано': moment(self.created_at).format('L'),
             'Кем изменено': self.editor,
