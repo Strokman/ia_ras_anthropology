@@ -10,8 +10,6 @@ class ResetPasswordRequestForm(FlaskForm):
     submit = SubmitField('Запросить изменение пароля')
 
     def validate_email(self, email):
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.email,
-                                        email.data
-                                        )
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.email, email.data)
         if user is None:
             raise ValidationError("Такого пользователя не существует!")

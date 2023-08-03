@@ -13,7 +13,8 @@
     
     {{ render_field(form.type) }}
     {{ render_field(form.epoch) }}
-    {{ render_field(form.preservation, list='steplist') }}
+    {{ render_field(form.preservation) }}
+
 
         </div>
                 <div class="col">
@@ -34,6 +35,7 @@
     {{ render_field(form.file) }} 
     {{ render_field(form.comment) }} 
     {{ render_field(form.submit) }}
+    <input type="reset" value="Сбросить" type="button" class="btn btn-primary"/>
         </div>
         <div class="col">
             

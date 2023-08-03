@@ -9,6 +9,7 @@ from os import remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
 from anthropos.helpers import export_xls, save_file
+from werkzeug.exceptions import NotFound
 
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
@@ -26,7 +27,6 @@ def individ():
             site_id=form.data.get('site', None).id,
             preservation_id=form.data.get('preservation', None),
             type=form.data.get('type', None),
-            sex_type=form.data.get('sex', None).sex,
             created_at=datetime.utcnow(),
             created_by=current_user.id,
             edited_at=datetime.utcnow(),
@@ -56,7 +56,8 @@ def individ():
         
         # add requiered relations
         individ.grave = grave
-
+        sex = form.sex.data
+        sex.individs.append(individ)
         site = form.site.data
         site.graves.append(grave)
         site.individs.append(individ)
@@ -130,7 +131,10 @@ def edit_individ(individ_id):
         individ.type=form.data.get('type', None)
         individ.edited_at=datetime.utcnow()
         individ.edited_by=current_user.id
-        form.sex.data.individ.append(individ)
+        
+        sex = form.sex.data
+        sex.individs.append(individ)
+        
         if input_comment := form.comment.data:
             comment = Comment(text=input_comment)
             db.session.add(comment)
@@ -199,7 +203,7 @@ def individ_table():
             flash('Нет данных для экспорта', 'warning')
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=enumerate(individs, 1),
+                           individs=individs,
                            form=form,
                            action=url_for('individ.individ_table'))
 

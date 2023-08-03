@@ -6,7 +6,7 @@ class Sex(db.Model, BaseModel):
     __tablename__ = 'sex'
 
     sex = db.Column(db.String(16), primary_key=True)
-    individ = db.relationship('Individ', back_populates='sex')
+    individs = db.relationship('Individ', back_populates='sex')
 
     def __init__(self, sex):
         self.sex = sex

@@ -1,9 +1,10 @@
-from flask import redirect, url_for, render_template, jsonify, flash, request
+from flask import redirect, url_for, render_template, flash, request
 from flask_login import login_required, current_user
 from anthropos import db
 from anthropos.site.forms import ArchaeologicalSiteForm
 from anthropos.site import bp
-from anthropos.models import ArchaeologicalSite, Region
+from anthropos.models import ArchaeologicalSite, Region, FederalDistrict
+from werkzeug.exceptions import NotFound
 
 
 @bp.route('/submit_site', methods=['GET', 'POST'])
@@ -28,17 +29,12 @@ def submit_site():
     return render_template('site/site_input.html', title='Добавить памятник', form=site_form)
 
 
-@bp.route('/site_table')
-@login_required
-def site_table():
-    sites = enumerate(ArchaeologicalSite.get_all())
-    return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
-
-
 @bp.route('/edit_site/<site_id>', methods=['GET', 'POST'])
 @login_required
 def edit_site(site_id):
-    site = db.session.get(ArchaeologicalSite, site_id)
+
+    site: ArchaeologicalSite = ArchaeologicalSite.get_one_by_attr(ArchaeologicalSite.id, site_id)
+
     form = ArchaeologicalSiteForm()
     if request.method == 'POST' and form.validate_on_submit():
         site.name = form.name.data
@@ -64,13 +60,21 @@ def edit_site(site_id):
     return render_template('site/site_input.html', title='Редактировать памятник', form=form)
 
 
-@bp.route('/get_region/<fd_id>')
-def region(fd_id):
-    regions = Region.query.filter_by(federal_districts_id=fd_id).all()
-    regionArray = [{'id': 0, 'name': 'Выберите субъект'}]
+@bp.route('/site_table')
+@login_required
+def site_table():
+    sites = enumerate(ArchaeologicalSite.get_all())
+    return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
+
+
+@bp.route('/get_region/<int:fd_id>')
+def region(fd_id: int):
+    fed_distr: FederalDistrict = FederalDistrict.get_one_by_attr(FederalDistrict.id, fd_id)
+    regions: list[Region] = fed_distr.region
+    regionArray: list[dict[int, str]] = [{'id': 0, 'name': 'Выберите субъект'}]
     for region in regions:
-        regionObj = {}
+        regionObj: dict = {}
         regionObj['id'] = region.id
         regionObj['name'] = region.name
         regionArray.append(regionObj)
-    return jsonify({'regions': regionArray})
+    return {'regions': regionArray}

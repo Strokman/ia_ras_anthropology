@@ -26,7 +26,7 @@ class Individ(db.Model, BaseModel):
     epoch = db.relationship('Epoch', uselist=False, back_populates='individ')
     creator = db.relationship("DatabaseUser", foreign_keys='Individ.created_by', back_populates='individs_created')
     editor = db.relationship("DatabaseUser", foreign_keys='Individ.edited_by', back_populates='individs_edited')
-    sex = db.relationship('Sex', back_populates='individ')
+    sex = db.relationship('Sex', back_populates='individs')
     preservation = db.relationship('Preservation', back_populates='individ')
     file = db.relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
     grave = db.relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')

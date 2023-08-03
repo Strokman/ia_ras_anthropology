@@ -2,9 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
 from anthropos.models import DatabaseUser
-from anthropos import db
 from anthropos.lib import CleanName, OnlyCharsValidator, DataRequiredImproved, CleanString
-from sqlalchemy import select
 
 
 class RegistrationForm(FlaskForm):
@@ -19,13 +17,11 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(label='Создать учетную запись')
 
     def validate_username(self, username):
-        stmt = select(DatabaseUser).filter_by(username=username.data)
-        user = db.session.scalar(stmt)
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.username, username.data)
         if user is not None:
             raise ValidationError('Пользователь существует!')
 
     def validate_email(self, email):
-        stmt = select(DatabaseUser).filter_by(email=email.data)
-        user = db.session.scalar(stmt)
+        user = DatabaseUser.get_one_by_attr(DatabaseUser.email, email.data)
         if user is not None:
             raise ValidationError('E-Mail уже зарегистрирован!')
