@@ -64,3 +64,5 @@ with app.app_context():
                 d = Preservation(i)
                 db.session.add(d)
             db.session.commit()
+
+            print('Tables created')
