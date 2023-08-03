@@ -18,7 +18,7 @@ class ArchaeologicalSite(db.Model, BaseModel):
     creator = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.created_by", back_populates='sites_created')
     editor = db.relationship("DatabaseUser", foreign_keys="ArchaeologicalSite.edited_by", back_populates='sites_edited')
     region = db.relationship('Region', back_populates='sites')
-    individ = db.relationship("Individ", back_populates='site')
+    individs = db.relationship("Individ", back_populates='site')
     graves = db.relationship("Grave", back_populates='site')
 
     epochs = db.relationship("Epoch", secondary=sites_epochs,
