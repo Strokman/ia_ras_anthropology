@@ -1,7 +1,10 @@
 from anthropos.models import Individ
 from os import path, remove
 from flask import Flask
+from werkzeug.utils import secure_filename
 import pandas as pd
+from uuid import uuid1
+from anthropos.models.individ import Individ
 
 
 def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='default') -> str:
@@ -36,3 +39,12 @@ def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='d
     df['Изменено'] = df['Изменено'].dt.tz_localize('UTC').dt.tz_convert('Europe/Moscow').dt.tz_localize(None)
     df.to_excel(path_to_file, sheet_name=export_name)
     return path_to_file
+
+
+def save_file(file, current_app: Flask) -> dict:
+    filename = secure_filename(file.filename)
+    extension = filename.rsplit('.', 1)[1].lower()
+    filename = f'{uuid1()}.{extension}'
+    saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
+    file.save(saving_path)
+    return {'filename': filename, 'path': saving_path}
