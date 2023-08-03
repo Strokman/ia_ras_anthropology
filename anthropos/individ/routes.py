@@ -5,7 +5,7 @@ from .forms import IndividForm
 from anthropos.individ import bp
 from datetime import datetime
 from sqlalchemy import select
-from os import path, remove, rename
+from os import remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
 from anthropos.helpers import export_xls, save_file
