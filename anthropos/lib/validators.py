@@ -1,4 +1,6 @@
 from wtforms.validators import ValidationError, DataRequired
+from werkzeug.utils import secure_filename
+from flask import current_app
 
 
 class DataRequiredImproved(DataRequired):
@@ -34,6 +36,15 @@ class CleanName(object):
             pass
 
 
+class FileFieldValidator(object):
+    def __call__(self, form, field):
+        filename = secure_filename(field.data.filename)
+        if '.' not in filename:
+            raise ValidationError('Некорректное имя файла: отсутствует расширение')
+        elif filename.rsplit('.', 1)[1].lower() not in current_app.config['ALLOWED_EXTENSIONS']:
+            raise ValidationError('Формат файла не поддерживается')
+
+
 class SelectFieldValidator(object):
     def __call__(self, form, field):
         if int(field.data) == 0:
@@ -47,3 +58,4 @@ class OnlyCharsValidator(object):
             return field.data
         if not field.data.isalpha():
             raise ValidationError('Допускаются только буквы')
+        
