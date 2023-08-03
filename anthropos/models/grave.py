@@ -8,7 +8,7 @@ class Grave(db.Model, BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     grave_type = db.Column(db.String(32))
     kurgan_number = db.Column(db.String(32))
-    grave_number = db.Column(db.Integer)
+    grave_number = db.Column(db.Integer, nullable=False)
     catacomb = db.Column(db.Integer)
     chamber = db.Column(db.Integer)
     trench = db.Column(db.String(32))
@@ -36,7 +36,7 @@ class Grave(db.Model, BaseModel):
         return desc
     
     def dict_russian(self):
-        attrs = {
+         return {
             'к.': self.kurgan_number,
             'п.': self.grave_number,
             'катакомба': self.catacomb,
@@ -51,4 +51,3 @@ class Grave(db.Model, BaseModel):
             'тах. отметка': self.tachymeter_point,
             'скелет': self.skeleton
         }
-        return attrs
