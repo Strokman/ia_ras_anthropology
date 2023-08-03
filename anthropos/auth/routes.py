@@ -53,7 +53,7 @@ def register():
         user.save_to_db()
         user.send_confirmation_email()
         flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
-        flash(f'Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')
+        flash('Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', title='Регистрация', form=form)
 
