@@ -60,7 +60,7 @@ class Individ(db.Model, BaseModel):
             'Область': self.site.region,
             'Долгота': self.site.long,
             'Широта': self.site.lat,
-            'Автор раскопок': ''.join((researcher.__str__() for researcher in self.site.researchers)),
+            'Автор раскопок': ''.join((researcher.__repr__() for researcher in self.site.researchers)),
             'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
             'Возраст': self.age(),

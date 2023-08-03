@@ -17,10 +17,7 @@ class Researcher(db.Model, BaseModel):
                                   secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
                                   back_populates='researchers')
 
-    def __str__(self):
+    def __repr__(self):
         if self.middle_name:
             return f'{self.last_name} {self.first_name.capitalize()[0]}.{self.middle_name.capitalize()[0]}.'
         return f'{self.last_name} {self.first_name.capitalize()[0]}.'
-
-    def __repr__(self):
-        return f'{self.first_name} {self.last_name}'
