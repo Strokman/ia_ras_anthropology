@@ -16,7 +16,7 @@ def submit_site():
                                   lat=site_form.lat.data
                                   )
         site.epochs.extend(site_form.epoch.data)
-        site.researchers.extend(site_form.researcher.data)
+        site.researchers.extend([site_form.researcher.data]) # if possibility of multiple selection will be added - just remove the list parentheses
         region = Region.get_one_by_attr(Region.id, int(site_form.region.data))
         region.sites.append(site)
         
@@ -45,7 +45,7 @@ def edit_site(site_id):
         site.long = form.long.data
         site.lat = form.lat.data
         site.epochs = form.epoch.data
-        site.researchers = form.researcher.data
+        site.researchers = [form.researcher.data] # if possibility of multiple selection will be added - just remove the list parentheses
         region = db.session.get(Region, int(form.region.data))
         region.sites.append(site)
         current_user.sites_edited.append(site)
@@ -58,7 +58,7 @@ def edit_site(site_id):
         form.long.data = site.long
         form.lat.data = site.lat
         form.epoch.data = site.epochs
-        form.researcher.data = site.researchers
+        form.researcher.data = site.researchers[0] # if possibility of multiple selection will be added - just remove the index
         form.federal_district.data = site.region.federal_district
         form.region.choices = [(site.region.id, site.region)]
     return render_template('site/site_input.html', title='Редактировать памятник', form=form)

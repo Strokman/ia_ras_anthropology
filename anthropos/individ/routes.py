@@ -77,7 +77,7 @@ def individ():
 
         if uploaded_file := form.file.data:
             saved_file = save_file(uploaded_file, current_app)
-            file = File(path=saved_file.get('path'), filename=saved_file.get('filename'))
+            file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
             db.session.add(file)
             individ.file = file
 
@@ -108,7 +108,6 @@ def delete_individ(individ_id):
 def edit_individ(individ_id):
     individ = db.session.get(Individ, individ_id)
     form = IndividForm()
-
     if request.method == 'POST' and form.validate_on_submit():
         individ.grave.grave_type=form.data.get('grave_type', None)
         individ.grave.kurgan_number=form.data.get('kurgan_number', None)
@@ -124,7 +123,6 @@ def edit_individ(individ_id):
         individ.grave.niveau_point=form.data.get('niveau_point', None)
         individ.grave.tachymeter_point=form.data.get('tachymeter_point', None)
         individ.grave.skeleton=form.data.get('skeleton', None)
-        individ.comment.text = form.data.get('comment', None)
         individ.year=form.data.get('year', None)
         individ.age_min=form.data.get('age_min', None)
         individ.age_max=form.data.get('age_max', None)
@@ -133,6 +131,10 @@ def edit_individ(individ_id):
         individ.edited_at=datetime.utcnow()
         individ.edited_by=current_user.id
         form.sex.data.individ.append(individ)
+        if input_comment := form.comment.data:
+            comment = Comment(text=input_comment)
+            db.session.add(comment)
+            individ.comment = comment
         if individ.site != (site := form.site.data):
             site.individ.append(individ)
         individ.create_index()
@@ -142,52 +144,57 @@ def edit_individ(individ_id):
                 saved_file = save_file(uploaded_file, current_app)
                 individ.file.path = saved_file.get('path')
                 individ.file.filename = saved_file.get('filename')
+                individ.file.extension = saved_file.get('extension')
+            else:
+                saved_file = save_file(uploaded_file, current_app)
+                file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
+                db.session.add(file)
+                individ.file = file
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
         db.session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(url_for('individ.individ_table'))
     elif request.method == 'GET':
-        try:
-            form.submit.label.text = 'Редактировать'
-            form.site.data = individ.site
-            form.sex.data = individ.sex
-            form.type.data = individ.type
-            form.age_min.data = individ.age_min
-            form.age_max.data = individ.age_max
-            form.year.data = individ.year
-            form.preservation.data = individ.preservation.id
-            form.epoch.data = individ.epoch
-            form.grave_type.data = individ.grave.grave_type
-            form.kurgan_number.data = individ.grave.kurgan_number
-            form.grave_number.data = individ.grave.grave_number
-            form.catacomb.data = individ.grave.catacomb
-            form.chamber.data = individ.grave.chamber
-            form.trench.data = individ.grave.trench
-            form.area.data = individ.grave.area
-            form.object.data = individ.grave.object
-            form.chamber.data = individ.grave.chamber
-            form.layer.data = individ.grave.layer
-            form.layer.data = individ.grave.layer
-            form.square.data = individ.grave.square
-            form.sector.data = individ.grave.sector
-            form.niveau_point.data = individ.grave.niveau_point
-            form.tachymeter_point.data = individ.grave.tachymeter_point
-            form.skeleton.data = individ.grave.skeleton
+        form.submit.label.text = 'Редактировать'
+        form.site.data = individ.site
+        form.sex.data = individ.sex
+        form.type.data = individ.type
+        form.age_min.data = individ.age_min
+        form.age_max.data = individ.age_max
+        form.year.data = individ.year
+        form.preservation.data = individ.preservation.id
+        form.epoch.data = individ.epoch
+        form.grave_type.data = individ.grave.grave_type
+        form.kurgan_number.data = individ.grave.kurgan_number
+        form.grave_number.data = individ.grave.grave_number
+        form.catacomb.data = individ.grave.catacomb
+        form.chamber.data = individ.grave.chamber
+        form.trench.data = individ.grave.trench
+        form.area.data = individ.grave.area
+        form.object.data = individ.grave.object
+        form.chamber.data = individ.grave.chamber
+        form.layer.data = individ.grave.layer
+        form.layer.data = individ.grave.layer
+        form.square.data = individ.grave.square
+        form.sector.data = individ.grave.sector
+        form.niveau_point.data = individ.grave.niveau_point
+        form.tachymeter_point.data = individ.grave.tachymeter_point
+        form.skeleton.data = individ.grave.skeleton
+        if individ.comment:
             form.comment.data = individ.comment.text
-        except AttributeError:
-            pass
     return render_template('individ/submit_individ.html', form=form)
+
 
 @bp.route('/individ_table', methods=['GET', 'POST'])
 @login_required
 def individ_table():
-    individs = Individ.get_all(Individ.index)
-    form = FilterForm()
+    individs: list[Individ] = Individ.get_all(Individ.index)
+    form: FilterForm = FilterForm()
     if request.method == 'POST':
         try:
-            file = export_xls(individs, current_app, export_name='all_individs')
-            return send_file(file, as_attachment=True)
+            file: str = export_xls(individs, current_app, export_name='all_individs')
+            return send_file(file, as_attachment=True, download_name=f"filtered_individs-{str(datetime.now()).replace(' ', '_')}.xlsx")
         except:
             flash('Нет данных для экспорта', 'warning')
     return render_template('individ/individ_table.html',
@@ -200,9 +207,9 @@ def individ_table():
 @bp.route('/individ_filter', methods=['GET', 'POST'])
 @login_required
 def search():
-    form = FilterForm()
+    form: FilterForm = FilterForm()
     if request.args:
-        filters = dict()
+        filters: dict = dict()
         for argument in request.args:
             value = request.args.get(argument)
             if argument in ('year_min', 'year_max', 'age_min', 'age_max'):
@@ -249,7 +256,7 @@ def search():
     if request.method == 'POST':   
         try:
             file = export_xls(individs, current_app, export_name='filtered_individs')
-            return send_file(file, as_attachment=True)
+            return send_file(file, as_attachment=True, download_name=f"filtered_individs-{str(datetime.now()).replace(' ', '_')}.xlsx")
         except:
             flash('Нет данных для экспорта', 'warning')
     return redirect(url_for('individ.individ_table'))
