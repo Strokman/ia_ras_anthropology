@@ -16,7 +16,7 @@ class ArchaeologicalSiteForm(FlaskForm):
     def __init__(self):
         super().__init__()
         self.region.choices = [(0, 'Выберите субъект')]
-        self.federal_district.query = FederalDistrict.get_all(FederalDistrict.id)
+        self.federal_district.query = FederalDistrict.get_all()
         self.researcher.query = Researcher.get_all(Researcher.last_name)
         self.epoch.query = Epoch.get_all(Epoch.id)
 
