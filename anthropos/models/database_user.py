@@ -65,7 +65,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
         return check_password_hash(self.password_hash, password)
 
     def send_confirmation_email(self):
-        link = request.url_root[:-1] + url_for('auth.user_confirmation', username=self.username, token=self.token)
+        link = current_app.config['HOST'] + url_for('auth.user_confirmation', username=self.username, token=self.token)
         send_email('BaseHabilis - подтверждение email',
                sender=current_app.config['ADMIN_EMAIL'],
                recipients=[self.email],
@@ -83,13 +83,14 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     
 
     def send_password_reset_email(self):
+        link = current_app.config['HOST'] + url_for('auth.reset_password', token=self.get_reset_password_token())
         send_email('BaseHabilis - сброс пароля',
                sender=current_app.config['ADMIN_EMAIL'],
                recipients=[self.email],
                text_body=render_template('email/reset_password.txt',
-                                         user=self, token=self.get_reset_password_token()),
+                                         user=self, link=link),
                html_body=render_template('email/reset_password.html',
-                                         user=self, token=self.get_reset_password_token()))
+                                         user=self, link=link))
         
 
     @staticmethod
