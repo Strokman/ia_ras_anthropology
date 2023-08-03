@@ -1,14 +1,14 @@
-from flask import redirect, url_for, render_template, flash, jsonify, send_file, request, current_app
+from flask import redirect, url_for, render_template, flash, send_file, request, current_app
 from flask_login import login_required, current_user
 from anthropos import db
 from .forms import IndividForm
 from anthropos.individ import bp
 from datetime import datetime
 from sqlalchemy import select
-from os import path, remove
+from os import path, remove, rename
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
-from anthropos.helpers import export_xls
+from anthropos.helpers import export_xls, save_file
 
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
@@ -16,6 +16,24 @@ from anthropos.helpers import export_xls
 def individ():
     form = IndividForm()
     if form.validate_on_submit():
+
+        # If form submitted correctly
+        # create instance of Individ class
+        individ = Individ(
+            year=form.data.get('year', None),
+            age_min=form.data.get('age_min', None),
+            age_max=form.data.get('age_max', None),
+            site_id=form.data.get('site', None).id,
+            preservation_id=form.data.get('preservation', None),
+            type=form.data.get('type', None),
+            sex_type=form.data.get('sex', None).sex,
+            created_at=datetime.utcnow(),
+            created_by=current_user.id,
+            edited_at=datetime.utcnow(),
+            edited_by=current_user.id,
+        )
+
+        # create instance of Grave class
         grave = Grave(
             grave_type=form.data.get('grave_type', None),
             kurgan_number=form.data.get('kurgan_number', None),
@@ -32,48 +50,38 @@ def individ():
             tachymeter_point=form.data.get('tachymeter_point', None),
             skeleton=form.data.get('skeleton', None)
         )
-        grave.save_to_db()
-        if site := form.site.data:
-            site.graves.append(grave)
-        comment = Comment(text=form.comment.data)
-        comment.save_to_db()
 
-
-        individ = Individ(
-            year=form.data.get('year', None),
-            age_min=form.data.get('age_min', None),
-            age_max=form.data.get('age_max', None),
-            site_id=form.data.get('site', None).id,
-            preservation_id=form.data.get('preservation', None),
-            type=form.data.get('type', None),
-            sex_type=form.data.get('sex', None).sex,
-            created_at=datetime.utcnow(),
-            created_by=current_user.id,
-            edited_at=datetime.utcnow(),
-            edited_by=current_user.id,
-        )
-        individ.save_to_db()
+        # add both to the session, so that everything will work correct with ID's etc.
+        db.session.add_all((individ, grave))
+        
+        # add requiered relations
         individ.grave = grave
-        individ.comment = comment
 
+        site = form.site.data
+        site.graves.append(grave)
+        site.individs.append(individ)
+
+        # create index of individ - because it requieres grave it is only here, \
+        # after grave is initialized and related to the individ
         individ.create_index()
 
-        
-        if file := form.file.data:
-            extension = file.filename.rsplit('.', 1)[1].lower()
-            if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                filename = f'{individ.index}.{extension}'
-                saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
-                file.save(saving_path)
-            file = File(path=saving_path, filename=filename)
-            file.save_to_db()
+        # check if file, comment and epoch were submitted, than instanciate everything,\
+        #  add to the session create relations
+        if form.comment.data:
+            comment = Comment(text=form.comment.data)
+            db.session.add(comment)
+            individ.comment = comment
 
+        if epoch := form.epoch.data:
+            epoch.individ.append(individ)
+
+        if uploaded_file := form.file.data:
+            saved_file = save_file(uploaded_file, current_app)
+            file = File(path=saved_file.get('path'), filename=saved_file.get('filename'))
+            db.session.add(file)
             individ.file = file
-        try:
-            form.epoch.data.individ.append(individ)
-        except:
-            pass
 
+        # commit all changes to the DB
         db.session.commit()
 
         flash('Успешно добавлено', 'success')
@@ -116,11 +124,11 @@ def edit_individ(individ_id):
         individ.grave.niveau_point=form.data.get('niveau_point', None)
         individ.grave.tachymeter_point=form.data.get('tachymeter_point', None)
         individ.grave.skeleton=form.data.get('skeleton', None)
-        individ.comment.text = form.comment.data
+        individ.comment.text = form.data.get('comment', None)
         individ.year=form.data.get('year', None)
         individ.age_min=form.data.get('age_min', None)
         individ.age_max=form.data.get('age_max', None)
-        individ.preservation_id=form.data.get('preservation', None)
+        individ.preservation_id=form.data.get('preservation', None) # ПРОВЕРИТЬ
         individ.type=form.data.get('type', None)
         individ.edited_at=datetime.utcnow()
         individ.edited_by=current_user.id
@@ -128,26 +136,12 @@ def edit_individ(individ_id):
         if individ.site != (site := form.site.data):
             site.individ.append(individ)
         individ.create_index()
-        if file := form.file.data:
+        if uploaded_file := form.file.data:
             if individ.file != None:
                 remove(individ.file.path)
-                extension = file.filename.rsplit('.', 1)[1].lower()
-                if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                    filename = f'{individ.index}.{extension}'
-                    save_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
-                    file.save(save_path)
-                    individ.file.path = save_path
-                    individ.file.filename = filename
-            else:
-                extension = file.filename.rsplit('.', 1)[1].lower()
-                if '.' in file.filename and extension in current_app.config['ALLOWED_EXTENSIONS']:
-                    filename = f'{individ.index}.{extension}'
-                    saving_path = path.join(current_app.root_path, current_app.config['UPLOAD_FOLDER'], filename)
-                    file.save(saving_path)
-                file = File(path=saving_path, filename=filename)
-                file.save_to_db()
-
-                individ.file = file
+                saved_file = save_file(uploaded_file, current_app)
+                individ.file.path = saved_file.get('path')
+                individ.file.filename = saved_file.get('filename')
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
         db.session.commit()
