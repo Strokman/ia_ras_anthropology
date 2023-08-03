@@ -193,7 +193,7 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET', 'POST'])
 @login_required
 def individ_table():
-    individs: list[Individ] = Individ.get_all(Individ.index)
+    individs: list[Individ] = enumerate(Individ.get_all(Individ.index), 1)
     form: FilterForm = FilterForm()
     if request.method == 'POST':
         try:
