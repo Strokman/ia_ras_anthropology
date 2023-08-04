@@ -1,10 +1,9 @@
-from flask import send_file, flash, redirect, url_for, session, current_app, request
+from flask import send_file, flash, redirect, url_for, session, current_app
 from os import path, remove
 from anthropos.extensions import db
 from anthropos.file import bp
-from anthropos.models import File, Individ
+from anthropos.models import File
 from anthropos.helpers import export_xls
-from sqlalchemy import select
 from datetime import datetime
 
 
