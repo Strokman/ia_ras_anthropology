@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template, flash, send_file, request, current_app
+from flask import redirect, url_for, render_template, flash, request, current_app, session
 from flask_login import login_required, current_user
 from anthropos import db
 from .forms import IndividForm
@@ -8,8 +8,7 @@ from sqlalchemy import select
 from os import remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
-from anthropos.helpers import export_xls, save_file
-from werkzeug.exceptions import NotFound
+from anthropos.helpers import save_file
 
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
@@ -190,28 +189,28 @@ def edit_individ(individ_id):
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/individ_table', methods=['GET', 'POST'])
+@bp.route('/individ_table', methods=['GET'])
 @login_required
 def individ_table():
-    individs: list[Individ] = enumerate(Individ.get_all(Individ.index), 1)
+    individs: list[Individ] = Individ.get_all(Individ.index)
+    key = 'all'
+    session.pop(key, None)
+    session.setdefault(key, individs)
     form: FilterForm = FilterForm()
-    if request.method == 'POST':
-        try:
-            file: str = export_xls(individs, current_app, export_name='all_individs')
-            return send_file(file, as_attachment=True, download_name=f"filtered_individs-{str(datetime.now()).replace(' ', '_')}.xlsx")
-        except:
-            flash('Нет данных для экспорта', 'warning')
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=individs,
+                           individs=enumerate(individs, 1),
                            form=form,
+                           key=key,
                            action=url_for('individ.individ_table'))
 
 
-@bp.route('/individ_filter', methods=['GET', 'POST'])
+@bp.route('/individ_filter', methods=['GET'])
 @login_required
 def search():
     form: FilterForm = FilterForm()
+    key = 'filtered'
+    session.pop(key, None)
     if request.args:
         filters: dict = dict()
         for argument in request.args:
@@ -251,18 +250,14 @@ def search():
         # if h := filters.get('age_max'):
         #     stmt = stmt.where(Individ.age_max <= h)
         global individs
-        individs = db.session.execute(stmt.group_by(Individ.id).order_by(Individ.index)).scalars().all()
+        individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+        session[key] = individs
         return render_template('individ/individ_table.html',
                                title='Таблица индивидов',
                                individs=enumerate(individs, 1),
                                form=form,
+                               key=key,
                                action=url_for('individ.search'))
-    if request.method == 'POST':   
-        try:
-            file = export_xls(individs, current_app, export_name='filtered_individs')
-            return send_file(file, as_attachment=True, download_name=f"filtered_individs-{str(datetime.now()).replace(' ', '_')}.xlsx")
-        except:
-            flash('Нет данных для экспорта', 'warning')
     return redirect(url_for('individ.individ_table'))
 
 

@@ -6,11 +6,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body {% if individ.file.filename.split('.')[1] != 'pdf' %}{{'img-embed'}}{% endif %} file">
-                <embed class="{% if individ.file.filename.split('.')[1] != 'pdf' %}{{'img-embed'}}{% endif %}" height="100%" width="100%" src="{{url_for('file.file', filename=individ.file.filename)}}" frameborder="0" width="100%" height="400px">
+                <embed class="{% if individ.file.filename.split('.')[1] != 'pdf' %}{{'img-embed'}}{% endif %}" height="100%" width="100%" src="{{url_for('file.get_file', filename=individ.file.filename)}}" frameborder="0" width="100%" height="400px">
         </div>
         <div class="modal-footer">
       
-          <a href="{{url_for('file.file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" target="_blank" role="button">Скачать</a>
+          <a href="{{url_for('file.get_file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" target="_blank" role="button">Скачать</a>
           <a href="{{url_for('file.delete_file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
         </div>
       </div>

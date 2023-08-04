@@ -14,9 +14,8 @@
       <a class="nav-link" href="{{ url_for('individ.individ_table') }}">Сбросить фильтры</a>
     </li>
     <li class="nav-item">
-      <form method="post", action="{{ action }}">
-        <input class="nav-link" id="reqFile" name="submit" type="submit" value="Экспорт .xlsx">
-        </form> 
+      <a class="nav-link" href="{{ url_for('file.export_excel', key=key) }}">Экспорт .xlsx</a>
+
     </li>
   </ul>
   </div>
