@@ -29,7 +29,7 @@ class Grave(db.Model, BaseModel):
     def __repr__(self):
         if self.kurgan_number:
             return f'{self.site}, к.{self.kurgan_number}/п.{self.grave_number}'
-        return f'п.{self.grave_number}'
+        return f'{self.site}, п.{self.grave_number}'
     
     def __str__(self):
         desc = ', '.join([f'{k} {v}' for k, v in self.dict_russian().items() if v is not None])
