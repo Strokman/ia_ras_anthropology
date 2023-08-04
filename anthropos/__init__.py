@@ -1,9 +1,8 @@
 from flask import Flask
-from flask_admin.contrib.sqla import ModelView
+
 
 from config import Config
 from anthropos.extensions import (
-    admin,
     bootstrap,
     csrf,
     db,
@@ -13,24 +12,16 @@ from anthropos.extensions import (
     moment,
     sess)
 
-from anthropos.models import (
-    ArchaeologicalSite,
-    DatabaseUser,
-    Region,
-    Epoch
-)
-
-from anthropos.site import bp as site_bp
-from anthropos.errors import bp as errors_bp
+from anthropos.admin import admin
 from anthropos.auth import bp as auth_bp
-from anthropos.index import bp as index_bp
-from anthropos.researcher import bp as researcher_bp
-from anthropos.individ import bp as individ_bp
-from anthropos.user import bp as user_bp
-from anthropos.map import bp as map_bp
+from anthropos.errors import bp as errors_bp
 from anthropos.file import bp as file_bp
-
-
+from anthropos.index import bp as index_bp
+from anthropos.individ import bp as individ_bp
+from anthropos.map import bp as map_bp
+from anthropos.researcher import bp as researcher_bp
+from anthropos.site import bp as site_bp
+from anthropos.user import bp as user_bp
 
 # import logging
 # from logging.config import dictConfig
@@ -85,10 +76,7 @@ def register_extensions(app: Flask) -> None:
     csrf.init_app(app)
     moment.init_app(app)
     admin.init_app(app)
-    admin.add_view(ModelView(DatabaseUser, db.session))
-    admin.add_view(ModelView(ArchaeologicalSite, db.session))
-    admin.add_view(ModelView(Region, db.session))
-    admin.add_view(ModelView(Epoch, db.session))
+
     sess.init_app(app)
     return None
 

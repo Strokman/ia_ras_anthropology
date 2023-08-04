@@ -6,7 +6,6 @@ from werkzeug.datastructures.file_storage import FileStorage
 import pandas as pd
 from uuid import uuid1
 from anthropos.models.individ import Individ
-from datetime import datetime
 
 
 def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='default') -> str:
