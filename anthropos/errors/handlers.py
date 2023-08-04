@@ -1,10 +1,19 @@
-from flask import render_template, current_app
+from flask import render_template, current_app, flash, redirect, request
 from anthropos.errors import bp
 from anthropos.lib.email import send_email
 from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed
 import traceback
 
-@bp.app_errorhandler(404)
+
+from flask_wtf.csrf import CSRFError
+
+@bp.app_errorhandler(CSRFError)
+def handle_csrf_error(error: CSRFError):
+    flash(error.description, 'warning')
+    return redirect(request.referrer)
+
+
+@bp.app_errorhandler(NotFound)
 def not_found_error(error: NotFound):
     response = {
         'code': error.code,
@@ -20,7 +29,7 @@ def not_found_error(error: NotFound):
     return render_template('errors/base_error.html', response=response), 404
 
 
-@bp.app_errorhandler(500)
+@bp.app_errorhandler(InternalServerError)
 def internal_error(error: InternalServerError):
     response = {
         'code': error.code,
