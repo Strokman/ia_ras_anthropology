@@ -13,7 +13,7 @@ from anthropos.helpers import save_file
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
-def individ():
+def submit_individ():
     form = IndividForm()
     if form.validate_on_submit():
 
