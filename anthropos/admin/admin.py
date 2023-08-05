@@ -1,4 +1,6 @@
+from flask import current_app
 from flask_admin import Admin
+from flask_admin.contrib.fileadmin import FileAdmin
 
 from anthropos.admin.models import MyAdminView, MyModelView, UserView
 from anthropos.extensions import db
@@ -32,3 +34,4 @@ admin.add_view(MyModelView(Region, db.session, category='Locations'))
 admin.add_view(MyModelView(Epoch, db.session, category='Fixed tables'))
 admin.add_view(MyModelView(Preservation, db.session, category='Fixed tables'))
 admin.add_view(MyModelView(Sex, db.session, category='Fixed tables'))
+admin.add_view(FileAdmin('anthropos/static', '/static/', name='Static Files'))
