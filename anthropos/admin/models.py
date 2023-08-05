@@ -33,4 +33,5 @@ class MyModelView(ModelView, ViewMixin):
 
     
 class MyAdminView(AdminIndexView, ViewMixin):
-    pass
+    def is_visible(self):
+        return False

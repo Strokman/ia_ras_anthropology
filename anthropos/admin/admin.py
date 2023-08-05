@@ -18,7 +18,7 @@ from anthropos.models import (
 )
 
 
-admin = Admin(name='BaseHabilis Admin', template_mode='bootstrap4', index_view=MyAdminView())
+admin = Admin(name='BaseHabilis Admin', base_template='admin/master.html', template_mode='bootstrap4', index_view=MyAdminView())
 
 admin.add_view(UserView(DatabaseUser, db.session, name='Users', url='users'))
 admin.add_view(MyModelView(Individ, db.session, name='Individs', url='individs', endpoint='individs'))
