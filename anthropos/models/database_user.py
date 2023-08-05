@@ -32,11 +32,6 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
     sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by', back_populates='editor')
     individs_created = db.relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
     individs_edited = db.relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
-    sites_created = db.relationship('ArchaeologicalSite',
-                                    foreign_keys='ArchaeologicalSite.created_by',
-                                    back_populates='creator')
-    sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by',
-                                    back_populates='editor')
 
     def __init__(self,
                  username,
@@ -90,6 +85,9 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                                          user=self, token=self.get_reset_password_token()),
                html_body=render_template('email/reset_password.html',
                                          user=self, token=self.get_reset_password_token()))
+        
+    def is_admin(self):
+        return self.role == 'admin'
         
 
     @staticmethod

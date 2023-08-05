@@ -75,6 +75,10 @@
                     <a class="nav-item nav-link" href="{{ url_for('map.map') }}">Карта</a>
                 </div>
                     <div class="navbar-nav ms-auto">
+                        {% if current_user.is_admin() %}
+                        <a class="nav-item nav-link"
+                        href="{{ url_for('admin.index') }}">Панель администратора</a>
+                        {% endif %}
                         <a class="nav-item nav-link"
                         href="{{ url_for('user.user', username=current_user.username) }}">Профиль</a>
                         <a class="nav-link" href="{{ url_for('auth.logout') }}">Выход</a>
