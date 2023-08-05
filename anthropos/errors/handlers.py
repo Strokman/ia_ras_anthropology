@@ -20,12 +20,12 @@ def not_found_error(error: NotFound):
         'message': 'Страница не существует',
         'tb': traceback.format_exc()
     }
-    txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    send_email(f'BaseHabilis - ошибка {response.get("code")}',
-            sender=current_app.config['ADMIN_EMAIL'],
-            recipients=[current_app.config['BACKUP_EMAIL']],
-            text_body=txt
-            )
+    # txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    # send_email(f'BaseHabilis - ошибка {response.get("code")}',
+    #         sender=current_app.config['ADMIN_EMAIL'],
+    #         recipients=[current_app.config['BACKUP_EMAIL']],
+    #         text_body=txt
+    #         )
     return render_template('errors/base_error.html', response=response), 404
 
 
