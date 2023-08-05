@@ -85,7 +85,7 @@ def submit_individ():
         db.session.commit()
 
         flash('Успешно добавлено', 'success')
-        return redirect(url_for('individ.individ'))
+        return redirect(url_for('individ.submit_individ'))
     return render_template('individ/submit_individ.html', form=form)
 
 
