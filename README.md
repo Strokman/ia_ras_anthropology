@@ -1,9 +1,6 @@
-# ia_ras_anthropology
+# BaseHabilis
 
 
-"""
-    РЕЛЕЙШЕНЫ ПИСАТЬ КАК ЗДЕСЬ И В КЛАССЕ АРХПАМЯТНИК - ТОГДА РАБОТАЕТ НОРМАЛЬНО
-ИСПОЛЬЗОВАТЬ ТОЛЬКО back_populates
-    """
+This Flask App is designed for my scientific unit in Institute of Archaeology.
 
-формам можно передавать атрибуты html в виде словаря - render_kw={'class': 'form-control'}
+It serves the purpose of storing and accessing data about the anthropological materials, which are gathered in Institute
