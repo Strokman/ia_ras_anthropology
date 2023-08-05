@@ -4,6 +4,7 @@ from flask import Flask
 from config import Config
 from anthropos.extensions import (
     bootstrap,
+    cache,
     csrf,
     db,
     login,
@@ -68,6 +69,7 @@ def create_app(config_class: Config=Config) -> Flask:
 
 
 def register_extensions(app: Flask) -> None:
+    cache.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
     login.init_app(app)

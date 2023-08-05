@@ -5,7 +5,7 @@ from datetime import datetime
 from urllib.parse import urlsplit
 from anthropos.auth.forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
 from anthropos.models import DatabaseUser
-from anthropos import db
+from anthropos import db, cache
 
 
 @bp.route('/login', methods=['GET', 'POST'])

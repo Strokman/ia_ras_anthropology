@@ -1,4 +1,5 @@
 from anthropos.models import Individ
+from anthropos import cache
 from os import path, remove
 from flask import Flask
 from werkzeug.utils import secure_filename
@@ -7,7 +8,7 @@ import pandas as pd
 from uuid import uuid1
 from anthropos.models.individ import Individ
 
-
+@cache.cached(timeout=600, key_prefix='excel') # check if it's working
 def export_xls(individs: list[Individ], current_app: Flask, export_name: str ='default') -> str:
 
     export_data: dict = dict()

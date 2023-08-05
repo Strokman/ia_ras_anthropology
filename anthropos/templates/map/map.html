@@ -36,7 +36,7 @@ setInterval(function () {
     }, 100);
 {% for i in sites %}
 
-var marker = L.marker([{{i.lat}}, {{ i.long}}]).addTo(map).bindPopup('{{i.name}} <br> <a href="{{url_for("map.individs_by_map", site_id=i.id)}}">Индивиды</a');
+var marker = L.marker([{{i.lat}}, {{ i.long}}]).addTo(map).bindPopup('{{i.name}} <br> <a href="{{url_for("individ.individs_by_site", site_id=i.id)}}">Индивиды</a');
 
 {% endfor %}
 </script>

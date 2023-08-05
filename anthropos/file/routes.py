@@ -1,13 +1,13 @@
 from flask import send_file, flash, redirect, url_for, session, current_app
 from os import path, remove
-from anthropos.extensions import db
+from anthropos.extensions import db, cache
 from anthropos.file import bp
 from anthropos.models import File
 from anthropos.helpers import export_xls
 from datetime import datetime
 
 
-@bp.route('/file/<string:filename>')
+@bp.route('/file/<filename>')
 def get_file(filename):
     file: File = File.get_one_by_attr(File.filename, filename)
     if file and path.isfile(file.path) and file.extension == 'pdf':
@@ -28,7 +28,7 @@ def delete_file(filename):
     return redirect(url_for('individ.individ_table'))
 
 
-@bp.route('/export_excel/<string:key>')
+@bp.route('/export_excel/<key>')
 def export_excel(key):
     individs = session[key]
     try:

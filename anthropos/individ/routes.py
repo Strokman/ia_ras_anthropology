@@ -1,6 +1,6 @@
 from flask import redirect, url_for, render_template, flash, request, current_app, session
 from flask_login import login_required, current_user
-from anthropos import db
+from anthropos import db, cache
 from .forms import IndividForm
 from anthropos.individ import bp
 from datetime import datetime
@@ -190,6 +190,7 @@ def edit_individ(individ_id):
 
 
 @bp.route('/individ_table', methods=['GET'])
+@cache.cached(timeout=600)
 @login_required
 def individ_table():
     individs: list[Individ] = Individ.get_all(Individ.index)
@@ -261,3 +262,12 @@ def search():
     return redirect(url_for('individ.individ_table'))
 
 
+@bp.route('/by_site/<site_id>', methods=['GET', 'POST'])
+@login_required
+def individs_by_site(site_id):
+    stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
+    individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+    key = f'site_{site_id}_individs'
+    session.pop(key, None)
+    session.setdefault(key, individs)
+    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=enumerate(individs, 1))
