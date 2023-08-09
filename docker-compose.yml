@@ -19,7 +19,7 @@ services:
       start_period: 10s
     restart: always
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - /var/services/homes/Strokman/anton-pg/postgres-data:/var/lib/postgresql/data
 
 
   basehabilis:
@@ -32,8 +32,6 @@ services:
     env_file: .env
     networks:
       - default
-    dns:
-      - 8.8.8.8
     ports:
       - 5100:5100
     restart: always
