@@ -8,7 +8,7 @@ from sqlalchemy import select
 
 @bp.route('/map', methods=['GET', 'POST'])
 @login_required
-@cache.cached(timeout=600)
+@cache.cached(timeout=60)
 def map():
     sites = ArchaeologicalSite.get_all()
     return render_template('map/map.html', title='Карта', sites=sites)

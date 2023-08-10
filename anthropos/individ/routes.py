@@ -190,7 +190,6 @@ def edit_individ(individ_id):
 
 
 @bp.route('/individ_table', methods=['GET'])
-@cache.cached(timeout=600)
 @login_required
 def individ_table():
     individs: list[Individ] = Individ.get_all(Individ.index)
