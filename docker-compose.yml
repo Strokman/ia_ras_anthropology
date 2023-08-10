@@ -19,7 +19,7 @@ services:
       start_period: 10s
     restart: always
     volumes:
-      - /var/services/homes/Strokman/anton-pg/postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
 
 
   basehabilis:
