@@ -23,7 +23,7 @@ class Config:
     ALLOWED_EXTENSIONS = ['pdf', 'jpg', 'jpeg', 'png']
     CACHE_TYPE = "FileSystemCache"  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT = 300
-    CACHE_DIR = '/Users/antonstrokov/VSCode/ia_ras_anthropology/cache'
+    CACHE_DIR = './cache'
 
     # Yandex conf
     MAIL_SERVER = environ.get('MAIL_SERVER')
