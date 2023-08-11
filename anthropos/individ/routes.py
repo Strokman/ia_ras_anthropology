@@ -213,14 +213,18 @@ def search():
     session.pop(key, None)
     if request.args:
         filters: dict = dict()
+        print(request.args.get('index'))
+        print(type(request.args.get('index')))
         for argument in request.args:
             value = request.args.get(argument)
-            if argument in ('year_min', 'year_max', 'age_min', 'age_max') and value:
-                filters.setdefault(argument, int(value))
+            if argument in ('year_min', 'year_max', 'age_min', 'age_max', 'index', 'comment') and value:
+                filters.setdefault(argument, value)
             if value != '__None' and value != '':
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
         print(filters)
+        if index_search := filters.get('index'):
+            stmt =stmt.where(Individ.index.ilike(f'%{index_search}%'))
         if a := filters.get('epoch'):
             stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(a))
         if b := filters.get('researcher'):
@@ -245,6 +249,8 @@ def search():
             stmt = stmt.where(getattr(Individ, 'type').in_(s))
         if z := filters.get('grave'):
             stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(z))
+        if comment := filters.get('comment'):
+            stmt = stmt.join(Individ.comment).where(Comment.text.ilike(f'%{comment}%'))
         if filters.get('age_min') and filters.get('age_max'):
             min = filters.get('age_min')
             max = filters.get('age_max')

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, SelectMultipleField
+from wtforms import SubmitField, IntegerField, SelectMultipleField, SearchField
 from wtforms.validators import Optional
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 from anthropos.models import FederalDistrict, Epoch, Researcher, Sex, Preservation, DatabaseUser, ArchaeologicalSite
@@ -21,19 +21,21 @@ class FilterForm(FlaskForm):
         self.creator.query = DatabaseUser.get_all(DatabaseUser.last_name)
         self.site.query = ArchaeologicalSite.get_all()
 
+    index = SearchField('Поиск по индексу', validators=[Optional()])
     site = QuerySelectMultipleField('Памятник')
     epoch = QuerySelectMultipleField('Эпоха')
     year_min = IntegerField(label='Год исследования: от', validators=[Optional()])
     year_max = IntegerField(label='до', validators=[Optional()])
     sex = QuerySelectMultipleField(label='Пол')
-    type = SelectMultipleField(label='Обряд')
     age_min = IntegerField(label='Возраст: от', validators=[Optional()])
     age_max = IntegerField(label='до', validators=[Optional()])
+    type = SelectMultipleField(label='Обряд')
     preservation = QuerySelectMultipleField(label='Сохранность')
     grave = IntegerField(label='Номер погребения', validators=[Optional()])
     grave_type = SelectMultipleField(label='Тип погребения')
     researcher = QuerySelectMultipleField('Исследователи')
     federal_district = QuerySelectMultipleField('Федеральный округ')
+    comment = SearchField('Поиск по примечанию', validators=[Optional()])
     creator = QuerySelectMultipleField('Кем создан')
     submit = SubmitField('Выбрать')
 
