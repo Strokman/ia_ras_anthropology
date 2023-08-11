@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileField
 from wtforms import StringField, SubmitField, SelectField, IntegerField, IntegerRangeField, TextAreaField
 from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import NumberRange, Optional
+from wtforms.validators import NumberRange, Optional, ValidationError
 from anthropos.lib.validators import CleanString, DataRequiredImproved, FileFieldValidator
 from anthropos.models import ArchaeologicalSite, Sex, Epoch
 from anthropos import db
@@ -13,7 +13,7 @@ class IndividForm(FlaskForm):
         super().__init__()
         self.site.query = ArchaeologicalSite.get_all()
         self.sex.query = Sex.get_all(Sex.sex)
-        self.type.choices = ['ингумация', 'кремация']
+        self.type.choices = ['Выберите обряд', 'ингумация', 'кремация']
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
         self.epoch.query = Epoch.get_all(Epoch.id)
 
@@ -47,3 +47,7 @@ class IndividForm(FlaskForm):
     file = FileField(label='Файл: pdf, jpeg', validators=[Optional(), FileFieldValidator()])
 
     submit = SubmitField(label='Добавить индивида')
+
+    def validate_type(self, type):
+        if type.data == 'Выберите обряд':
+            raise ValidationError('Пожалуйста, выберите один из вариантов')
