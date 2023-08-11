@@ -4,7 +4,7 @@ from anthropos import db, cache
 from .forms import IndividForm
 from anthropos.individ import bp
 from datetime import datetime
-from sqlalchemy import select
+from sqlalchemy import select, or_, between, and_, case
 from os import remove
 from .forms import FilterForm
 from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
@@ -215,11 +215,12 @@ def search():
         filters: dict = dict()
         for argument in request.args:
             value = request.args.get(argument)
-            if argument in ('year_min', 'year_max', 'age_min', 'age_max'):
-                filters.setdefault(argument, value)
+            if argument in ('year_min', 'year_max', 'age_min', 'age_max') and value:
+                filters.setdefault(argument, int(value))
             if value != '__None' and value != '':
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
+        print(filters)
         if a := filters.get('epoch'):
             stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(a))
         if b := filters.get('researcher'):
@@ -244,11 +245,33 @@ def search():
             stmt = stmt.where(getattr(Individ, 'type').in_(s))
         if z := filters.get('grave'):
             stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(z))
-        # if g := filters.get('age_min'):
-        #     stmt = stmt.where(Individ.age_min >= g)
-        #     stmt = stmt.where(Individ.age_max >= g)
-        # if h := filters.get('age_max'):
-        #     stmt = stmt.where(Individ.age_max <= h)
+        if filters.get('age_min') and filters.get('age_max'):
+            min = filters.get('age_min')
+            max = filters.get('age_max')
+            stmt = stmt.where(
+                case(
+                (Individ.age_max.is_(None), or_(between(Individ.age_min, min, max), Individ.age_min < min)),
+                (Individ.age_min.is_(None), Individ.age_max >= min),
+                else_ = (or_(between(Individ.age_min, min, max), between(Individ.age_max, min, max)))
+                )
+                )
+        if filters.get('age_min') and not filters.get('age_max'):
+            min = filters.get('age_min')
+            stmt = stmt.where(
+                case(
+                (Individ.age_max.is_(None), Individ.age_min >= 0),
+                else_ = or_(between(Individ.age_min, min, 200), between(Individ.age_max, min, 200))
+                )
+                )
+        if filters.get('age_max') and not filters.get('age_min'):
+            max = filters.get('age_max')
+            print('popka')
+            stmt = stmt.where(
+                case(
+                (Individ.age_min.is_(None), Individ.age_max > 0),
+                else_ = or_(between(Individ.age_max, 0, max), Individ.age_min <= max)
+                )
+                )
         global individs
         individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
         session[key] = individs
