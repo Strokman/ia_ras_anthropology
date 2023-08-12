@@ -1,11 +1,11 @@
+from flask import redirect, url_for, flash
 from flask_admin import AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
-from flask import redirect, url_for, flash
 
 
 class ViewMixin():
-
+    
     def is_accessible(self):
         if not current_user.is_anonymous:
             return current_user.is_admin()
@@ -31,7 +31,7 @@ class UserView(ModelView, ViewMixin):
 class MyModelView(ModelView, ViewMixin):
     pass
 
-    
+
 class MyAdminView(AdminIndexView, ViewMixin):
     def is_visible(self):
         return False
