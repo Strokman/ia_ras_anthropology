@@ -1,7 +1,5 @@
 from flask import Flask
 
-
-from config import Config
 from anthropos.extensions import (
     bootstrap,
     cache,
@@ -12,7 +10,6 @@ from anthropos.extensions import (
     migrate,
     moment,
     sess)
-
 from anthropos.admin import admin
 from anthropos.auth import bp as auth_bp
 from anthropos.errors import bp as errors_bp
@@ -23,38 +20,7 @@ from anthropos.map import bp as map_bp
 from anthropos.researcher import bp as researcher_bp
 from anthropos.site import bp as site_bp
 from anthropos.user import bp as user_bp
-
-# import logging
-# from logging.config import dictConfig
-
-# dictConfig({
-#     'version': 1,
-#     'formatters': {'default': {
-#         'format': '[%(created)f] %(levelname)s in %(module)s: %(message)s',
-#     }},
-#     'handlers': {'wsgi': {
-#         'class': 'logging.StreamHandler',
-#         'stream': 'ext://flask.logging.wsgi_errors_stream',
-#         'formatter': 'default'
-#     }, "file": {
-#                 "class": "logging.handlers.TimedRotatingFileHandler",
-#                 "filename": "flask.log",
-#                 "when": "D",
-#                 "interval": 10,
-#                 "backupCount": 5,
-#                 "formatter": "default",
-#             },},
-#     'root': {
-#         'level': 'INFO',
-#         'handlers': ['wsgi', 'file']
-#     }
-# })
-
-# root = logging.getLogger("root")
-
-# app = Flask(__name__)
-# app.config.from_object(Config)
-
+from config import Config
 
 
 def create_app(config_class: Config=Config) -> Flask:

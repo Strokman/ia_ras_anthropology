@@ -17,8 +17,7 @@ def submit_individ():
     form = IndividForm()
     if form.validate_on_submit():
 
-        # If form submitted correctly
-        # create instance of Individ class
+        # If form submitted correctly - create instance of Individ class
         individ = Individ(
             year=form.data.get('year', None),
             age_min=form.data.get('age_min', None),
@@ -62,11 +61,11 @@ def submit_individ():
         site.individs.append(individ)
 
         # create index of individ - because it requieres grave it is only here, \
-        # after grave is initialized and related to the individ
+        # after grave is initialized and relation to the individ is added
         individ.create_index()
 
         # check if file, comment and epoch were submitted, than instanciate everything,\
-        #  add to the session create relations
+        #  add to session to create relations
         if form.comment.data:
             comment = Comment(text=form.comment.data)
             db.session.add(comment)
@@ -223,16 +222,16 @@ def search():
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
         print(filters)
-        if index_search := filters.get('index'):
-            stmt =stmt.where(Individ.index.ilike(f'%{index_search}%'))
-        if a := filters.get('epoch'):
-            stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(a))
-        if b := filters.get('researcher'):
-            stmt = stmt.where(getattr(Researcher, 'id').in_(b))
-        if c := filters.get('federal_district'):
-            stmt = stmt.join(Region.federal_district).where(getattr(FederalDistrict, 'id').in_(c))
-        if d := filters.get('year_min'):
-            stmt = stmt.where(Individ.year >= d)
+        if index_search_filter := filters.get('index'):
+            stmt =stmt.where(Individ.index.ilike(f'%{index_search_filter}%'))
+        if epoch_filter := filters.get('epoch'):
+            stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(epoch_filter))
+        if researcher_filter := filters.get('researcher'):
+            stmt = stmt.where(getattr(Researcher, 'id').in_(researcher_filter))
+        if feddistrict_filter := filters.get('federal_district'):
+            stmt = stmt.join(Region.federal_district).where(getattr(FederalDistrict, 'id').in_(feddistrict_filter))
+        if year_filter := filters.get('year_min'):
+            stmt = stmt.where(Individ.year >= year_filter)
         if e := filters.get('year_max'):
             stmt = stmt.where(Individ.year <= e)
         if f := filters.get('sex'):

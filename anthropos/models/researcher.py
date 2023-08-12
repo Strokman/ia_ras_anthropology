@@ -13,12 +13,11 @@ class Researcher(db.Model, BaseModel):
     middle_name = db.Column(db.String(128))
 
     sites = db.relationship('ArchaeologicalSite', secondary=sites_researchers,
-                                  back_populates='researchers')
-    
+                            back_populates='researchers')
 
     # почему-то не работает, проверить, если добавляю в релейшн
     # primaryjoin='ArchaeologicalSite.id==sites_researchers.c.archaeological_site_id',
-                                #   secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
+    #   secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
 
     def __repr__(self):
         if self.middle_name:
