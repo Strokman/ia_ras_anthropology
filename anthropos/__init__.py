@@ -23,11 +23,11 @@ from anthropos.user import bp as user_bp
 from config import Config
 
 
-def create_app(config_class: Config=Config) -> Flask:
+def create_app(config_class: Config = Config) -> Flask:
     app = Flask(__name__)
 
     app.config.from_object(config_class)
-    
+
     register_blueprints(app)
     register_extensions(app)
 

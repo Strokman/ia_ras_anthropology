@@ -5,4 +5,7 @@
 
 {% block body %}
   <p>Well hello everyone</p>
+  {{current_user.username}} <br>
+  {{current_user.is_admin()}}<br>
+  {{current_user.role}}<br>
 {% endblock %}

@@ -67,9 +67,6 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                html_body=render_template('email/mail_confirmation.html',
                                          link=link))
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
 
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
