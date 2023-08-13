@@ -1,5 +1,5 @@
 """
-    Admin module contains all neccessary logic for admin panel
+    Admin package contains all neccessary logic for admin panel
     of the Base Habilis app
 """
 

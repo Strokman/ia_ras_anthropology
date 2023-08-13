@@ -1,13 +1,24 @@
+"""
+Module contains Base model, which implements basic CRUD operations.
+This model is inherited by most of all other SQLAlchemy models in
+the Base Habilis app.
+"""
 from sqlalchemy import select
-from sqlalchemy.orm.scoping import scoped_session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
+
 from anthropos.extensions import db
 
 
 class BaseModel:
 
     @classmethod
-    def get_all(cls, attr: InstrumentedAttribute=None):
+    def get_by_id(cls, id: int | str):
+        stmt = select(cls).where(cls.id == id)
+        result = db.session.scalar(stmt)
+        return result
+    
+    @classmethod
+    def get_all(cls, attr: InstrumentedAttribute = None):
         if attr:
             stmt = select(cls).order_by(attr)
         else:

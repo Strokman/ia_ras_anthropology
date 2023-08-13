@@ -1,26 +1,44 @@
-from anthropos.auth import bp
-from flask import redirect, render_template, url_for, flash, request, session
-from flask_login import current_user, login_user, logout_user
+"""
+    Module contains all routes of auth package
+"""
 from datetime import datetime
 from urllib.parse import urlsplit
-from anthropos.auth.forms import LoginForm, ResetPasswordRequestForm, ResetPasswordForm, RegistrationForm
+
+from flask import (
+    flash,
+    redirect,
+    render_template,
+    request,
+    url_for
+    )
+from flask_login import (
+    current_user,
+    login_user,
+    logout_user
+    )
+from werkzeug.wrappers import Response
+
+from anthropos import db
+from anthropos.auth import bp
+from anthropos.auth.forms import (
+    LoginForm,
+    ResetPasswordRequestForm,
+    ResetPasswordForm,
+    RegistrationForm
+    )
 from anthropos.models import DatabaseUser
-from anthropos import db, cache
 
 
 @bp.route('/login', methods=['GET', 'POST'])
-def login():
+def login() -> Response | str:
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
-                                            form.username.data
-                                            )
+        user: DatabaseUser | None = DatabaseUser.get_one_by_attr(DatabaseUser.username, form.username.data)
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
-        session['user_role'] = user.role
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index.index')
@@ -29,13 +47,13 @@ def login():
 
 
 @bp.route('/logout')
-def logout():
+def logout() -> Response:
     logout_user()
     return redirect(url_for('index.index'))
 
 
 @bp.route('/register', methods=['GET', 'POST'])
-def register():
+def register() -> Response | str:
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = RegistrationForm()
@@ -59,10 +77,8 @@ def register():
 
 
 @bp.route('/user_confirmation/<username>/<token>')
-def user_confirmation(username, token):
-    user = DatabaseUser.get_one_by_attr(DatabaseUser.username,
-                                        username
-                                        )
+def user_confirmation(username, token) -> Response:
+    user: DatabaseUser | None = DatabaseUser.get_one_by_attr(DatabaseUser.username, username)
     if str(user.token) == token:
         user.activated = True
         db.session.commit()
@@ -71,7 +87,7 @@ def user_confirmation(username, token):
 
 
 @bp.route('/reset_password_request', methods=['GET', 'POST'])
-def reset_password_request():
+def reset_password_request() -> Response | str:
     if current_user.is_authenticated:
         return redirect(url_for('index.index'))
     form = ResetPasswordRequestForm()
@@ -87,9 +103,8 @@ def reset_password_request():
 
 
 @bp.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
+def reset_password(token) -> Response | str:
     if current_user.is_authenticated:
-        # return redirect(url_for('index.index'))
         logout_user()
     user = DatabaseUser.verify_reset_password_token(token)
     if not user:

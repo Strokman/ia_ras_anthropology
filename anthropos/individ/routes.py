@@ -223,7 +223,7 @@ def search():
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
         print(filters)
         if index_search_filter := filters.get('index'):
-            stmt =stmt.where(Individ.index.ilike(f'%{index_search_filter}%'))
+            stmt = stmt.where(Individ.index.ilike(f'%{index_search_filter}%'))
         if epoch_filter := filters.get('epoch'):
             stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(epoch_filter))
         if researcher_filter := filters.get('researcher'):

@@ -2,7 +2,7 @@ from anthropos.extensions import login, db
 from werkzeug.security import check_password_hash, generate_password_hash
 from .base_model import BaseModel
 from flask_login import UserMixin
-from flask import request, url_for, flash, session, redirect, current_app, render_template
+from flask import url_for, flash, session, redirect, current_app, render_template
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from anthropos.lib.email import send_email
@@ -12,7 +12,7 @@ from functools import wraps
 
 
 class DatabaseUser(UserMixin, db.Model, BaseModel):
-    __tablename__ = 'database_users'
+    __tablename__: str = 'database_users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
@@ -42,30 +42,30 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                  email,
                  created,
                  last_login,
-                 middle_name=None):
+                 middle_name=None) -> None:
         self.username = username
         self.password_hash = generate_password_hash(password)
-        self.first_name: str = first_name
-        self.last_name: str = last_name
+        self.first_name = first_name
+        self.last_name = last_name
         self.affiliation = affiliation
         self.email = email
         self.created = created
         self.last_login = last_login
-        self.middle_name: str = middle_name
+        self.middle_name = middle_name
 
-    def set_password(self, password):
+    def set_password(self, password) -> None:
         self.password_hash = generate_password_hash(password)
 
-    def check_password(self, password):
+    def check_password(self, password) -> bool:
         return check_password_hash(self.password_hash, password)
 
-    def send_confirmation_email(self):
+    def send_confirmation_email(self) -> None:
         link = current_app.config['HOST'] + url_for('auth.user_confirmation', username=self.username, token=self.token)
         send_email('BaseHabilis - подтверждение email',
-               sender=current_app.config['ADMIN_EMAIL'],
-               recipients=[self.email],
-               html_body=render_template('email/mail_confirmation.html',
-                                         link=link))
+                   sender=current_app.config['ADMIN_EMAIL'],
+                   recipients=[self.email],
+                   html_body=render_template('email/mail_confirmation.html',
+                                             link=link))
 
 
     def get_reset_password_token(self, expires_in=600):
@@ -83,10 +83,12 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                                          user=self, link=link),
                html_body=render_template('email/reset_password.html',
                                          user=self, link=link))
-        
-    def is_admin(self):
+
+    def is_admin(self) -> bool:
         return self.role == 'admin'
-        
+
+    def is_active(self) -> bool:
+        return self.activated
 
     @staticmethod
     def verify_reset_password_token(token):
@@ -95,7 +97,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.id, id)
+        user: DatabaseUser | None = DatabaseUser.get_one_by_attr(DatabaseUser.id, id)
         return user
 
     def __str__(self):
@@ -110,7 +112,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 @login.user_loader
 def load_user(user_id):
     user = db.session.query(DatabaseUser).get(int(user_id))
-    if not user or not user.activated:
+    if not user or not user.is_active():
         return None
     return user
 
