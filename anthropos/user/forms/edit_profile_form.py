@@ -21,12 +21,12 @@ class EditProfileForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != self.original_username:
-            user = DatabaseUser.query.filter_by(username=self.username.data).first()
+            user = DatabaseUser.get_one_by_attr('username', self.username.data)
             if user is not None:
                 raise ValidationError('Пользователь существует!')
 
     def validate_email(self, email):
         if email.data != self.original_email:
-            user = DatabaseUser.query.filter_by(email=self.email.data).first()
+            user = DatabaseUser.get_one_by_attr('email', self.email.data)
             if user is not None:
                 raise ValidationError('E-Mail уже зарегистрирован!')
