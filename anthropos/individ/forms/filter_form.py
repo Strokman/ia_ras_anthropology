@@ -12,13 +12,13 @@ class FilterForm(FlaskForm):
     def __init__(self):
         super().__init__()
         self.federal_district.query = FederalDistrict.get_all()
-        self.researcher.query = Researcher.get_all(Researcher.last_name)
-        self.epoch.query = Epoch.get_all(Epoch.id)
-        self.sex.query = Sex.get_all(Sex.sex)
+        self.researcher.query = Researcher.get_all('last_name')
+        self.epoch.query = Epoch.get_all('id')
+        self.sex.query = Sex.get_all('sex')
         self.type.choices = ['ингумация', 'кремация']
-        self.preservation.query = Preservation.get_all(Preservation.id)
+        self.preservation.query = Preservation.get_all('id')
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
-        self.creator.query = DatabaseUser.get_all(DatabaseUser.last_name)
+        self.creator.query = DatabaseUser.get_all('last_name')
         self.site.query = ArchaeologicalSite.get_all()
 
     index = SearchField('Поиск по индексу', validators=[Optional()])

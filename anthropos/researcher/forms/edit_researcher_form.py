@@ -1,6 +1,11 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
-from anthropos.lib.validators import CleanName, OnlyCharsValidator, DataRequiredImproved
+
+from anthropos.lib.validators import (
+    CleanName,
+    OnlyCharsValidator,
+    DataRequiredImproved
+    )
 
 
 class EditResearcherForm(FlaskForm):
@@ -10,4 +15,3 @@ class EditResearcherForm(FlaskForm):
     middle_name = StringField(label='Отчество', validators=[CleanName(), OnlyCharsValidator()])
     affiliation = StringField(label='Место работы', validators=[DataRequiredImproved()])
     submit = SubmitField(label='Сохранить изменения')
-

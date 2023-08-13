@@ -55,7 +55,7 @@ with app.app_context():
             sex = ('не определен', 'мужской', 'женский')
             for i in sex:
                 b = Sex(sex=i)
-                b.save_to_db()
+                b.save()
 
 
             """ДОБАВЛЕНИЕ СОХРАННОСТИ"""

@@ -23,7 +23,7 @@ def submit_site():
         
         current_user.sites_created.append(site)
         current_user.sites_edited.append(site)
-        site.save_to_db()
+        site.save()
         flash('Памятник добавлен', 'success')
         return redirect(url_for('site.submit_site'))
     return render_template('site/site_input.html', title='Добавить памятник', form=site_form)

@@ -1,14 +1,34 @@
-from flask import redirect, url_for, render_template, flash, request, current_app, session
-from flask_login import login_required, current_user
-from anthropos import db, cache
-from .forms import IndividForm
-from anthropos.individ import bp
 from datetime import datetime
-from sqlalchemy import select, or_, between, and_, case
 from os import remove
-from .forms import FilterForm
-from anthropos.models import Sex, Individ, Researcher, ArchaeologicalSite, Epoch, FederalDistrict, Region, Preservation, Grave, DatabaseUser, Comment, File
+
+from flask import (
+    current_app,
+    flash,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for)
+from flask_login import current_user, login_required
+from sqlalchemy import between, case, or_, select
+
+from anthropos import db
 from anthropos.helpers import save_file
+from anthropos.individ.forms import IndividForm, FilterForm
+from anthropos.individ import bp
+from anthropos.models import (
+    Sex,
+    Individ,
+    Researcher,
+    ArchaeologicalSite,
+    Epoch,
+    FederalDistrict,
+    Region,
+    Preservation,
+    Grave,
+    DatabaseUser,
+    Comment,
+    File)
 
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
@@ -91,13 +111,12 @@ def submit_individ():
 @bp.route('/delete_individ/<int:individ_id>', methods=['GET'])
 @login_required
 def delete_individ(individ_id):
-    individ = db.session.scalars(select(Individ).where(Individ.id==individ_id)).first()
+    individ: Individ | None = Individ.get_by_id(individ_id)
     try:
         remove(individ.file.path)
     except AttributeError as e:
         print(e)
-    db.session.delete(individ)
-    db.session.commit()
+    individ.delete()
     flash('Запись удалена', 'warning')
     return redirect(request.referrer)
 
@@ -105,7 +124,7 @@ def delete_individ(individ_id):
 @bp.route('/edit_individ/<int:individ_id>', methods=['GET', 'POST'])
 @login_required
 def edit_individ(individ_id):
-    individ = db.session.get(Individ, individ_id)
+    individ = Individ.get_by_id(individ_id)
     form = IndividForm()
     if request.method == 'POST' and form.validate_on_submit():
         individ.grave.grave_type=form.data.get('grave_type', None)
@@ -125,7 +144,7 @@ def edit_individ(individ_id):
         individ.year=form.data.get('year', None)
         individ.age_min=form.data.get('age_min', None)
         individ.age_max=form.data.get('age_max', None)
-        individ.preservation_id=form.data.get('preservation', None) # ПРОВЕРИТЬ
+        individ.preservation_id=form.data.get('preservation', None)     # ПРОВЕРИТЬ
         individ.type=form.data.get('type', None)
         individ.edited_at=datetime.utcnow()
         individ.edited_by=current_user.id
@@ -141,7 +160,7 @@ def edit_individ(individ_id):
             site.individ.append(individ)
         individ.create_index()
         if uploaded_file := form.file.data:
-            if individ.file != None:
+            if individ.file is not None:
                 remove(individ.file.path)
                 saved_file = save_file(uploaded_file, current_app)
                 individ.file.path = saved_file.get('path')
@@ -191,7 +210,7 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET'])
 @login_required
 def individ_table():
-    individs: list[Individ] = Individ.get_all(Individ.index)
+    individs: list[Individ] = Individ.get_all('index')
     key = 'all'
     session.pop(key, None)
     session.setdefault(key, individs)
@@ -212,8 +231,6 @@ def search():
     session.pop(key, None)
     if request.args:
         filters: dict = dict()
-        print(request.args.get('index'))
-        print(type(request.args.get('index')))
         for argument in request.args:
             value = request.args.get(argument)
             if argument in ('year_min', 'year_max', 'age_min', 'age_max', 'index', 'comment') and value:
@@ -221,7 +238,6 @@ def search():
             if value != '__None' and value != '':
                 filters.setdefault(argument, request.args.getlist(argument))
         stmt = select(Individ).join(Individ.site).join(Individ.preservation).join(ArchaeologicalSite.researchers).join(Individ.sex).join(ArchaeologicalSite.region)
-        print(filters)
         if index_search_filter := filters.get('index'):
             stmt = stmt.where(Individ.index.ilike(f'%{index_search_filter}%'))
         if epoch_filter := filters.get('epoch'):
@@ -230,52 +246,51 @@ def search():
             stmt = stmt.where(getattr(Researcher, 'id').in_(researcher_filter))
         if feddistrict_filter := filters.get('federal_district'):
             stmt = stmt.join(Region.federal_district).where(getattr(FederalDistrict, 'id').in_(feddistrict_filter))
-        if year_filter := filters.get('year_min'):
-            stmt = stmt.where(Individ.year >= year_filter)
-        if e := filters.get('year_max'):
-            stmt = stmt.where(Individ.year <= e)
-        if f := filters.get('sex'):
-            stmt = stmt.where(getattr(Sex, 'sex').in_(f))
-        if g := filters.get('preservation'):
-            stmt = stmt.where(getattr(Preservation, 'id').in_(g))
-        if e := filters.get('grave_type'):
-            stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_type').in_(e))
-        if f := filters.get('creator'):
-            stmt = stmt.join(Individ.creator).where(getattr(DatabaseUser, 'id').in_(f))
-        if i := filters.get('site'):
-            stmt = stmt.join(Individ.site).where(getattr(ArchaeologicalSite, 'id').in_(i))
-        if s := filters.get('type'):
-            stmt = stmt.where(getattr(Individ, 'type').in_(s))
-        if z := filters.get('grave'):
-            stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(z))
-        if comment := filters.get('comment'):
-            stmt = stmt.join(Individ.comment).where(Comment.text.ilike(f'%{comment}%'))
+        if year_min_filter := filters.get('year_min'):
+            stmt = stmt.where(Individ.year >= year_min_filter)
+        if year_max_filter := filters.get('year_max'):
+            stmt = stmt.where(Individ.year <= year_max_filter)
+        if sex_filter := filters.get('sex'):
+            stmt = stmt.where(getattr(Sex, 'sex').in_(sex_filter))
+        if preservation_filter := filters.get('preservation'):
+            stmt = stmt.where(getattr(Preservation, 'id').in_(preservation_filter))
+        if grave_type_filter := filters.get('grave_type'):
+            stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_type').in_(grave_type_filter))
+        if creator_filter := filters.get('creator'):
+            stmt = stmt.join(Individ.creator).where(getattr(DatabaseUser, 'id').in_(creator_filter))
+        if arch_site_filter := filters.get('site'):
+            stmt = stmt.join(Individ.site).where(getattr(ArchaeologicalSite, 'id').in_(arch_site_filter))
+        if type_filter := filters.get('type'):
+            stmt = stmt.where(getattr(Individ, 'type').in_(type_filter))
+        if grave_number_filter := filters.get('grave'):
+            stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(grave_number_filter))
+        if comment_filter := filters.get('comment'):
+            stmt = stmt.join(Individ.comment).where(Comment.text.ilike(f'%{comment_filter}%'))
         if filters.get('age_min') and filters.get('age_max'):
-            min = filters.get('age_min')
-            max = filters.get('age_max')
+            age_min = filters.get('age_min')
+            age_max = filters.get('age_max')
             stmt = stmt.where(
                 case(
-                (Individ.age_max.is_(None), or_(between(Individ.age_min, min, max), Individ.age_min < min)),
-                (Individ.age_min.is_(None), Individ.age_max >= min),
-                else_ = (or_(between(Individ.age_min, min, max), between(Individ.age_max, min, max)))
+                    (Individ.age_max.is_(None), or_(between(Individ.age_min, age_min, age_max), Individ.age_min < age_min)),
+                    (Individ.age_min.is_(None), Individ.age_max >= age_min),
+                    else_=(or_(between(Individ.age_min, age_min, age_max), between(Individ.age_max, age_min, age_max)))
                 )
                 )
         if filters.get('age_min') and not filters.get('age_max'):
-            min = filters.get('age_min')
+            age_min = filters.get('age_min')
             stmt = stmt.where(
                 case(
-                (Individ.age_max.is_(None), Individ.age_min >= 0),
-                else_ = or_(between(Individ.age_min, min, 200), between(Individ.age_max, min, 200))
-                )
+                    (Individ.age_max.is_(None), Individ.age_min >= 0),
+                    else_=or_(between(Individ.age_min, age_min, 200), between(Individ.age_max, age_min, 200))
+                    )
                 )
         if filters.get('age_max') and not filters.get('age_min'):
-            max = filters.get('age_max')
-            print('popka')
+            age_max = filters.get('age_max')
             stmt = stmt.where(
                 case(
-                (Individ.age_min.is_(None), Individ.age_max > 0),
-                else_ = or_(between(Individ.age_max, 0, max), Individ.age_min <= max)
-                )
+                    (Individ.age_min.is_(None), Individ.age_max > 0),
+                    else_=or_(between(Individ.age_max, 0, age_max), Individ.age_min <= age_max)
+                    )
                 )
         global individs
         individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()

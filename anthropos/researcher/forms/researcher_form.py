@@ -1,14 +1,17 @@
 from flask_wtf import FlaskForm
-from flask import url_for, request
 from wtforms import StringField, SubmitField
-from anthropos.models import Researcher
-from anthropos import db
 from sqlalchemy import and_
-from anthropos.lib.validators import CleanName, OnlyCharsValidator, DataRequiredImproved
+
+from anthropos import db
+from anthropos.models import Researcher
+from anthropos.lib.validators import (
+    CleanName,
+    OnlyCharsValidator,
+    DataRequiredImproved
+    )
 
 
 class ResearcherForm(FlaskForm):
-
 
     last_name = StringField(label='Фамилия', validators=[DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     first_name = StringField(label='Имя', validators=[DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
@@ -28,4 +31,3 @@ class ResearcherForm(FlaskForm):
             return False
 
         return True
-

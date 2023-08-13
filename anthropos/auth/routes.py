@@ -68,7 +68,7 @@ def register() -> Response | str:
                             datetime.utcnow(),
                             form.middle_name.data
                             )
-        user.save_to_db()
+        user.save()
         user.send_confirmation_email()
         flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
         flash('Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')

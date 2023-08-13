@@ -3,7 +3,7 @@ from anthropos.models.base_model import BaseModel
 from anthropos.models.sites_researchers import sites_researchers
 
 
-class Researcher(db.Model, BaseModel):
+class Researcher(BaseModel, db.Model):
     __tablename__ = 'researchers'
 
     id = db.Column(db.Integer, primary_key=True)
