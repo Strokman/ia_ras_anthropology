@@ -109,7 +109,7 @@ def submit_individ():
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/delete_individ/<int:individ_id>', methods=['GET'])
+@bp.route('/delete_individ/<individ_id>', methods=['GET'])
 @login_required
 def delete_individ(individ_id):
     individ: Individ | None = Individ.get_by_id(individ_id)
