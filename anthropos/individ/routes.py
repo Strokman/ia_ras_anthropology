@@ -26,7 +26,7 @@ from anthropos.models import (
     Region,
     Preservation,
     Grave,
-    DatabaseUser,
+    User,
     Comment,
     File)
 
@@ -258,7 +258,7 @@ def search():
         if grave_type_filter := filters.get('grave_type'):
             stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_type').in_(grave_type_filter))
         if creator_filter := filters.get('creator'):
-            stmt = stmt.join(Individ.creator).where(getattr(DatabaseUser, 'id').in_(creator_filter))
+            stmt = stmt.join(Individ.creator).where(getattr(User, 'id').in_(creator_filter))
         if arch_site_filter := filters.get('site'):
             stmt = stmt.join(Individ.site).where(getattr(ArchaeologicalSite, 'id').in_(arch_site_filter))
         if type_filter := filters.get('type'):

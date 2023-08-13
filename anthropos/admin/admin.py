@@ -10,7 +10,7 @@ from anthropos.admin.models import MyAdminView, MyModelView, UserView
 from anthropos.extensions import db
 from anthropos.models import (
     ArchaeologicalSite,
-    DatabaseUser,
+    User,
     Region,
     Epoch,
     Individ,
@@ -28,7 +28,7 @@ admin = Admin(name='BaseHabilis Admin',
               template_mode='bootstrap4',
               index_view=MyAdminView(name='BaseHabilis Admin'))
 
-admin.add_view(UserView(DatabaseUser, db.session, name='Users', url='users'))
+admin.add_view(UserView(User, db.session, name='Users', url='users', endpoint='users'))
 admin.add_view(MyModelView(Individ, db.session, name='Individs', url='individs', endpoint='individs'))
 admin.add_view(MyModelView(ArchaeologicalSite, db.session, name='Sites'))
 admin.add_view(MyModelView(Researcher, db.session, endpoint='researchers'))

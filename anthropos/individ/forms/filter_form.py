@@ -9,7 +9,7 @@ from anthropos.models import (
     Researcher,
     Sex,
     Preservation,
-    DatabaseUser,
+    User,
     ArchaeologicalSite
     )
 
@@ -27,7 +27,7 @@ class FilterForm(FlaskForm):
         self.type.choices = ['ингумация', 'кремация']
         self.preservation.query = Preservation.get_all('id')
         self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
-        self.creator.query = DatabaseUser.get_all('last_name')
+        self.creator.query = User.get_all('last_name')
         self.site.query = ArchaeologicalSite.get_all()
 
     index = SearchField('Поиск по индексу', validators=[Optional()])

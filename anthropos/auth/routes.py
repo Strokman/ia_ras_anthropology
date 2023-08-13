@@ -26,7 +26,7 @@ from anthropos.auth.forms import (
     ResetPasswordForm,
     RegistrationForm
     )
-from anthropos.models import DatabaseUser
+from anthropos.models import User
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -35,7 +35,7 @@ def login() -> Response | str:
         return redirect(url_for('index.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user: DatabaseUser | None = DatabaseUser.get_one_by_attr('username', form.username.data)
+        user: User | None = User.get_one_by_attr('username', form.username.data)
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         db.session.commit()
@@ -58,7 +58,7 @@ def register() -> Response | str:
         return redirect(url_for('index.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = DatabaseUser(form.username.data,
+        user = User(form.username.data,
                             form.password.data,
                             form.first_name.data,
                             form.last_name.data,
@@ -78,7 +78,7 @@ def register() -> Response | str:
 
 @bp.route('/user_confirmation/<username>/<token>')
 def user_confirmation(username, token) -> Response:
-    user: DatabaseUser | None = DatabaseUser.get_one_by_attr('username', username)
+    user: User | None = User.get_one_by_attr('username', username)
     if str(user.token) == token:
         user.activated = True
         db.session.commit()
@@ -92,7 +92,7 @@ def reset_password_request() -> Response | str:
         return redirect(url_for('index.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        user = DatabaseUser.get_one_by_attr('email',
+        user = User.get_one_by_attr('email',
                                             form.email.data
                                             )
         user.send_password_reset_email()
@@ -106,7 +106,7 @@ def reset_password_request() -> Response | str:
 def reset_password(token) -> Response | str:
     if current_user.is_authenticated:
         logout_user()
-    user = DatabaseUser.verify_reset_password_token(token)
+    user = User.verify_reset_password_token(token)
     if not user:
         return redirect(url_for('index.index'))
     form = ResetPasswordForm()

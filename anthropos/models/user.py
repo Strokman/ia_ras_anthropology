@@ -11,8 +11,8 @@ from time import time
 from functools import wraps
 
 
-class DatabaseUser(UserMixin, db.Model, BaseModel):
-    __tablename__: str = 'database_users'
+class User(UserMixin, db.Model, BaseModel):
+    __tablename__: str = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, unique=True, index=True)
@@ -97,7 +97,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        user: DatabaseUser | None = DatabaseUser.get_one_by_attr('id', id)
+        user: User | None = User.get_one_by_attr('id', id)
         return user
 
     def __str__(self):
@@ -111,7 +111,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
 
 @login.user_loader
 def load_user(user_id):
-    user = db.session.query(DatabaseUser).get(int(user_id))
+    user = User.get_by_id(user_id)
     if not user or not user.is_active():
         return None
     return user

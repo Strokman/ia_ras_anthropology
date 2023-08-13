@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Length, Email, EqualTo, ValidationError
-from anthropos.models import DatabaseUser
+from anthropos.models import User
 from anthropos.lib import CleanName, OnlyCharsValidator, DataRequiredImproved, CleanString
 
 
@@ -17,12 +17,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(label='Создать учетную запись')
 
     def validate_username(self, username):
-        user = DatabaseUser.get_one_by_attr('username', username.data)
+        user = User.get_one_by_attr('username', username.data)
         if user is not None:
             raise ValidationError('Пользователь существует!')
 
     def validate_email(self, email):
-        user = DatabaseUser.get_one_by_attr('email', email.data)
+        user = User.get_one_by_attr('email', email.data)
         if user is not None:
             raise ValidationError('E-Mail уже зарегистрирован!')
         

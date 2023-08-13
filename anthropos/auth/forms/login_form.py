@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from anthropos.lib.validators import DataRequiredImproved
 from wtforms.validators import ValidationError
 
-from anthropos.models import DatabaseUser
+from anthropos.models import User
 
 
 class LoginForm(FlaskForm):
@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
     def validate_username(self, username):
         global user
-        user = DatabaseUser.get_one_by_attr('username', username.data)
+        user = User.get_one_by_attr('username', username.data)
         if user is None:
             raise ValidationError('Неверный логин!')
         elif not user.activated:

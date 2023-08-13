@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, ValidationError
 from wtforms.validators import Length, Email
 
-from anthropos.models import DatabaseUser
+from anthropos.models import User
 from anthropos.lib.validators import (
     CleanName,
     CleanString,
@@ -27,12 +27,12 @@ class EditProfileForm(FlaskForm):
 
     def validate_username(self, username):
         if username.data != self.original_username:
-            user = DatabaseUser.get_one_by_attr('username', self.username.data)
+            user = User.get_one_by_attr('username', self.username.data)
             if user is not None:
                 raise ValidationError('Пользователь существует!')
 
     def validate_email(self, email):
         if email.data != self.original_email:
-            user = DatabaseUser.get_one_by_attr('email', self.email.data)
+            user = User.get_one_by_attr('email', self.email.data)
             if user is not None:
                 raise ValidationError('E-Mail уже зарегистрирован!')

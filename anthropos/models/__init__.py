@@ -1,4 +1,4 @@
-from .database_user import *
+from anthropos.models.user import *
 from .archaeological_site import *
 from .sites_epochs import *
 from .epoch import *
