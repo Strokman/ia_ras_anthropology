@@ -42,7 +42,7 @@ class BaseModel:
         stmt = select(cls).where(cls.id == id)
         result = db.session.scalar(stmt)
         return result
-    
+
     @classmethod
     def get_all(cls, attr: str = None) -> list[Self]:
         if attr and hasattr(cls, attr):
@@ -55,11 +55,12 @@ class BaseModel:
         return result
 
     @classmethod
-    def get_one_by_attr(cls, attr, value):
-        stmt = select(cls).where(attr==value)
-        result = db.session.scalar(stmt)
+    def get_one_by_attr(cls, attr: str, value):
+        if hasattr(cls, attr):
+            stmt = select(cls).where(getattr(cls, attr) == value)
+            result = db.session.scalar(stmt)
         return result
-    
+
     def save(self, commit: bool = True):
         """Save the record."""
         db.session.add(self)

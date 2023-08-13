@@ -17,11 +17,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField(label='Создать учетную запись')
 
     def validate_username(self, username):
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.username, username.data)
+        user = DatabaseUser.get_one_by_attr('username', username.data)
         if user is not None:
             raise ValidationError('Пользователь существует!')
 
     def validate_email(self, email):
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.email, email.data)
+        user = DatabaseUser.get_one_by_attr('email', email.data)
         if user is not None:
             raise ValidationError('E-Mail уже зарегистрирован!')
+        

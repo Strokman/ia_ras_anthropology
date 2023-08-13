@@ -17,8 +17,8 @@ class ArchaeologicalSiteForm(FlaskForm):
         super().__init__()
         self.region.choices = [(0, 'Выберите субъект')]
         self.federal_district.query = FederalDistrict.get_all()
-        self.researcher.query = Researcher.get_all(Researcher.last_name)
-        self.epoch.query = Epoch.get_all(Epoch.id)
+        self.researcher.query = Researcher.get_all('last_name')
+        self.epoch.query = Epoch.get_all('id')
 
     name = StringField(label='Название памятника', validators=[Length(min=4, message='Длина названия не менее 4 знаков'), DataRequiredImproved(), CleanString()])
     lat = DecimalField(places=6, label='Широта', validators=[NumberRange(min=-90, max=90, message='Градусы должны быть в пределах -90 - 90'), DataRequiredImproved()])

@@ -9,7 +9,7 @@ from datetime import datetime
 
 @bp.route('/file/<filename>')
 def get_file(filename):
-    file: File = File.get_one_by_attr(File.filename, filename)
+    file: File = File.get_one_by_attr('filename', filename)
     if file and path.isfile(file.path) and file.extension == 'pdf':
         return send_file(file.path, download_name=f'{file.individ.index}.{file.extension}')
     elif file and file.extension != 'pdf':
@@ -20,7 +20,7 @@ def get_file(filename):
 
 @bp.route('/delete_file/<string:filename>', methods=['GET'])
 def delete_file(filename):
-    file: File = File.get_one_by_attr(File.filename, filename)
+    file: File = File.get_one_by_attr('filename', filename)
     if file:
         remove(file.path)
         db.session.delete(file)

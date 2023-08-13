@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
     def validate_username(self, username):
         global user
-        user = DatabaseUser.get_one_by_attr(DatabaseUser.username, username.data)
+        user = DatabaseUser.get_one_by_attr('username', username.data)
         if user is None:
             raise ValidationError('Неверный логин!')
         elif not user.activated:

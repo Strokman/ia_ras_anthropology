@@ -97,7 +97,7 @@ class DatabaseUser(UserMixin, db.Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        user: DatabaseUser | None = DatabaseUser.get_one_by_attr(DatabaseUser.id, id)
+        user: DatabaseUser | None = DatabaseUser.get_one_by_attr('id', id)
         return user
 
     def __str__(self):
