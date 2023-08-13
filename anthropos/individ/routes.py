@@ -119,7 +119,7 @@ def delete_individ(individ_id):
         print(e)
     individ.delete()
     flash('Запись удалена', 'warning')
-    return redirect(request.referrer)
+    return redirect(url_for('individ.individ_table'))
 
 
 @bp.route('/edit_individ/<int:individ_id>', methods=['GET', 'POST'])
