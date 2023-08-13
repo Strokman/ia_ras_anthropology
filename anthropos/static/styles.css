@@ -10,6 +10,11 @@ body {
 
 .table{
   font-size: 14px;
+  overflow-x: auto;
+}
+
+.table-div {
+  overflow-x: auto;
 }
 
 .comment_field {
