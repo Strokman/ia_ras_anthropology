@@ -38,7 +38,6 @@ class ViewAccessControl:
         Returns:
             Response: Redirects user to the index page
         """
-        print('kek')
         flash('Недостаточно прав', 'warning')
         return redirect(url_for('index.index'))
 
@@ -48,25 +47,49 @@ class UserView(ViewAccessControl, ModelView):
     UserView inherits from flask_admin base model and
     ViewMixin, where the neccessary logic for granting
     access to the admin panel is implemented.
-    
+    Model contains basic view customization for
+    users management page.
+
     Args:
-        ModelView (from flask_admin.contrib.sqla.ModelView):
-        Base flask_admin view Model
-        ViewMixin (anthropos.admin.models.ViewMixin):
+        ViewAccessControl (anthropos.admin.models.ViewAccessControl):
         Model with overwritten access methods
+        ModelView (flask_admin.contrib.sqla.ModelView):
+        Base flask_admin view model
     """
-    to_exclude = ['password_hash', 'token', 'last_login', 'created', 'email']
-    can_view_details = True
-    column_exclude_list = to_exclude
-    create_modal = True
-    edit_modal = True
-    form_excluded_columns = to_exclude
-    form_choices = {'role': [('user', 'user'), ('admin', 'admin')]}
+    to_exclude: list[str] = ['password_hash', 'token', 'last_login', 'created', 'email']
+    can_view_details: bool = True
+    column_exclude_list: list[str] = to_exclude
+    create_modal: bool = True
+    edit_modal: bool = True
+    form_excluded_columns: list[str] = to_exclude
+    form_choicesd: dict[str, list[str]] = {'role': [('user', 'user'), ('admin', 'admin')]}
 
 
 class MyModelView(ViewAccessControl, ModelView):
+    """
+    MyModelView inherits from flask_admin base model
+    and custom view mixin, which restricts the access to view for
+    all non-'admin' users.
+
+    Args:
+        ViewAccessControl (anthropos.admin.models.ViewAccessControl):
+        Model with overwritten access methods
+        ModelView (flask_admin.contrib.sqla.ModelView):
+        Base flask_admin view model
+    """
     pass
 
 
 class MyAdminView(ViewAccessControl, AdminIndexView):
+    """
+    MyAdminView inherits from flask_admin admin index view
+    and custom view mixin, which restricts the access to view for
+    all non-'admin' users.
+
+    Args:
+        ViewAccessControl (anthropos.admin.models.ViewAccessControl):
+        Model with overwritten access methods
+        AdminIndexView (flask_admin.AdminIndexView):
+        Base flask_admin index view model
+    """
     pass
