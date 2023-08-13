@@ -3,7 +3,10 @@
 
 This Flask App is designed for my scientific unit in Institute of Archaeology.
 
-It serves the purpose of storing and accessing data about the anthropological materials, which are gathered in Institute
+It serves the purpose of storing and accessing data about the anthropological materials, which are gathered in Institute.
+
+Institute of archaeology of Russian Academy of Sciences was established in 1919. After the end of WWII Institute carried multiple of excavations in the European part of the USSR and Russia.
+All anthropological collections, which were gathered during the excavations, are stored without any sistematization and catalogization.
 
 
 The application is inspired by:
