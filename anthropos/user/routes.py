@@ -1,15 +1,17 @@
+from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
-from flask import redirect, url_for, flash, render_template
-from anthropos.models import DatabaseUser
+from werkzeug.wrappers import Response
+
 from anthropos import db
-from anthropos.user.forms import EditProfileForm
 from anthropos.user import bp
+from anthropos.models import DatabaseUser
+from anthropos.user.forms import EditProfileForm
 
 
 @bp.route('/user/<username>', methods=['GET'])
 @login_required
-def user(username):
-    user = db.session.query(DatabaseUser).filter_by(username=username).first_or_404()
+def user(username) -> str:
+    user = DatabaseUser.get_one_by_attr('username', username)
     profile_form = EditProfileForm(current_user.username, current_user.email)
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name
@@ -22,9 +24,8 @@ def user(username):
 
 @bp.route('/edit_profile', methods=['POST'])
 @login_required
-def edit_profile():
+def edit_profile() -> Response:
     form = EditProfileForm(current_user.username, current_user.email)
-
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.first_name = form.first_name.data
