@@ -12,6 +12,19 @@ from anthropos.extensions import db
 class BaseModel:
 
     @classmethod
+    def create(cls, **kwargs):
+        """Create a new record and save it the database."""
+        instance = cls(**kwargs)
+        return instance.save()
+    
+    def save(self, commit=True):
+        """Save the record."""
+        db.session.add(self)
+        if commit:
+            db.session.commit()
+        return self
+    
+    @classmethod
     def get_by_id(cls, id: int | str):
         stmt = select(cls).where(cls.id == id)
         result = db.session.scalar(stmt)
