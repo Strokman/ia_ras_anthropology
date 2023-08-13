@@ -4,7 +4,6 @@ from anthropos import db
 from anthropos.site.forms import ArchaeologicalSiteForm
 from anthropos.site import bp
 from anthropos.models import ArchaeologicalSite, Region, FederalDistrict
-from werkzeug.exceptions import NotFound
 
 
 @bp.route('/submit_site', methods=['GET', 'POST'])
