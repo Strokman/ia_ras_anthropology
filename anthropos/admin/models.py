@@ -1,3 +1,9 @@
+"""
+    Models of flask_admin package are customized
+    ro restrict access for all users without 'admin' role.
+    Basic customization added to Users view:
+    excluded columns with password hash, editing in modals etc.
+"""
 from flask import redirect, url_for, flash
 from flask_admin import AdminIndexView
 from flask_admin.contrib.sqla import ModelView

@@ -1,3 +1,8 @@
+"""
+    Admin module contains all neccessary logic for admin panel
+    of the Base Habilis app
+"""
+
 from anthropos.admin.models import MyAdminView, MyModelView, UserView
 from anthropos.admin.admin import admin
 

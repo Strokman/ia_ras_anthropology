@@ -1,3 +1,9 @@
+"""
+    Admin module of Base Habilis app instanciates
+    the flask_admin class and adds necessary views to
+    admin panel of the application.
+    Recent customization is pretty basic.
+"""
 from flask_admin import Admin
 
 from anthropos.admin.models import MyAdminView, MyModelView, UserView
