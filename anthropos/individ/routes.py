@@ -69,9 +69,10 @@ def submit_individ():
             skeleton=form.data.get('skeleton', None)
         )
 
-        # add both to the session, so that everything will work correct with ID's etc.
+        # add both to the session, so that everything
+        # will work correct with ID's etc.
         db.session.add_all((individ, grave))
-        
+
         # add requiered relations
         individ.grave = grave
         sex = form.sex.data
@@ -148,10 +149,10 @@ def edit_individ(individ_id):
         individ.type=form.data.get('type', None)
         individ.edited_at=datetime.utcnow()
         individ.edited_by=current_user.id
-        
+
         sex = form.sex.data
         sex.individs.append(individ)
-        
+
         if input_comment := form.comment.data:
             comment = Comment(text=input_comment)
             db.session.add(comment)

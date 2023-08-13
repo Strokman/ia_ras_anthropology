@@ -2,7 +2,16 @@ from flask_wtf import FlaskForm
 from wtforms import SubmitField, IntegerField, SelectMultipleField, SearchField
 from wtforms.validators import Optional
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
-from anthropos.models import FederalDistrict, Epoch, Researcher, Sex, Preservation, DatabaseUser, ArchaeologicalSite
+
+from anthropos.models import (
+    FederalDistrict,
+    Epoch,
+    Researcher,
+    Sex,
+    Preservation,
+    DatabaseUser,
+    ArchaeologicalSite
+    )
 
 
 class FilterForm(FlaskForm):
@@ -38,4 +47,3 @@ class FilterForm(FlaskForm):
     comment = SearchField('Поиск по примечанию', validators=[Optional()])
     creator = QuerySelectMultipleField('Кем создан')
     submit = SubmitField('Выбрать')
-

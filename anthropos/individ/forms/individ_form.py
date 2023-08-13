@@ -62,4 +62,3 @@ class IndividForm(FlaskForm):
     def validate_type(self, type):
         if type.data == 'Выберите обряд':
             raise ValidationError('Пожалуйста, выберите один из вариантов')
-        

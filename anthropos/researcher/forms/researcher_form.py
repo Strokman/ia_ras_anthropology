@@ -19,15 +19,17 @@ class ResearcherForm(FlaskForm):
     affiliation = StringField(label='Место работы', validators=[DataRequiredImproved()])
     submit = SubmitField(label='Добавить исследователя')
 
-    def validate(self, extra_validators=None):
+    def validate(self, extra_validators=None) -> bool:
         rv = FlaskForm.validate(self)
         if not rv:
             return False
-
         researcher = db.session.query(Researcher).filter(
-            and_(Researcher.first_name == self.first_name.data, Researcher.last_name == self.last_name.data)).first()
+            and_(
+                Researcher.first_name == self.first_name.data,
+                Researcher.last_name == self.last_name.data
+                )
+            ).first()
         if researcher is not None:
             self.last_name.errors.append(f'Исследователь {researcher} уже есть в базе данных!')
             return False
-
         return True

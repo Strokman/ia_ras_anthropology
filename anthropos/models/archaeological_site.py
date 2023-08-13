@@ -5,7 +5,7 @@ from .base_model import BaseModel
 
 
 class ArchaeologicalSite(db.Model, BaseModel):
-    __tablename__ = 'archaeological_sites'
+    __tablename__: str = 'archaeological_sites'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False, index=True)

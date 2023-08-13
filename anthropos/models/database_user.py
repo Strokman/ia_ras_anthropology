@@ -126,5 +126,3 @@ def admin_required(f):
         else:
             return f(*args, **kwargs)
     return decorated_view
-
-

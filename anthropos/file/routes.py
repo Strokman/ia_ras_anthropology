@@ -1,14 +1,16 @@
-from flask import send_file, flash, redirect, url_for, session, current_app
-from os import path, remove
-from anthropos.extensions import db, cache
-from anthropos.file import bp
-from anthropos.models import File
-from anthropos.helpers import export_xls
 from datetime import datetime
+from os import path, remove
+
+from flask import send_file, flash, redirect, url_for, session, current_app
+from werkzeug.wrappers import Response
+
+from anthropos.file import bp
+from anthropos.helpers import export_xls
+from anthropos.models import File
 
 
 @bp.route('/file/<filename>')
-def get_file(filename):
+def get_file(filename) -> Response:
     file: File = File.get_one_by_attr('filename', filename)
     if file and path.isfile(file.path) and file.extension == 'pdf':
         return send_file(file.path, download_name=f'{file.individ.index}.{file.extension}')
@@ -23,8 +25,8 @@ def delete_file(filename):
     file: File = File.get_one_by_attr('filename', filename)
     if file:
         remove(file.path)
-        db.session.delete(file)
-        db.session.commit()
+        file.delete()
+        flash('Файл удален', 'success')
     return redirect(url_for('individ.individ_table'))
 
 
@@ -35,5 +37,5 @@ def export_excel(key):
         file: str = export_xls(individs, current_app, export_name=key)
         return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.now()).replace(' ', '_')}.xlsx")
     except:
-        flash('Нет данных для экспорта', 'warning')
+        flash('Нет данных для экспорта/некорректные данные', 'warning')
     return redirect(url_for('index.index'))
