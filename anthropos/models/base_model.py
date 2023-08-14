@@ -39,9 +39,7 @@ class BaseModel:
         Returns:
             Self: entry from DB, instance of a class
         """
-        stmt = select(cls).where(cls.id == id)
-        result = db.session.scalar(stmt)
-        return result
+        return db.session.get(cls, id)
 
     @classmethod
     def get_all(cls, attr: str = None) -> list[Self]:
