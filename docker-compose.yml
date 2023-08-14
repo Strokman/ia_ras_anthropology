@@ -36,4 +36,4 @@ services:
       - 5100:5100
     restart: always
     volumes:
-    - ./anhtropos-files:~/anthropos/static/files
+    - ./anhtropos-files:/home/anthropos/anthropos/static/files
