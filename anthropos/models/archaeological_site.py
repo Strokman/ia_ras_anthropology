@@ -1,7 +1,7 @@
 from anthropos import db
 from anthropos.models.sites_epochs import sites_epochs
 from anthropos.models.sites_researchers import sites_researchers
-from .base_model import BaseModel
+from anthropos.models.base_model import BaseModel
 
 
 class ArchaeologicalSite(db.Model, BaseModel):
@@ -18,8 +18,8 @@ class ArchaeologicalSite(db.Model, BaseModel):
     creator = db.relationship("User", foreign_keys="ArchaeologicalSite.created_by", back_populates='sites_created')
     editor = db.relationship("User", foreign_keys="ArchaeologicalSite.edited_by", back_populates='sites_edited')
     region = db.relationship('Region', back_populates='sites')
-    individs = db.relationship("Individ", back_populates='site')
-    graves = db.relationship("Grave", back_populates='site')
+    individs = db.relationship("Individ", back_populates='site', cascade='all, delete-orphan')
+    graves = db.relationship("Grave", back_populates='site', cascade='all, delete-orphan')
 
     epochs = db.relationship("Epoch", secondary=sites_epochs,
                              primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',

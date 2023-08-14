@@ -12,7 +12,7 @@ from flask import (
 from flask_login import current_user, login_required
 from sqlalchemy import between, case, or_, select
 
-from anthropos import db
+from anthropos import db, csrf
 from anthropos.helpers import save_file
 from anthropos.individ.forms import IndividForm, FilterForm
 from anthropos.individ import bp
@@ -109,7 +109,8 @@ def submit_individ():
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/delete_individ/<individ_id>', methods=['GET'])
+@bp.route('/delete_individ/<individ_id>', methods=['POST'])
+@csrf.exempt
 @login_required
 def delete_individ(individ_id):
     individ: Individ | None = Individ.get_by_id(individ_id)
@@ -118,7 +119,7 @@ def delete_individ(individ_id):
     except AttributeError as e:
         print(e)
     individ.delete()
-    flash('Запись удалена', 'warning')
+    flash('Запись удалена', 'success')
     return redirect(url_for('individ.individ_table'))
 
 

@@ -1,4 +1,4 @@
-<div class="modal fade" id="file{{individ.file.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="file{{individ.file.id}}" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog {% if individ.file.filename.split('.')[1] != 'pdf' %}{{'img-embed'}}{% endif %} modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -11,7 +11,9 @@
         <div class="modal-footer">
       
           <a href="{{url_for('file.get_file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" target="_blank" role="button">Скачать</a>
-          <a href="{{url_for('file.delete_file', filename=individ.file.filename)}}" class="btn btn-primary" tabindex="-1" role="button">Удалить</a>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{id}}">
+            Удалить
+          </button>
         </div>
       </div>
     </div>

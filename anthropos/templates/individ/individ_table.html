@@ -76,13 +76,20 @@
             </tr>
 
 
-{% with individ=individ %}
+{% with individ=individ, id=individ.id, url=url_for('individ.delete_individ', individ_id=individ.id)%}
 
 {% include "_modal_table.html" %}
+{% include "_modal_warning.html" %}
+{% endwith %}
+{% with individ=individ, id=individ.file.filename, url=url_for('file.delete_file', filename=individ.file.filename) %}
 {% if individ.file %}
 {% include "_modal_file.html" %}
+
+{% include "_modal_warning.html" %}
+
 {% endif %}
 {% endwith %}
+
 {% endfor %}
         </tbody>
     </table>
