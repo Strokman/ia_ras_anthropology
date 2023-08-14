@@ -32,6 +32,7 @@ services:
     env_file: .env
     networks:
       - default
+    user: anthropos:anthropos
     ports:
       - 5100:5100
     restart: always
