@@ -20,7 +20,6 @@ RUN chmod +x boot.sh
 
 ENV FLASK_APP base_habilis.py
 
-RUN mkdir anthropos/static/files
 RUN chown -R anthropos:anthropos ./
 USER anthropos
 

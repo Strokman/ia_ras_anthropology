@@ -35,5 +35,3 @@ services:
     ports:
       - 5100:5100
     restart: always
-    volumes:
-    - ./anthropos-files:/home/anthropos/anthropos/static/files
