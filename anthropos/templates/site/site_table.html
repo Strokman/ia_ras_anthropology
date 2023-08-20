@@ -31,7 +31,7 @@
                 <td class="text-end">{{ site.region }}</td>
                 <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
                 <td class="text-end">{% for researcher in site.researchers %}{{ researcher }}<br>{% endfor %}</td>
-                <td class="text-end">{% for individ in site.individ %} {{individ}} <br>{% endfor %}</td>
+                <td class="text-end">{% for individ in site.individs %} {{individ}} <br>{% endfor %}</td>
                 <td class="text-end">{{ site.editor }}</td>
                 <td class="text-end"><a href="{{ url_for('site.edit_site', site_id=site.id) }}" class="btn btn-primary" tabindex="-1" role="button">Ред.</a></td>
             </tr>
