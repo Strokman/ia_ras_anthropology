@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from sqlalchemy import and_
 
-from anthropos import db
+from src.database import session
 from anthropos.models import Researcher
 from anthropos.lib.validators import (
     CleanName,
@@ -23,7 +23,7 @@ class ResearcherForm(FlaskForm):
         rv = FlaskForm.validate(self)
         if not rv:
             return False
-        researcher = db.session.query(Researcher).filter(
+        researcher = session.query(Researcher).filter(
             and_(
                 Researcher.first_name == self.first_name.data,
                 Researcher.last_name == self.last_name.data

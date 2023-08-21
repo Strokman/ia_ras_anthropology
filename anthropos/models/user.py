@@ -1,6 +1,7 @@
-from anthropos.extensions import login, db
+from anthropos.extensions import login
+from src.database import Column, relationship, Model, String, Integer, Boolean, DateTime
 from werkzeug.security import check_password_hash, generate_password_hash
-from .base_model import BaseModel
+from src.database.base_model import BaseModel
 from flask_login import UserMixin
 from flask import url_for, flash, session, redirect, current_app, render_template
 from uuid import uuid4
@@ -11,27 +12,27 @@ from time import time
 from functools import wraps
 
 
-class User(UserMixin, db.Model, BaseModel):
+class User(UserMixin, Model, BaseModel):
     __tablename__: str = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False, unique=True, index=True)
-    password_hash = db.Column(db.String(256), nullable=False)
-    first_name = db.Column(db.String(128), nullable=False)
-    last_name = db.Column(db.String(128), nullable=False)
-    middle_name = db.Column(db.String(128))
-    affiliation = db.Column(db.String(128), nullable=False)
-    email = db.Column(db.String(128), index=True, nullable=False, unique=True)
-    activated = db.Column(db.Boolean, nullable=False, default=False)
-    role = db.Column(db.String(16), nullable=False, default='user')
-    token = db.Column(UUID(as_uuid=True), nullable=False, default=uuid4())
-    created = db.Column(db.DateTime, nullable=False)
-    last_login = db.Column(db.DateTime, nullable=False)
+    id = Column(Integer, primary_key=True)
+    username = Column(String(50), nullable=False, unique=True, index=True)
+    password_hash = Column(String(256), nullable=False)
+    first_name = Column(String(128), nullable=False)
+    last_name = Column(String(128), nullable=False)
+    middle_name = Column(String(128))
+    affiliation = Column(String(128), nullable=False)
+    email = Column(String(128), index=True, nullable=False, unique=True)
+    activated = Column(Boolean, nullable=False, default=False)
+    role = Column(String(16), nullable=False, default='user')
+    token = Column(UUID(as_uuid=True), nullable=False, default=uuid4())
+    created = Column(DateTime, nullable=False)
+    last_login = Column(DateTime, nullable=False)
 
-    sites_created = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.created_by', back_populates='creator')
-    sites_edited = db.relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by', back_populates='editor')
-    individs_created = db.relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
-    individs_edited = db.relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
+    sites_created = relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.created_by', back_populates='creator')
+    sites_edited = relationship('ArchaeologicalSite', foreign_keys='ArchaeologicalSite.edited_by', back_populates='editor')
+    individs_created = relationship('Individ', foreign_keys='Individ.created_by', back_populates='creator')
+    individs_edited = relationship('Individ', foreign_keys='Individ.edited_by', back_populates='editor')
 
     def __init__(self,
                  username,

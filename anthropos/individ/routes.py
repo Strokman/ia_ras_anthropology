@@ -7,12 +7,12 @@ from flask import (
     redirect,
     render_template,
     request,
-    session,
+    session as sess,
     url_for)
 from flask_login import current_user, login_required
 from sqlalchemy import between, case, or_, select
 
-from anthropos import db, csrf
+from anthropos.extensions import csrf
 from anthropos.helpers import save_file
 from anthropos.individ.forms import IndividForm, FilterForm
 from anthropos.individ import bp
@@ -29,14 +29,13 @@ from anthropos.models import (
     User,
     Comment,
     File)
-
+from src.database import session
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
 def submit_individ():
     form = IndividForm()
     if form.validate_on_submit():
-
         # If form submitted correctly - create instance of Individ class
         individ = Individ(
             year=form.data.get('year', None),
@@ -71,7 +70,7 @@ def submit_individ():
 
         # add both to the session, so that everything
         # will work correct with ID's etc.
-        db.session.add_all((individ, grave))
+        session.add_all((individ, grave))
 
         # add requiered relations
         individ.grave = grave
@@ -89,7 +88,7 @@ def submit_individ():
         #  add to session to create relations
         if form.comment.data:
             comment = Comment(text=form.comment.data)
-            db.session.add(comment)
+            session.add(comment)
             individ.comment = comment
 
         if epoch := form.epoch.data:
@@ -98,11 +97,11 @@ def submit_individ():
         if uploaded_file := form.file.data:
             saved_file = save_file(uploaded_file, current_app)
             file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
-            db.session.add(file)
+            session.add(file)
             individ.file = file
 
         # commit all changes to the DB
-        db.session.commit()
+        session.commit()
 
         flash('Успешно добавлено', 'success')
         return redirect(url_for('individ.submit_individ'))
@@ -156,7 +155,7 @@ def edit_individ(individ_id):
 
         if input_comment := form.comment.data:
             comment = Comment(text=input_comment)
-            db.session.add(comment)
+            session.add(comment)
             individ.comment = comment
         if individ.site != (site := form.site.data):
             site.individ.append(individ)
@@ -171,11 +170,11 @@ def edit_individ(individ_id):
             else:
                 saved_file = save_file(uploaded_file, current_app)
                 file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
-                db.session.add(file)
+                session.add(file)
                 individ.file = file
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
-        db.session.commit()
+        session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(url_for('individ.individ_table'))
     elif request.method == 'GET':
@@ -214,8 +213,8 @@ def edit_individ(individ_id):
 def individ_table():
     individs: list[Individ] = Individ.get_all('index')
     key = 'all'
-    session.pop(key, None)
-    session.setdefault(key, individs)
+    sess.pop(key, None)
+    sess.setdefault(key, individs)
     form: FilterForm = FilterForm()
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
@@ -230,7 +229,7 @@ def individ_table():
 def search():
     form: FilterForm = FilterForm()
     key = 'filtered'
-    session.pop(key, None)
+    sess.pop(key, None)
     if request.args:
         filters: dict = dict()
         for argument in request.args:
@@ -295,8 +294,8 @@ def search():
                     )
                 )
         global individs
-        individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
-        session[key] = individs
+        individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+        sess[key] = individs
         return render_template('individ/individ_table.html',
                                title='Таблица индивидов',
                                individs=enumerate(individs, 1),
@@ -310,8 +309,8 @@ def search():
 @login_required
 def individs_by_site(site_id):
     stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
-    individs = db.session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+    individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
     key = f'site_{site_id}_individs'
-    session.pop(key, None)
-    session.setdefault(key, individs)
+    sess.pop(key, None)
+    sess.setdefault(key, individs)
     return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=enumerate(individs, 1))

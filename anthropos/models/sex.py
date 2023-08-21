@@ -1,12 +1,12 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, Model, String
+from src.database.base_model import BaseModel
 
 
-class Sex(db.Model, BaseModel):
+class Sex(Model, BaseModel):
     __tablename__ = 'sex'
 
-    sex = db.Column(db.String(16), primary_key=True)
-    individs = db.relationship('Individ', back_populates='sex')
+    sex = Column(String(16), primary_key=True)
+    individs = relationship('Individ', back_populates='sex')
 
     def __init__(self, sex):
         self.sex = sex

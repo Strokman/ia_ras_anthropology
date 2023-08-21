@@ -4,12 +4,12 @@ from anthropos.extensions import (
     bootstrap,
     cache,
     csrf,
-    db,
     login,
     mail,
     migrate,
     moment,
     sess)
+from src.database import db
 from anthropos.admin import admin
 from anthropos.auth import bp as auth_bp
 from anthropos.cli import bp as cli_bp

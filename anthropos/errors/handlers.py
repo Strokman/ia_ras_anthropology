@@ -1,7 +1,7 @@
 from flask import render_template, current_app, flash, redirect, request
 from anthropos.errors import bp
 from anthropos.lib.email import send_email
-from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed
+from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed, BadRequest
 import traceback
 
 
@@ -45,8 +45,8 @@ def internal_error(error: InternalServerError):
     return render_template('errors/base_error.html', response=response), 500
 
 
-@bp.app_errorhandler(502)
-def internal_error(error: BadGateway):
+@bp.app_errorhandler(BadGateway)
+def bad_gateway(error: BadGateway):
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
@@ -61,8 +61,8 @@ def internal_error(error: BadGateway):
     return render_template('errors/base_error.html', response=response), 502
 
 
-@bp.app_errorhandler(405)
-def internal_error(error: MethodNotAllowed):
+@bp.app_errorhandler(MethodNotAllowed)
+def method_not_allowed(error: MethodNotAllowed):
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
@@ -75,3 +75,19 @@ def internal_error(error: MethodNotAllowed):
         text_body=txt
         )
     return render_template('errors/base_error.html', response=response), 405
+
+
+@bp.app_errorhandler(BadRequest)
+def bad_request(error: BadRequest):
+    response = {
+        'code': error.code,
+        'message': 'Ошибка сервера, администратор уведомлен',
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+        sender=current_app.config['ADMIN_EMAIL'],
+        recipients=[current_app.config['BACKUP_EMAIL']],
+        text_body=txt
+        )
+    return render_template('errors/base_error.html', response=response), 400

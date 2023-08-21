@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from anthropos import db
+from src.database import session
 from anthropos.user import bp
 from anthropos.models import User
 from anthropos.user.forms import EditProfileForm
@@ -36,7 +36,7 @@ def edit_profile() -> Response:
             current_user.email = form.email.data
             current_user.activated = False
             current_user.send_confirmation_email()
-        db.session.commit()
+        session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(url_for('user.user', username=current_user.username))
     flash('Изменения не сохранены. См. ошибки ниже', 'danger')

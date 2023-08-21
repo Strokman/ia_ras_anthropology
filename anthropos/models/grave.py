@@ -1,30 +1,30 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, ForeignKey, Model, Integer, String
+from src.database.base_model import BaseModel
 
 
-class Grave(db.Model, BaseModel):
+class Grave(Model, BaseModel):
     __tablename__ = 'graves'
 
-    id = db.Column(db.Integer, primary_key=True)
-    grave_type = db.Column(db.String(32))
-    kurgan_number = db.Column(db.String(32))
-    grave_number = db.Column(db.Integer, nullable=False)
-    catacomb = db.Column(db.Integer)
-    chamber = db.Column(db.Integer)
-    trench = db.Column(db.String(32))
-    area = db.Column(db.String(32))
-    object = db.Column(db.String(32))
-    layer = db.Column(db.String(32))
-    square = db.Column(db.String(32))
-    sector = db.Column(db.String(32))
-    niveau_point = db.Column(db.Integer)
-    tachymeter_point = db.Column(db.Integer)
-    skeleton = db.Column(db.String(32))
-    individ_id = db.Column(db.Integer, db.ForeignKey('individs.id'))
-    site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
+    id = Column(Integer, primary_key=True)
+    grave_type = Column(String(32))
+    kurgan_number = Column(String(32))
+    grave_number = Column(Integer, nullable=False)
+    catacomb = Column(Integer)
+    chamber = Column(Integer)
+    trench = Column(String(32))
+    area = Column(String(32))
+    object = Column(String(32))
+    layer = Column(String(32))
+    square = Column(String(32))
+    sector = Column(String(32))
+    niveau_point = Column(Integer)
+    tachymeter_point = Column(Integer)
+    skeleton = Column(String(32))
+    individ_id = Column(Integer, ForeignKey('individs.id'))
+    site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
 
-    individ = db.relationship('Individ', back_populates='grave')
-    site = db.relationship('ArchaeologicalSite', back_populates='graves')
+    individ = relationship('Individ', back_populates='grave')
+    site = relationship('ArchaeologicalSite', back_populates='graves')
 
     def __repr__(self):
         if self.kurgan_number:

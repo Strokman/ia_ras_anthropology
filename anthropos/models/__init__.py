@@ -11,4 +11,4 @@ from .file import *
 from .preservation import *
 from .federal_district import *
 from .region import *
-from .base_model import *
+from src.database.base_model import *

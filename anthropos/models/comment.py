@@ -1,15 +1,15 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, ForeignKey, Model, String, Integer
+from src.database.base_model import BaseModel
 
-class Comment(db.Model, BaseModel):
+
+class Comment(Model, BaseModel):
     __tablename__ = 'comments'
 
-    id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String, nullable=False)
-    invidiv_id = db.Column(db.Integer, db.ForeignKey('individs.id'))
+    id = Column(Integer, primary_key=True)
+    text = Column(String, nullable=False)
+    invidiv_id = Column(Integer, ForeignKey('individs.id'))
 
-
-    individ = db.relationship('Individ', back_populates='comment')
+    individ = relationship('Individ', back_populates='comment')
 
     def __repr__(self):
         return f'{self.text}'

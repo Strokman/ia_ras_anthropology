@@ -1,14 +1,14 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, Model, Integer, String
+from src.database.base_model import BaseModel
 
 
-class Preservation(db.Model, BaseModel):
+class Preservation(Model, BaseModel):
     __tablename__ = 'preservation'
 
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(64))
+    id = Column(Integer, primary_key=True)
+    description = Column(String(64))
 
-    individ = db.relationship('Individ', back_populates='preservation')
+    individ = relationship('Individ', back_populates='preservation')
 
     def __init__(self, description):
         self.description = description

@@ -1,7 +1,7 @@
-from anthropos import db
+from src.database import Column, ForeignKey, Integer, Table
 
 
-sites_epochs = db.Table('sites_epochs',
-                        db.Column("archaeological_site_id", db.Integer, db.ForeignKey("archaeological_sites.id")),
-                        db.Column("epoch_id", db.Integer, db.ForeignKey("epochs.id"))
+sites_epochs = Table('sites_epochs',
+                        Column("archaeological_site_id", Integer, ForeignKey("archaeological_sites.id")),
+                        Column("epoch_id", Integer, ForeignKey("epochs.id"))
                         )

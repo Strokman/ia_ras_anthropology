@@ -1,16 +1,16 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, ForeignKey, Model, Integer, String
+from src.database.base_model import BaseModel
 
 
-class Region(db.Model, BaseModel):
+class Region(Model, BaseModel):
     __tablename__ = 'regions'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    federal_districts_id = db.Column(db.ForeignKey('federal_districts.id'))
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), nullable=False)
+    federal_districts_id = Column(ForeignKey('federal_districts.id'))
 
-    federal_district = db.relationship('FederalDistrict', back_populates='region')
-    sites = db.relationship('ArchaeologicalSite', back_populates='region')
+    federal_district = relationship('FederalDistrict', back_populates='region')
+    sites = relationship('ArchaeologicalSite', back_populates='region')
 
     def __repr__(self):
         return f'{self.name}'

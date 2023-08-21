@@ -1,16 +1,16 @@
-from anthropos import db
+from src.database import Column, relationship, Model, Integer, String
 from .sites_epochs import sites_epochs
-from .base_model import BaseModel
+from src.database.base_model import BaseModel
 
 
-class Epoch(db.Model, BaseModel):
+class Epoch(Model, BaseModel):
     __tablename__ = 'epochs'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False, index=True)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(64), nullable=False, index=True)
 
-    individ = db.relationship('Individ', back_populates='epoch', cascade='all, delete-orphan')
-    sites = db.relationship('ArchaeologicalSite', secondary=sites_epochs,
+    individ = relationship('Individ', back_populates='epoch', cascade='all, delete-orphan')
+    sites = relationship('ArchaeologicalSite', secondary=sites_epochs,
                         primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
                         secondaryjoin= 'Epoch.id==sites_epochs.c.epoch_id', back_populates='epochs')
 

@@ -18,7 +18,7 @@ from flask_login import (
     )
 from werkzeug.wrappers import Response
 
-from anthropos import db
+from src.database import session
 from anthropos.auth import bp
 from anthropos.auth.forms import (
     LoginForm,
@@ -38,7 +38,7 @@ def login() -> Response | str:
         user: User | None = User.get_one_by_attr('username', form.username.data)
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
-        db.session.commit()
+        session.commit()
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index.index')
@@ -81,7 +81,7 @@ def user_confirmation(username, token) -> Response:
     user: User | None = User.get_one_by_attr('username', username)
     if str(user.token) == token:
         user.activated = True
-        db.session.commit()
+        session.commit()
         flash('Email подтвержден', 'success')
     return redirect(url_for('auth.login'))
 
@@ -112,7 +112,7 @@ def reset_password(token) -> Response | str:
     form = ResetPasswordForm()
     if form.validate_on_submit():
         user.set_password(form.password.data)
-        db.session.commit()
+        session.commit()
         flash('Ваш пароль изменен.', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', title='Восстановление пароля', form=form)

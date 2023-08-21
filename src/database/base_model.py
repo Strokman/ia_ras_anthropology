@@ -7,7 +7,7 @@ from typing import Self
 
 from sqlalchemy import select
 
-from anthropos.extensions import db
+from src.database import session
 
 
 class BaseModel:
@@ -39,7 +39,7 @@ class BaseModel:
         Returns:
             Self: entry from DB, instance of a class
         """
-        return db.session.get(cls, id)
+        return session.get(cls, id)
 
     @classmethod
     def get_all(cls, attr: str = None) -> list[Self]:
@@ -49,21 +49,21 @@ class BaseModel:
             stmt = select(cls).order_by(cls.name)
         else:
             stmt = select(cls).order_by(cls.id)
-        result = db.session.scalars(stmt).all()
+        result = session.scalars(stmt).all()
         return result
 
     @classmethod
     def get_one_by_attr(cls, attr: str, value):
         if hasattr(cls, attr):
             stmt = select(cls).where(getattr(cls, attr) == value)
-            result = db.session.scalar(stmt)
+            result = session.scalar(stmt)
         return result
 
     def save(self, commit: bool = True):
         """Save the record."""
-        db.session.add(self)
+        session.add(self)
         if commit:
-            db.session.commit()
+            session.commit()
         return self
 
     def update(self, commit=True, **kwargs):
@@ -77,9 +77,9 @@ class BaseModel:
 
     def delete(self, commit: bool = True) -> None:
         """Remove the record from the database."""
-        db.session.delete(self)
+        session.delete(self)
         if commit:
-            return db.session.commit()
+            return session.commit()
         return
 
     def as_dict(self):

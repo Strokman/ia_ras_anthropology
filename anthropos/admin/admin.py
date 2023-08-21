@@ -7,7 +7,7 @@
 from flask_admin import Admin
 
 from anthropos.admin.models import MyAdminView, MyModelView, UserView
-from anthropos.extensions import db
+from src.database import session
 from anthropos.models import (
     ArchaeologicalSite,
     User,
@@ -28,15 +28,15 @@ admin = Admin(name='BaseHabilis Admin',
               template_mode='bootstrap4',
               index_view=MyAdminView(name='BaseHabilis Admin'))
 
-admin.add_view(UserView(User, db.session, name='Users', url='users', endpoint='users'))
-admin.add_view(MyModelView(Individ, db.session, name='Individs', url='individs', endpoint='individs'))
-admin.add_view(MyModelView(ArchaeologicalSite, db.session, name='Sites'))
-admin.add_view(MyModelView(Researcher, db.session, endpoint='researchers'))
-admin.add_view(MyModelView(Grave, db.session))
-admin.add_view(MyModelView(Comment, db.session))
-admin.add_view(MyModelView(File, db.session, endpoint='files'))
-admin.add_view(MyModelView(FederalDistrict, db.session, category='Locations'))
-admin.add_view(MyModelView(Region, db.session, category='Locations'))
-admin.add_view(MyModelView(Epoch, db.session, category='Fixed tables'))
-admin.add_view(MyModelView(Preservation, db.session, category='Fixed tables'))
-admin.add_view(MyModelView(Sex, db.session, category='Fixed tables'))
+admin.add_view(UserView(User, session, name='Users', url='users', endpoint='users'))
+admin.add_view(MyModelView(Individ, session, name='Individs', url='individs', endpoint='individs'))
+admin.add_view(MyModelView(ArchaeologicalSite, session, name='Sites'))
+admin.add_view(MyModelView(Researcher, session, endpoint='researchers'))
+admin.add_view(MyModelView(Grave, session))
+admin.add_view(MyModelView(Comment, session))
+admin.add_view(MyModelView(File, session, endpoint='files'))
+admin.add_view(MyModelView(FederalDistrict, session, category='Locations'))
+admin.add_view(MyModelView(Region, session, category='Locations'))
+admin.add_view(MyModelView(Epoch, session, category='Fixed tables'))
+admin.add_view(MyModelView(Preservation, session, category='Fixed tables'))
+admin.add_view(MyModelView(Sex, session, category='Fixed tables'))

@@ -1,5 +1,5 @@
 from anthropos.cli import bp
-from anthropos.extensions import db
+from src.database import session
 
 from anthropos.models import Epoch, FederalDistrict, Region,  Preservation, Sex
 from csv import DictReader
@@ -28,8 +28,8 @@ def create_table():
                 "Новое время"]
         for i in epochs:
             epoch = Epoch(name=i)
-            db.session.add(epoch)
-            db.session.commit()
+            session.add(epoch)
+            session.commit()
 
         """ДОБАВЛЕНИЕ РЕГИОНОВ И ФО"""
         fo = set()
@@ -44,13 +44,13 @@ def create_table():
 
         for dictrict in fo:
             dist = FederalDistrict(name=dictrict)
-            db.session.add(dist)
-        db.session.commit()
+            session.add(dist)
+        session.commit()
         for k, v in reg.items():
             if v:
-                region = Region(name=k, federal_districts_id=db.session.query(FederalDistrict).filter_by(name=v).first().id)
-                db.session.add(region)
-        db.session.commit()
+                region = Region(name=k, federal_districts_id=session.query(FederalDistrict).filter_by(name=v).first().id)
+                session.add(region)
+        session.commit()
 
 
         """ДОБАВЛЕНИЕ ПОЛА"""
@@ -64,7 +64,7 @@ def create_table():
         preservation_rates = ('плохая', 'удовлетворительная', 'средняя', 'хорошая')
         for i in preservation_rates:
             d = Preservation(i)
-            db.session.add(d)
-        db.session.commit()
+            session.add(d)
+        session.commit()
 
         print('Tables created')

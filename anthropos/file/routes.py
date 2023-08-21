@@ -1,5 +1,6 @@
 from datetime import datetime
-from os import path, remove
+from os import remove
+from src.services.files.file_service import get_file_from_db
 
 from flask import send_file, flash, redirect, url_for, session, current_app
 from flask_login import login_required
@@ -9,18 +10,17 @@ from anthropos.extensions import csrf
 from anthropos.file import bp
 from anthropos.helpers import export_xls
 from anthropos.models import File
+from src.database import session as repo
+from src.services.files.file_service import FileDTO
 
 
 @bp.route('/file/<filename>', methods=['GET'])
 @login_required
 def get_file(filename) -> Response:
-    file: File = File.get_one_by_attr('filename', filename)
-    if file and path.isfile(file.path) and file.extension == 'pdf':
-        return send_file(file.path, download_name=f'{file.individ.index}.{file.extension}')
-    elif file and file.extension != 'pdf':
-        return send_file(file.path, as_attachment=True, download_name=f'{file.individ.index}.{file.extension}')
-    flash('Файл не существует', 'warning')
-    return redirect(url_for('individ.individ_table'))
+    request = FileDTO(filename=filename)
+    file = get_file_from_db(repo, request)
+    return send_file(file.path, as_attachment=file.as_attachment, download_name=file.return_filename)
+    # return redirect(url_for('individ.individ_table'))
 
 
 @bp.route('/delete_file/<string:filename>', methods=['POST'])

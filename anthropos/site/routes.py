@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from anthropos import db
+from src.database import session
 from anthropos.site import bp
 from anthropos.models import ArchaeologicalSite, Region, FederalDistrict
 from anthropos.site.forms import ArchaeologicalSiteForm
@@ -24,7 +24,7 @@ def submit_site() -> Response | str:
         region.sites.append(site)
         current_user.sites_created.append(site)
         current_user.sites_edited.append(site)
-        db.session.commit()
+        session.commit()
         flash('Памятник добавлен', 'success')
         return redirect(url_for('site.submit_site'))
     return render_template('site/site_input.html', title='Добавить памятник', form=site_form)
@@ -46,7 +46,7 @@ def edit_site(site_id) -> Response | str:
         region: Region | None = Region.get_by_id(form.region.data)
         region.sites.append(site)
         current_user.sites_edited.append(site)
-        db.session.commit()
+        session.commit()
         flash('Изменения сохранены', 'success')
         return redirect(url_for('site.site_table'))
     elif request.method == 'GET':

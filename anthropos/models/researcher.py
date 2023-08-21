@@ -1,18 +1,18 @@
-from anthropos.extensions import db
-from anthropos.models.base_model import BaseModel
+from src.database import Column, relationship, Model, Integer, String
+from src.database.base_model import BaseModel
 from anthropos.models.sites_researchers import sites_researchers
 
 
-class Researcher(BaseModel, db.Model):
+class Researcher(BaseModel, Model):
     __tablename__ = 'researchers'
 
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(128), nullable=False)
-    last_name = db.Column(db.String(128), nullable=False)
-    affiliation = db.Column(db.String(128), nullable=False)
-    middle_name = db.Column(db.String(128))
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String(128), nullable=False)
+    last_name = Column(String(128), nullable=False)
+    affiliation = Column(String(128), nullable=False)
+    middle_name = Column(String(128))
 
-    sites = db.relationship('ArchaeologicalSite', secondary=sites_researchers,
+    sites = relationship('ArchaeologicalSite', secondary=sites_researchers,
                             back_populates='researchers')
 
     # почему-то не работает, проверить, если добавляю в релейшн

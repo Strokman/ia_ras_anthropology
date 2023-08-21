@@ -1,35 +1,35 @@
-from anthropos import db
-from .base_model import BaseModel
+from src.database import Column, relationship, ForeignKey, Integer, DateTime, String, Model
+from src.database import BaseModel
 from flask_moment import moment
 
 
-class Individ(db.Model, BaseModel):
+class Individ(BaseModel, Model):
     __tablename__ = 'individs'
 
-    id = db.Column(db.Integer, primary_key=True)
-    index = db.Column(db.String(128))
-    year = db.Column(db.Integer)
-    age_min = db.Column(db.Integer)
-    age_max = db.Column(db.Integer)
-    type = db.Column(db.String(16))
-    created_at = db.Column(db.DateTime, nullable=False)
-    edited_at = db.Column(db.DateTime)
-    sex_type = db.Column(db.String, db.ForeignKey('sex.sex'))
-    site_id = db.Column(db.Integer, db.ForeignKey('archaeological_sites.id'))
-    epoch_id = db.Column(db.Integer, db.ForeignKey('epochs.id'))
-    created_by = db.Column(db.Integer, db.ForeignKey("users.id"))
-    edited_by = db.Column(db.Integer, db.ForeignKey("users.id"))
-    preservation_id = db.Column(db.Integer, db.ForeignKey('preservation.id'))
+    id = Column(Integer, primary_key=True)
+    index = Column(String(128))
+    year = Column(Integer)
+    age_min = Column(Integer)
+    age_max = Column(Integer)
+    type = Column(String(16))
+    created_at = Column(DateTime, nullable=False)
+    edited_at = Column(DateTime)
+    sex_type = Column(String, ForeignKey('sex.sex'))
+    site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
+    epoch_id = Column(Integer, ForeignKey('epochs.id'))
+    created_by = Column(Integer, ForeignKey("users.id"))
+    edited_by = Column(Integer, ForeignKey("users.id"))
+    preservation_id = Column(Integer, ForeignKey('preservation.id'))
 
-    site = db.relationship('ArchaeologicalSite', back_populates='individs')
-    comment = db.relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
-    epoch = db.relationship('Epoch', uselist=False, back_populates='individ')
-    creator = db.relationship("User", foreign_keys='Individ.created_by', back_populates='individs_created')
-    editor = db.relationship("User", foreign_keys='Individ.edited_by', back_populates='individs_edited')
-    sex = db.relationship('Sex', back_populates='individs')
-    preservation = db.relationship('Preservation', back_populates='individ')
-    file = db.relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
-    grave = db.relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')
+    site = relationship('ArchaeologicalSite', back_populates='individs')
+    comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
+    epoch = relationship('Epoch', uselist=False, back_populates='individ')
+    creator = relationship("User", foreign_keys='Individ.created_by', back_populates='individs_created')
+    editor = relationship("User", foreign_keys='Individ.edited_by', back_populates='individs_edited')
+    sex = relationship('Sex', back_populates='individs')
+    preservation = relationship('Preservation', back_populates='individ')
+    file = relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
+    grave = relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')
 
     def create_index(self):
         if self.grave.grave_type == 'курганный' and self.grave.kurgan_number:
