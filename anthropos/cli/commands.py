@@ -4,10 +4,11 @@ from anthropos.extensions import db
 from anthropos.models import Epoch, FederalDistrict, Region,  Preservation, Sex
 from csv import DictReader
 
+
 @bp.cli.command("create-tables")
 def create_table():
-    epochs = Epoch.get_all()
-    if len(epochs) > 0:
+    all_epochs = Epoch.get_all()
+    if len(all_epochs) > 0:
         print('already created')
     else:
         """ДОБАВЛЕНИЕ ЭПОХ"""
