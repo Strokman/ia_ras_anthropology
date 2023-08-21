@@ -6,6 +6,7 @@ the Base Habilis app.
 from typing import Self
 
 from sqlalchemy import select
+from sqlalchemy.orm import scoped_session
 
 from src.database import session
 
@@ -53,10 +54,10 @@ class BaseModel:
         return result
 
     @classmethod
-    def get_one_by_attr(cls, attr: str, value):
+    def get_one_by_attr(cls,  attr: str, repo: scoped_session, value):
         if hasattr(cls, attr):
             stmt = select(cls).where(getattr(cls, attr) == value)
-            result = session.scalar(stmt)
+            result = repo.scalar(stmt)
         return result
 
     def save(self, commit: bool = True):

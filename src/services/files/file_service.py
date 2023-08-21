@@ -17,7 +17,7 @@ class FileDTO:
 def get_file_from_db(repo, params: FileDTO):
     if not params.filename:
         raise BadRequest('Filename not provided')
-    file: File = File.get_one_by_attr('filename', params.filename)
+    file: File = File.get_one_by_attr('filename', repo, params.filename)
     if not file:
         raise NotFound('Неверное имя файла')
     if path.isfile(file.path) and file.extension == 'pdf':
