@@ -12,3 +12,4 @@ __pycache__/
 TODO
 /.idea/
 /cache
+.pytest_cache

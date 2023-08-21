@@ -12,6 +12,7 @@ from anthropos.extensions import (
     sess)
 from anthropos.admin import admin
 from anthropos.auth import bp as auth_bp
+from anthropos.cli import bp as cli_bp
 from anthropos.errors import bp as errors_bp
 from anthropos.file import bp as file_bp
 from anthropos.index import bp as index_bp
@@ -51,6 +52,7 @@ def register_extensions(app: Flask) -> None:
 
 def register_blueprints(app: Flask) -> None:
     app.register_blueprint(site_bp, url_prefix='/site')
+    app.register_blueprint(cli_bp)
     app.register_blueprint(errors_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(index_bp)
