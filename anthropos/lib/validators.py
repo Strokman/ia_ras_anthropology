@@ -11,6 +11,8 @@ class DataRequiredImproved(DataRequired):
 
 class CleanString(object):
     def __call__(self, form, field):
+        if field.data and '@' in field.data:
+            raise ValidationError('Адрес электронной почты не должен быть именем пользователя')
         try:
             if field.data == '':
                 field.data = None

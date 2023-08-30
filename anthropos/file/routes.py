@@ -20,9 +20,9 @@ from src.services.files.file_service import FileDTO
 def get_file(filename) -> Response:
     request = FileDTO(filename=filename)
     try:
-        file = get_file_from_db(repo, request)
+        file: FileDTO = get_file_from_db(repo, request)
         return send_file(file.path, as_attachment=file.as_attachment, download_name=file.return_filename)
-    except NotFound as e:
+    except (NotFound) as e:
         flash(e.description, 'danger')
     return redirect(url_for('individ.individ_table'))
 

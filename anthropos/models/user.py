@@ -10,6 +10,7 @@ from anthropos.lib.email import send_email
 import jwt
 from time import time
 from functools import wraps
+from src.database import session as repo
 
 
 class User(UserMixin, Model, BaseModel):
@@ -98,7 +99,7 @@ class User(UserMixin, Model, BaseModel):
                             algorithms=['HS256'])['reset_password']
         except:
             return
-        user: User | None = User.get_one_by_attr('id', id)
+        user: User | None = User.get_one_by_attr('id', repo, id)
         return user
 
     def __str__(self):

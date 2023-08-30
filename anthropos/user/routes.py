@@ -11,7 +11,7 @@ from anthropos.user.forms import EditProfileForm
 @bp.route('/user/<username>', methods=['GET'])
 @login_required
 def user(username) -> str:
-    user = User.get_one_by_attr('username', username)
+    user = User.get_one_by_attr('username', session, username)
     profile_form = EditProfileForm(current_user.username, current_user.email)
     profile_form.username.data = current_user.username
     profile_form.first_name.data = current_user.first_name

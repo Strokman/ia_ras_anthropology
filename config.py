@@ -24,6 +24,11 @@ class Config:
     CACHE_TYPE = "FileSystemCache"  # Flask-Caching related configs
     CACHE_DEFAULT_TIMEOUT = 300
     CACHE_DIR = './cache'
+    POSTGRES_HOST = environ.get('POSTGRES_HOST')
+    POSTGRES_USER = environ.get('POSTGRES_USER')
+    POSTGRES_PASSWORD = environ.get('POSTGRES_PASSWORD')
+    POSTGRES_PORT = environ.get('POSTGRES_PORT')
+    POSTGRES_DB = environ.get('POSTGRES_DB')
 
     # Yandex conf
     MAIL_SERVER = environ.get('MAIL_SERVER')

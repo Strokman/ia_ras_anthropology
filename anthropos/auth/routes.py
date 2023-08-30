@@ -35,7 +35,7 @@ def login() -> Response | str:
         return redirect(url_for('index.index'))
     form = LoginForm()
     if form.validate_on_submit():
-        user: User | None = User.get_one_by_attr('username', form.username.data)
+        user: User | None = User.get_one_by_attr('username', session, form.username.data)
         login_user(user, remember=form.remember_me.data)
         user.last_login = datetime.utcnow()
         session.commit()
@@ -78,7 +78,7 @@ def register() -> Response | str:
 
 @bp.route('/user_confirmation/<username>/<token>')
 def user_confirmation(username, token) -> Response:
-    user: User | None = User.get_one_by_attr('username', username)
+    user: User | None = User.get_one_by_attr('username', session, username)
     if str(user.token) == token:
         user.activated = True
         session.commit()
@@ -92,7 +92,7 @@ def reset_password_request() -> Response | str:
         return redirect(url_for('index.index'))
     form = ResetPasswordRequestForm()
     if form.validate_on_submit():
-        user = User.get_one_by_attr('email',
+        user = User.get_one_by_attr('email', session,
                                             form.email.data
                                             )
         user.send_password_reset_email()

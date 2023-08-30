@@ -12,3 +12,4 @@ class File(Model, BaseModel):
     individ_id = Column(Integer, ForeignKey('individs.id'))
 
     individ = relationship('Individ', back_populates='file')
+    

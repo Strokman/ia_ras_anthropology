@@ -39,7 +39,7 @@ class IndividForm(FlaskForm):
     preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
     epoch = QuerySelectField('Эпоха', allow_blank=True, blank_text='Выберите эпоху', validators=[Optional()])
 
-    grave_type = SelectField(label='Тип погребения', validators=[DataRequiredImproved()])
+    grave_type = SelectField(label='Тип памятника', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])
     grave_number = StringField(render_kw={'placeholder': 'номер погребения'}, validators=[CleanString(), DataRequiredImproved()])
     catacomb = StringField(render_kw={'placeholder': 'катакомба'} , validators=[CleanString()])

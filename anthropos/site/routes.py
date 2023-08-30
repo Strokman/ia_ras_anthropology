@@ -20,7 +20,7 @@ def submit_site() -> Response | str:
             )
         site.epochs.extend(site_form.epoch.data)
         site.researchers.extend([site_form.researcher.data])   # if possibility of multiple selection will be added - just remove the list parentheses
-        region = Region.get_one_by_attr('id', site_form.region.data)
+        region = Region.get_one_by_attr('id', session, site_form.region.data)
         region.sites.append(site)
         current_user.sites_created.append(site)
         current_user.sites_edited.append(site)
@@ -33,7 +33,7 @@ def submit_site() -> Response | str:
 @bp.route('/edit_site/<site_id>', methods=['GET', 'POST'])
 @login_required
 def edit_site(site_id) -> Response | str:
-    site: ArchaeologicalSite = ArchaeologicalSite.get_one_by_attr('id', site_id)
+    site: ArchaeologicalSite = ArchaeologicalSite.get_one_by_attr('id', session, site_id)
     form = ArchaeologicalSiteForm()
     if request.method == 'POST' and form.validate_on_submit():
         site.update(
@@ -70,7 +70,7 @@ def site_table() -> str:
 
 @bp.route('/get_region/<int:fd_id>')
 def region(fd_id: int):
-    fed_distr: FederalDistrict = FederalDistrict.get_one_by_attr('id', fd_id)
+    fed_distr: FederalDistrict = FederalDistrict.get_one_by_attr('id', session, fd_id)
     regions: list[Region] = fed_distr.region
     regionArray: list[dict[int, str]] = [{'id': 0, 'name': 'Выберите субъект'}]
     for region in regions:
