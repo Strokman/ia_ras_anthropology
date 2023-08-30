@@ -13,3 +13,4 @@ TODO
 /.idea/
 /cache
 .pytest_cache
+*.dump
