@@ -1,10 +1,11 @@
 #!/bin/sh
 export PGPASSWORD="test"
-source .env
+source /Users/antonstrokov/VSCode/ia_ras_anthropology/.env
 
-filename="$(date +'%d-%m-%Y').dump"
+filename="$(date +'%d-%m-%Y-%H-%M').dump"
 
-pg_dump -h $POSTGRES_HOST -p $POSTGRES_PORT -Fc -U $POSTGRES_USER $POSTGRES_DB > $filename
+# mkdir ~/pg_dumps
 
-pg_restore --clean -h 192.168.1.57 -p 52432 -d test -U test $filename
+pg_dump -h $POSTGRES_HOST -p $POSTGRES_PORT -Fc -U $POSTGRES_USER $POSTGRES_DB > ~/pg_dumps/$filename
 
+echo "Finished"
