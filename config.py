@@ -36,3 +36,5 @@ class Config:
     MAIL_USE_SSL = environ.get('MAIL_USE_SSL')
     MAIL_USERNAME = environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
+    OBJECT_STORAGE_URL = environ.get('OBJECT_STORAGE_URL')
+    BUCKET = environ.get('BUCKET')

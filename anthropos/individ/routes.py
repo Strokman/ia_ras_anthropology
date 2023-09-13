@@ -31,6 +31,7 @@ from anthropos.models import (
     File)
 from src.database import session
 
+
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
 def submit_individ():

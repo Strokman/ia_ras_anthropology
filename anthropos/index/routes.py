@@ -1,5 +1,6 @@
 from anthropos.index import bp
 from flask import render_template
+
 # from flask import url_for
 # import requests
 # from anthropos.models import Individ
