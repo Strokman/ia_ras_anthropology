@@ -1,6 +1,5 @@
 from anthropos.models.file import File
-from flask import current_app
-from os import path
+from os import path, environ
 from dataclasses import dataclass
 from werkzeug.exceptions import NotFound, BadRequest
 import boto3
@@ -9,7 +8,7 @@ def create_s3_client():
     session = boto3.session.Session()
     s3 = session.client(
         service_name='s3',
-        endpoint_url=current_app.config['OBJECT_STORAGE_URL']
+        endpoint_url=environ.get('OBJECT_STORAGE_URL')
     )
 
     return s3
@@ -41,10 +40,10 @@ def get_file_from_db(repo, params: FileDTO):
 
 
 def upload_file_to_s3(client, params):
-    client.put_object(Body=params.stream.read(), Bucket=current_app.config['BUCKET'], Key=params.filename)
+    client.put_object(Body=params.stream.read(), Bucket=environ.get('BUCKET'), Key=params.filename)
 
 
 def get_file_s3(client, params):
-    get_object_response = client.get_object(Bucket=current_app.config['BUCKET'],
+    get_object_response = client.get_object(Bucket=environ.get('BUCKET'),
                                             Key=params.filename)
     return get_object_response['Body'].read()
