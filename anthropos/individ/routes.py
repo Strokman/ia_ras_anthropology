@@ -1,8 +1,6 @@
 from datetime import datetime
-from os import remove
 
 from flask import (
-    current_app,
     flash,
     redirect,
     render_template,
@@ -13,7 +11,6 @@ from flask_login import current_user, login_required
 from sqlalchemy import between, case, or_, select
 
 from anthropos.extensions import csrf
-from anthropos.helpers import save_file
 from anthropos.individ.forms import IndividForm, FilterForm
 from anthropos.individ import bp
 from anthropos.models import (
@@ -27,10 +24,10 @@ from anthropos.models import (
     Preservation,
     Grave,
     User,
-    Comment,
-    File)
+    Comment)
 from src.database import session
 
+from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
 @bp.route('/submit_individ', methods=['GET', 'POST'])
 @login_required
@@ -96,10 +93,10 @@ def submit_individ():
             epoch.individ.append(individ)
 
         if uploaded_file := form.file.data:
-            saved_file = save_file(uploaded_file, current_app)
-            file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
-            session.add(file)
-            individ.file = file
+            file_dto = FileDTO.create(uploaded_file)
+            upload_file_to_s3(s3_client, file_dto)
+            session.add(file_dto.file)
+            individ.file = file_dto.file
 
         # commit all changes to the DB
         session.commit()
@@ -114,10 +111,7 @@ def submit_individ():
 @login_required
 def delete_individ(individ_id):
     individ: Individ | None = Individ.get_by_id(individ_id)
-    try:
-        remove(individ.file.path)
-    except AttributeError as e:
-        print(e)
+    delete_file_from_s3(s3_client, individ.file)
     individ.delete()
     flash('Запись удалена', 'success')
     return redirect(url_for('individ.individ_table'))
@@ -162,17 +156,14 @@ def edit_individ(individ_id):
             site.individ.append(individ)
         individ.create_index()
         if uploaded_file := form.file.data:
+            file_dto = FileDTO.create(uploaded_file)
             if individ.file is not None:
-                remove(individ.file.path)
-                saved_file = save_file(uploaded_file, current_app)
-                individ.file.path = saved_file.get('path')
-                individ.file.filename = saved_file.get('filename')
-                individ.file.extension = saved_file.get('extension')
+                delete_file_from_s3(s3_client, individ.file)
+                upload_file_to_s3(s3_client, file_dto)               
             else:
-                saved_file = save_file(uploaded_file, current_app)
-                file = File(path=saved_file.get('path'), filename=saved_file.get('filename'), extension=saved_file.get('extension'))
-                session.add(file)
-                individ.file = file
+                upload_file_to_s3(s3_client, file_dto)
+                session.add(file_dto.file)
+            individ.file = file_dto.file
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
         session.commit()

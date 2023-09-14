@@ -4,8 +4,23 @@ from anthropos.lib.email import send_email
 from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed, BadRequest
 import traceback
 
-
+from botocore.exceptions import ClientError
 from flask_wtf.csrf import CSRFError
+
+@bp.app_errorhandler(ClientError)
+def handle_boto3_error(error: ClientError):
+    response = {
+        'code': error.response['ResponseMetadata']['HTTPStatusCode'],
+        'message': error.response['Error']['Message'],
+        'tb': traceback.format_exc()
+    }
+    txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+            sender=current_app.config['ADMIN_EMAIL'],
+            recipients=[current_app.config['BACKUP_EMAIL']],
+            text_body=txt
+            )
+    return render_template('errors/base_error.html', response=response), response['code']
 
 @bp.app_errorhandler(CSRFError)
 def handle_csrf_error(error: CSRFError):

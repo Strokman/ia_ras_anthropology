@@ -1,8 +1,12 @@
 from anthropos.models.file import File
-from os import path, environ
+from os import environ
 from dataclasses import dataclass
 from werkzeug.exceptions import NotFound, BadRequest
+from werkzeug.datastructures.file_storage import FileStorage
+from werkzeug.utils import secure_filename
 import boto3
+from uuid import uuid1
+
 
 def create_s3_client():
     session = boto3.session.Session()
@@ -13,7 +17,8 @@ def create_s3_client():
 
     return s3
 
-s3 = create_s3_client()
+
+s3_client = create_s3_client()
 
 
 @dataclass
@@ -21,10 +26,23 @@ class FileDTO:
     filename: str
     file: File = None
     stream: bytes = None
-    path: str = None
     extension: str = None
     return_filename: str = None
     as_attachment: bool = False
+
+    @classmethod
+    def create(cls, file: FileStorage):
+        filename: str = secure_filename(file.filename)
+        extension: str = filename.rsplit('.', 1)[1].lower()
+        filename: str = f'{uuid1()}.{extension}'
+        stream = file.stream
+        return FileDTO(filename,
+                       File(
+                           filename=filename,
+                           extension=extension),
+                       stream=stream,
+                       extension=extension
+                       )
 
 
 def get_file_from_db(repo, params: FileDTO):
@@ -33,17 +51,25 @@ def get_file_from_db(repo, params: FileDTO):
     file: File = File.get_one_by_attr('filename', repo, params.filename)
     if not file:
         raise NotFound('Неверное имя файла')
-    if path.isfile(file.path) and file.extension == 'pdf':
-        return FileDTO(filename=file.filename, file=file, path=file.path, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=False)
+    if file.extension == 'pdf':
+        return FileDTO(filename=file.filename, file=file, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=False)
     elif file.extension != 'pdf':
-        return FileDTO(filename=file.filename, file=file, path=file.path, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=True)
+        return FileDTO(filename=file.filename, file=file, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=True)
 
 
-def upload_file_to_s3(client, params):
+def upload_file_to_s3(client, params: FileDTO):
     client.put_object(Body=params.stream.read(), Bucket=environ.get('BUCKET'), Key=params.filename)
+    return True
 
 
-def get_file_s3(client, params):
+def get_file_from_s3(client, params):
     get_object_response = client.get_object(Bucket=environ.get('BUCKET'),
                                             Key=params.filename)
-    return get_object_response['Body'].read()
+    return get_object_response['Body']
+
+
+def delete_file_from_s3(client, params):
+    delete_object_response = client.delete_object(Bucket=environ.get('BUCKET'),
+                                            Key=params.filename)
+    print(delete_object_response)
+    return True

@@ -63,18 +63,3 @@ def export_xls(individs: list[Individ],
         dt.tz_convert('Europe/Moscow').dt.tz_localize(None)
     df.to_excel(path_to_file, sheet_name=export_name)
     return path_to_file
-
-
-def save_file(file: FileStorage, current_app: Flask) -> dict[str]:
-    filename: str = secure_filename(file.filename)
-    extension: str = filename.rsplit('.', 1)[1].lower()
-    filename: str = f'{uuid1()}.{extension}'
-    saving_path: str = path.join(current_app.root_path,
-                                 current_app.config['UPLOAD_FOLDER'],
-                                 filename)
-    file.save(saving_path)
-    rv: dict = dict()
-    rv.setdefault('filename', filename)
-    rv.setdefault('path', saving_path)
-    rv.setdefault('extension', extension)
-    return rv
