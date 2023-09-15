@@ -9,7 +9,7 @@ from werkzeug.exceptions import NotFound
 from anthropos.extensions import csrf
 from anthropos.file import bp
 from anthropos.helpers import export_xls
-from anthropos.models import File
+from src.repository.models import File
 from src.repository import session as repo
 from src.services.files.file_service import FileDTO, get_file_from_s3, s3_client, delete_file_from_s3
 

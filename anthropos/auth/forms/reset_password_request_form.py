@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Email, ValidationError
 
-from anthropos.models import User
+from src.repository.models import User
 from src.repository import session
 
 

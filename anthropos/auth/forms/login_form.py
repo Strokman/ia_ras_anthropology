@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from anthropos.lib.validators import DataRequiredImproved
 from wtforms.validators import ValidationError
 
-from anthropos.models import User
+from src.repository.models import User
 from src.repository import session
 
 

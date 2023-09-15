@@ -3,7 +3,7 @@ from os import path, remove
 import pandas as pd
 from flask import Flask
 
-from anthropos.models.individ import Individ
+from src.repository.models.individ import Individ
 
 
 def export_xls(individs: list[Individ],

@@ -3,7 +3,7 @@ from wtforms import SubmitField, IntegerField, SelectMultipleField, SearchField
 from wtforms.validators import Optional
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 
-from anthropos.models import (
+from src.repository.models import (
     FederalDistrict,
     Epoch,
     Researcher,

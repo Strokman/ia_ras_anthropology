@@ -13,7 +13,7 @@ from sqlalchemy import between, case, or_, select
 from anthropos.extensions import csrf
 from anthropos.individ.forms import IndividForm, FilterForm
 from anthropos.individ import bp
-from anthropos.models import (
+from src.repository.models import (
     Sex,
     Individ,
     Researcher,

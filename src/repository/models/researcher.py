@@ -1,6 +1,6 @@
 from src.repository import Column, relationship, Model, Integer, String
 from src.repository.base_model import BaseModel
-from anthropos.models.sites_researchers import sites_researchers
+from src.repository.models.sites_researchers import sites_researchers
 
 
 class Researcher(BaseModel, Model):

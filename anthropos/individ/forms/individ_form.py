@@ -16,7 +16,7 @@ from anthropos.lib.validators import (
     DataRequiredImproved,
     FileFieldValidator
     )
-from anthropos.models import ArchaeologicalSite, Epoch, Sex
+from src.repository.models import ArchaeologicalSite, Epoch, Sex
 
 
 class IndividForm(FlaskForm):

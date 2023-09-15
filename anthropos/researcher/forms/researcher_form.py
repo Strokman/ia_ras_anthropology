@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField
 from sqlalchemy import and_
 
 from src.repository import session
-from anthropos.models import Researcher
+from src.repository.models import Researcher
 from anthropos.lib.validators import (
     CleanName,
     OnlyCharsValidator,

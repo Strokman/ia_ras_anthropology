@@ -2,7 +2,7 @@ from flask import redirect, url_for, render_template, flash, request
 from flask_login import login_required
 from werkzeug.wrappers import Response
 
-from anthropos.models import Researcher
+from src.repository.models import Researcher
 from anthropos.researcher import bp
 from anthropos.researcher.forms import ResearcherForm, EditResearcherForm
 

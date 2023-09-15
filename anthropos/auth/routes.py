@@ -26,7 +26,7 @@ from anthropos.auth.forms import (
     ResetPasswordForm,
     RegistrationForm
     )
-from anthropos.models import User
+from src.repository.models import User
 
 
 @bp.route('/login', methods=['GET', 'POST'])

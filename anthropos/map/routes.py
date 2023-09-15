@@ -2,7 +2,7 @@ from flask import render_template
 from flask_login import login_required
 
 from anthropos.map import bp
-from anthropos.models import ArchaeologicalSite
+from src.repository.models import ArchaeologicalSite
 
 
 @bp.route('/map', methods=['GET', 'POST'])

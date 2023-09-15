@@ -1,4 +1,4 @@
-from anthropos.models.file import File
+from src.repository.models.file import File
 from os import environ
 from dataclasses import dataclass
 from werkzeug.exceptions import NotFound, BadRequest

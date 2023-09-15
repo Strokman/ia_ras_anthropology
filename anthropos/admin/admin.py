@@ -8,7 +8,7 @@ from flask_admin import Admin
 
 from anthropos.admin.models import MyAdminView, MyModelView, UserView
 from src.repository import session
-from anthropos.models import (
+from src.repository.models import (
     ArchaeologicalSite,
     User,
     Region,

@@ -1,7 +1,7 @@
 from anthropos.cli import bp
 from src.repository import session
 
-from anthropos.models import Epoch, FederalDistrict, Region,  Preservation, Sex
+from src.repository.models import Epoch, FederalDistrict, Region,  Preservation, Sex
 from csv import DictReader
 
 

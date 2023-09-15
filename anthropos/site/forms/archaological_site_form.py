@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField, DecimalField, SelectField
 from wtforms.validators import NumberRange, Length, Optional
 from ...lib.validators import CleanString, SelectFieldValidator, DataRequiredImproved
 from wtforms_sqlalchemy.fields import QuerySelectField, QuerySelectMultipleField
-from anthropos.models import FederalDistrict, Epoch, Researcher
+from src.repository.models import FederalDistrict, Epoch, Researcher
 
 
 class NonValidatingSelectField(SelectField):
