@@ -4,7 +4,7 @@ from anthropos.lib.validators import DataRequiredImproved
 from wtforms.validators import ValidationError
 
 from anthropos.models import User
-from src.database import session
+from src.repository import session
 
 
 class LoginForm(FlaskForm):

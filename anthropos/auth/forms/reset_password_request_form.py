@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Email, ValidationError
 
 from anthropos.models import User
-from src.database import session
+from src.repository import session
 
 
 class ResetPasswordRequestForm(FlaskForm):

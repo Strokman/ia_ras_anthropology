@@ -1,5 +1,5 @@
-from src.database import Column, relationship, Model, Integer, String
-from src.database.base_model import BaseModel
+from src.repository import Column, relationship, Model, Integer, String
+from src.repository.base_model import BaseModel
 
 
 class Preservation(Model, BaseModel):

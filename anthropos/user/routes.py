@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from src.database import session
+from src.repository import session
 from anthropos.user import bp
 from anthropos.models import User
 from anthropos.user.forms import EditProfileForm

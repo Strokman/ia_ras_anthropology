@@ -1,5 +1,5 @@
-from src.database import Column, ForeignKey, relationship, Model, Integer, String
-from src.database.base_model import BaseModel
+from src.repository import Column, ForeignKey, relationship, Model, Integer, String
+from src.repository.base_model import BaseModel
 
 
 class File(Model, BaseModel):

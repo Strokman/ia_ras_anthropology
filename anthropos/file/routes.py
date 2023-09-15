@@ -10,7 +10,7 @@ from anthropos.extensions import csrf
 from anthropos.file import bp
 from anthropos.helpers import export_xls
 from anthropos.models import File
-from src.database import session as repo
+from src.repository import session as repo
 from src.services.files.file_service import FileDTO, get_file_from_s3, s3_client, delete_file_from_s3
 
 

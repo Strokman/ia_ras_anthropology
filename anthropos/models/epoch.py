@@ -1,6 +1,6 @@
-from src.database import Column, relationship, Model, Integer, String
+from src.repository import Column, relationship, Model, Integer, String
 from .sites_epochs import sites_epochs
-from src.database.base_model import BaseModel
+from src.repository.base_model import BaseModel
 
 
 class Epoch(Model, BaseModel):

@@ -2,7 +2,7 @@ from flask import flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
-from src.database import session
+from src.repository import session
 from anthropos.site import bp
 from anthropos.models import ArchaeologicalSite, Region, FederalDistrict
 from anthropos.site.forms import ArchaeologicalSiteForm

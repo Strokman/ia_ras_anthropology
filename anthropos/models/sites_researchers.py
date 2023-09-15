@@ -1,4 +1,4 @@
-from src.database import Column, ForeignKey, Table, Integer
+from src.repository import Column, ForeignKey, Table, Integer
 
 
 sites_researchers = Table('sites_researchers',

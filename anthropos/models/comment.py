@@ -1,5 +1,5 @@
-from src.database import Column, relationship, ForeignKey, Model, String, Integer
-from src.database.base_model import BaseModel
+from src.repository import Column, relationship, ForeignKey, Model, String, Integer
+from src.repository.base_model import BaseModel
 
 
 class Comment(Model, BaseModel):

@@ -8,7 +8,7 @@ from typing import Self
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 
-from src.database import session
+from src.repository import session
 
 
 class BaseModel:

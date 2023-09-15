@@ -18,7 +18,7 @@ from flask_login import (
     )
 from werkzeug.wrappers import Response
 
-from src.database import session
+from src.repository import session
 from anthropos.auth import bp
 from anthropos.auth.forms import (
     LoginForm,

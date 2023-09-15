@@ -9,7 +9,7 @@ from anthropos.lib.validators import (
     DataRequiredImproved,
     OnlyCharsValidator,
     )
-from src.database import session
+from src.repository import session
 
 
 class EditProfileForm(FlaskForm):

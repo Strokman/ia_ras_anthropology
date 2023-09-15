@@ -1,7 +1,7 @@
-from src.database import Column, ForeignKey, relationship, Model, Numeric, String, Integer
+from src.repository import Column, ForeignKey, relationship, Model, Numeric, String, Integer
 from anthropos.models.sites_epochs import sites_epochs
 from anthropos.models.sites_researchers import sites_researchers
-from src.database.base_model import BaseModel
+from src.repository import BaseModel
 
 
 class ArchaeologicalSite(Model, BaseModel):

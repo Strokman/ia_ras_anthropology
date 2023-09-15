@@ -25,7 +25,7 @@ from anthropos.models import (
     Grave,
     User,
     Comment)
-from src.database import session
+from src.repository import session
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 

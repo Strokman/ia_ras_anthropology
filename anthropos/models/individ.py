@@ -1,5 +1,5 @@
-from src.database import Column, relationship, ForeignKey, Integer, DateTime, String, Model
-from src.database import BaseModel
+from src.repository import Column, relationship, ForeignKey, Integer, DateTime, String, Model
+from src.repository import BaseModel
 from flask_moment import moment
 
 

@@ -1,5 +1,5 @@
-from src.database import Column, relationship, ForeignKey, Model, Integer, String
-from src.database.base_model import BaseModel
+from src.repository import Column, relationship, ForeignKey, Model, Integer, String
+from src.repository.base_model import BaseModel
 
 
 class Grave(Model, BaseModel):

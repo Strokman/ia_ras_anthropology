@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from sqlalchemy import and_
 
-from src.database import session
+from src.repository import session
 from anthropos.models import Researcher
 from anthropos.lib.validators import (
     CleanName,
