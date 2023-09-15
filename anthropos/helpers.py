@@ -1,10 +1,7 @@
 from os import path, remove
-from uuid import uuid1
 
 import pandas as pd
 from flask import Flask
-from werkzeug.utils import secure_filename
-from werkzeug.datastructures.file_storage import FileStorage
 
 from anthropos.models.individ import Individ
 

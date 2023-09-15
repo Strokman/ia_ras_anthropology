@@ -58,7 +58,9 @@ def get_file_from_db(repo, params: FileDTO):
 
 
 def upload_file_to_s3(client, params: FileDTO):
-    client.put_object(Body=params.stream.read(), Bucket=environ.get('BUCKET'), Key=params.filename)
+    client.put_object(Body=params.stream.read(),
+                      Bucket=environ.get('BUCKET'),
+                      Key=params.filename)
     return True
 
 
@@ -69,7 +71,6 @@ def get_file_from_s3(client, params):
 
 
 def delete_file_from_s3(client, params):
-    delete_object_response = client.delete_object(Bucket=environ.get('BUCKET'),
-                                            Key=params.filename)
-    print(delete_object_response)
+    client.delete_object(Bucket=environ.get('BUCKET'),
+                         Key=params.filename)
     return True
