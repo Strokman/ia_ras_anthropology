@@ -1,5 +1,6 @@
 from src.base_habilis.cli import bp
 from src.repository import session
+from os import getcwd
 
 from src.repository.models import Epoch, FederalDistrict, Region,  Preservation, Sex
 from csv import DictReader
@@ -34,7 +35,7 @@ def create_table():
         """ДОБАВЛЕНИЕ РЕГИОНОВ И ФО"""
         fo = set()
         reg = dict()
-        with open('regions.csv', 'r') as f:
+        with open(f'{getcwd()}/regions.csv', 'r') as f:
             a = DictReader(f, delimiter=',')
             for i in a:
                 if i['federal_district']:
