@@ -32,6 +32,6 @@ services:
     env_file: .env
     networks:
       - default
-    ports:
-      - 5100:5100
+    expose:
+      - 5000
     restart: always
