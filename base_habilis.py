@@ -1,3 +1,3 @@
-from anthropos import create_app
+from src.base_habilis import create_app
 
 app = create_app()

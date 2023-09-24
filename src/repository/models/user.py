@@ -1,4 +1,4 @@
-from anthropos.extensions import login
+from src.base_habilis.extensions import login
 from src.repository import Column, relationship, Model, String, Integer, Boolean, DateTime
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.repository.base_model import BaseModel
@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from flask import url_for, flash, session, redirect, current_app, render_template
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
-from anthropos.lib.email import send_email
+from src.base_habilis.lib.email import send_email
 import jwt
 from time import time
 from functools import wraps
