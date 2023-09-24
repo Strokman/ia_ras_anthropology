@@ -9,7 +9,7 @@ from anthropos.extensions import (
     migrate,
     moment,
     sess)
-from src.repository import db
+from src.repository.postgres_repo import db
 from anthropos.admin import admin
 from anthropos.auth import bp as auth_bp
 from anthropos.cli import bp as cli_bp
