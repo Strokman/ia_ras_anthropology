@@ -15,7 +15,7 @@ RUN venv/bin/pip install gunicorn
 # copy every content from the local directory to the image
 COPY src src
 COPY migrations migrations
-COPY .aws ~/.aws/
+# COPY .aws ~/.aws/
 COPY base_habilis.py config.py boot.sh .env ./
 RUN chmod +x boot.sh
 
