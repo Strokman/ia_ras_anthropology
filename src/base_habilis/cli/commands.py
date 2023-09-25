@@ -1,6 +1,6 @@
 from src.base_habilis.cli import bp
 from src.repository import session
-from os import getcwd
+from os import path
 
 from src.repository.models import Epoch, FederalDistrict, Region,  Preservation, Sex
 from csv import DictReader
@@ -8,8 +8,8 @@ from csv import DictReader
 
 @bp.cli.command("create-tables")
 def create_table():
-    all_epochs = Epoch.get_all()
-    if len(all_epochs) > 0:
+    all_distr = FederalDistrict.get_all()
+    if len(all_distr) > 0:
         print('already created')
     else:
         """ДОБАВЛЕНИЕ ЭПОХ"""
@@ -34,8 +34,8 @@ def create_table():
 
         """ДОБАВЛЕНИЕ РЕГИОНОВ И ФО"""
         fo = set()
-        reg = dict()
-        with open(f'{getcwd()}/regions.csv', 'r') as f:
+        reg = {}
+        with open(f'{path.dirname(__file__)}/regions.csv', 'r') as f:
             a = DictReader(f, delimiter=',')
             for i in a:
                 if i['federal_district']:
