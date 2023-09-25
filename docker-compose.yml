@@ -10,8 +10,8 @@ services:
     image: postgres:latest
     networks:
       - default
-    ports:
-      - 5600:5432
+    expose:
+      - 5432
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "test" ]
       interval: 10s
