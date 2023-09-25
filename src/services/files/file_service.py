@@ -9,9 +9,13 @@ from uuid import uuid1
 
 
 def create_s3_client():
-    session = boto3.session.Session()
+    session = boto3.session.Session(
+            aws_access_key_id=environ.get('S3_ACCESS_KEY'),
+            aws_secret_access_key=environ.get('S3_SECRET_KEY')
+    )
     s3 = session.client(
         service_name='s3',
+        region_name='ru-central1',
         endpoint_url=environ.get('OBJECT_STORAGE_URL')
     )
 
