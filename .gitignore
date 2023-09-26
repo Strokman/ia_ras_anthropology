@@ -14,4 +14,3 @@ TODO
 /cache
 .pytest_cache
 *.dump
-/.aws/

@@ -5,32 +5,11 @@
 {% if current_user.is_authenticated %}
 <div class="row">
 <h3>Добрый день, {{current_user.first_name}}{% if current_user.middle_name %} {{current_user.middle_name}}{% endif %}!</h3>
-<div class="col-8">
+<div class="row">
     <br>
     <br>
-    <h6>Здесь вы найдете информацию о системе и краткую инструкцию</h6>
-    <p>Из того, что забыл сказать на видео - интерфейс программы пока примитивный, простой.<br> Также при изменении размера экрана могут быть ошибки, где-то что-то расплывется, в дальнейшем буду дорабатывать.<br>На функционал почти не влияет. Если есть пожелания - пишите <br> </p>
     <p>Кратко о программе</p>
-<iframe width="60%" height="40%" src="https://www.youtube.com/embed/DIzgtJ4XBjA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-<p>О структуре базы данных</p>
-<iframe width="60%" height="40%" src="https://www.youtube.com/embed/HxW4VEs6544" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-<p>Инструкция по эксплуатации</p>
-<iframe width="60%" height="40%" src="https://www.youtube.com/embed/IhsU0cSKCnM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
-<div class="col-4">
-    <br>
-    <br>
-    <h6>Последние изменения</h6>
-    <p>11.08.2023 v. 0.1.0</p>
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">Добавлен фильтр по индексу индивида</li>
-        <li class="list-group-item">Добавлен фильтр по тексту примечания</li>
-        <li class="list-group-item">Добавлен фильтр по возрастам</li>
-        <li class="list-group-item">В фильтр по обряду добавлена "пустая" опция</li>
-        <li class="list-group-item">Добавлено полное отображение данных о погребении в информации о индивиде</li>
-        <li class="list-group-item">Исправлено: увеличена скорость отображения всплывающих окон</li>
-        <li class="list-group-item">Исправлено: корректное отображение памятников исследователя в таблице</li>
-    </ul>
+<!-- <iframe width="60%" height="40%" src="https://www.youtube.com/embed/DIzgtJ4XBjA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
 </div>
 </div>
 {% else %}
