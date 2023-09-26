@@ -1,14 +1,20 @@
-from os import urandom, environ, path
+from os import environ, path
 from dotenv import load_dotenv
 from datetime import timedelta
 
 
 basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
+if environ.get('FLASK_ENV') == 'dev':
+    load_dotenv(path.join(basedir, '.env.dev'))
+elif environ.get('FLASK_ENV') == 'prod':
+    load_dotenv(path.join(basedir, '.env.prod'))
+else:
+    pass
 
 
 class Config:
-    SECRET_KEY = urandom(12)
+    FLASK_APP = 'base_habilis.py'
+    SECRET_KEY = environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     BACKUP_EMAIL = environ.get('BACKUP_EMAIL')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
