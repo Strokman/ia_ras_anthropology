@@ -13,7 +13,6 @@ else:
 
 
 class Config:
-    FLASK_APP = 'base_habilis.py'
     SECRET_KEY = environ.get('SECRET_KEY')
     SQLALCHEMY_DATABASE_URI = environ.get('SQLALCHEMY_DATABASE_URI')
     BACKUP_EMAIL = environ.get('BACKUP_EMAIL')
