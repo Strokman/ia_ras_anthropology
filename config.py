@@ -4,12 +4,8 @@ from datetime import timedelta
 
 
 basedir = path.abspath(path.dirname(__file__))
-if environ.get('FLASK_ENV') == 'dev':
-    load_dotenv(path.join(basedir, '.env.dev'))
-elif environ.get('FLASK_ENV') == 'prod':
-    load_dotenv(path.join(basedir, '.env.prod'))
-else:
-    pass
+load_dotenv(path.join(basedir, '.env'))
+
 
 
 class Config:
