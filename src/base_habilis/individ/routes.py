@@ -111,7 +111,8 @@ def submit_individ():
 @login_required
 def delete_individ(individ_id):
     individ: Individ | None = Individ.get_by_id(individ_id)
-    delete_file_from_s3(s3_client, individ.file)
+    if individ.file:
+        delete_file_from_s3(s3_client, individ.file)
     individ.delete()
     flash('Запись удалена', 'success')
     return redirect(url_for('individ.individ_table'))
