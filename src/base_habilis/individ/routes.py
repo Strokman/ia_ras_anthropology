@@ -111,7 +111,7 @@ def submit_individ():
 @login_required
 def delete_individ(individ_id):
     individ: Individ | None = Individ.get_by_id(individ_id)
-    if individ.file:
+    if individ.file is not None:
         delete_file_from_s3(s3_client, individ.file)
     individ.delete()
     flash('Запись удалена', 'success')
@@ -160,7 +160,7 @@ def edit_individ(individ_id):
             file_dto = FileDTO.create(uploaded_file)
             if individ.file is not None:
                 delete_file_from_s3(s3_client, individ.file)
-                upload_file_to_s3(s3_client, file_dto)               
+                upload_file_to_s3(s3_client, file_dto)              
             else:
                 upload_file_to_s3(s3_client, file_dto)
                 session.add(file_dto.file)

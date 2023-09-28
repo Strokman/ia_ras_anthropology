@@ -13,7 +13,7 @@ services:
     expose:
       - 5432
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "test" ]
+      test: [ "CMD", "pg_isready", "-U", "basehabilis" ]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -29,7 +29,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://test:test@db:5432/test
+      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db:$POSTGRES_PORT/$POSTGRES_DB
     env_file: .env
     networks:
       - default

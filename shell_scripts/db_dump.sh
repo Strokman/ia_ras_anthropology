@@ -1,8 +1,6 @@
-#!/bin/sh
-export PGPASSWORD="test"
-source /Users/antonstrokov/VSCode/ia_ras_anthropology/.env
+#!/bin/bash
+source ~/ia_ras_anthropology/.env
 
-filename="$(date +'%Y-%m-%d-%H-%M').dump"
+FILENAME="$(date +'%Y-%m-%d-%H-%M').dump"
 
-#on the prod - give full path mandatory
-pg_dump -h $POSTGRES_HOST -p $POSTGRES_PORT -Fc -U $POSTGRES_USER $POSTGRES_DB > ~/pg_dumps/$filename
+sudo docker exec 19f05141d779 pg_dump -Fc -U $POSTGRES_USER $POSTGRES_DB > ~/basehabilis_dumps/$FILENAME
