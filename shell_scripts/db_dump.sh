@@ -3,7 +3,7 @@
 ENV_FILE="${HOME}/ia_ras_anthropology/.env"
 
 source $ENV_FILE
-
+TZ=Europe/Moscow
 FILENAME="$(date +'%Y-%m-%d-%H-%M').dump"
 DIR="${HOME}/basehabilis_dumps"
 CONTAINER="19f05141d779"
