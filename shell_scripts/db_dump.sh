@@ -1,5 +1,5 @@
 #!/bin/bash
-
+echo &HOME
 ENV_FILE="$(HOME)/ia_ras_anthropology/.env"
 
 source $ENV_FILE
