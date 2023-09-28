@@ -1,6 +1,11 @@
 #!/bin/bash
-source ~/ia_ras_anthropology/.env
+
+ENV_FILE="~/ia_ras_anthropology/.env"
+
+source $ENV_FILE
 
 FILENAME="$(date +'%Y-%m-%d-%H-%M').dump"
+DIR="~/basehabilis_dumps"
+CONTAINER="19f05141d779"
 
-sudo docker exec 19f05141d779 pg_dump -Fc -U $POSTGRES_USER $POSTGRES_DB > ~/basehabilis_dumps/$FILENAME
+sudo docker exec $CONTAINER pg_dump -Fc -U $POSTGRES_USER $POSTGRES_DB > $DIR/$FILENAME
