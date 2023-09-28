@@ -47,6 +47,7 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
     depends_on:
       - basehabilis
+    restart: always
 
   certbot:
     image: certbot/certbot:latest
