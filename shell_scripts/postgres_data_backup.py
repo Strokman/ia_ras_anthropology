@@ -5,5 +5,5 @@ path = '/home/basehabilis/ia_ras_anthropology/'
 os.chdir(path)
 filename = datetime.now().strftime('%Y-%m-%d-%H-%M') + '-pg-data' + '.zip'
 
-with ZipFile(filename, 'w') as archive:
+with ZipFile(f'/home/basehabilis/{filename}', 'w', 4) as archive:
     archive.write('postgres-data')
