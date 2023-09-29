@@ -6,6 +6,6 @@ os.chdir(path)
 filename = datetime.now().strftime('%Y-%m-%d-%H-%M') + '-pg-data' + '.zip'
 with ZipFile(f'/home/basehabilis/{filename}', 'w', ZIP_DEFLATED) as archive:
     for dirname, subdirs, files in os.walk(path):
-        archive.write(dirname, arcname='')
+        archive.write(dirname, arcname=dirname)
         for filename in files:
-            archive.write(os.path.join(dirname, filename), arcname='')
+            archive.write(name := os.path.join(dirname, filename), arcname=name)
