@@ -49,8 +49,7 @@ services:
       - basehabilis
     restart: always
     networks:
-      meet.jitsi: 
-        external: true
+      meet.jitsi:
 
   certbot:
     image: certbot/certbot:latest
