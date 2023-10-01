@@ -48,12 +48,14 @@ services:
     depends_on:
       - basehabilis
     restart: always
-    networks:
-        docker-jitsi-meet-stable-8960-1_meet.jitsi:
-          external: true
+    
 
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+      
+  networks:
+        docker-jitsi-meet-stable-8960-1_meet.jitsi:
+          external: true
