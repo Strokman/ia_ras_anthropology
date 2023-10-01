@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import (
     StringField,
     SubmitField,
@@ -13,8 +13,7 @@ from wtforms.validators import NumberRange, Optional, ValidationError
 
 from src.base_habilis.lib.validators import (
     CleanString,
-    DataRequiredImproved,
-    FileFieldValidator
+    DataRequiredImproved
     )
 from src.repository.models import ArchaeologicalSite, Epoch, Sex
 
@@ -55,7 +54,7 @@ class IndividForm(FlaskForm):
     skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[CleanString()])
 
     comment = TextAreaField(label='Примечание')
-    file = FileField(label='Файл: pdf, jpeg', validators=[Optional(), FileFieldValidator()])
+    file = FileField(label='Файл: pdf, jpeg', validators=[Optional(), FileAllowed(['pdf', 'jpg', 'jpeg', 'png'], 'Формат файла не поддерживается')])
 
     submit = SubmitField(label='Добавить индивида')
 
