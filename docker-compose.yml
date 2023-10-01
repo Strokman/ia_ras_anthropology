@@ -48,6 +48,9 @@ services:
     depends_on:
       - basehabilis
     restart: always
+    networks:
+      meet.jitsi: 
+        external: true
 
   certbot:
     image: certbot/certbot:latest
