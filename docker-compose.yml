@@ -49,7 +49,8 @@ services:
       - basehabilis
     restart: always
     networks:
-      docker-jitsi-meet-stable-8960-1_meet.jitsi:
+        docker-jitsi-meet-stable-8960-1_meet.jitsi:
+          external: true
 
   certbot:
     image: certbot/certbot:latest
