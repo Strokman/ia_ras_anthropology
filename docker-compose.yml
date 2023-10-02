@@ -55,3 +55,9 @@ services:
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
+
+    
+  networks:
+    network1:
+      name: docker-jitsi-meet-stable-8960-1_meet.jitsi
+      external: true
