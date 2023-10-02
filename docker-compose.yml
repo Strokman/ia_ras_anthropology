@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: $POSTGRES_DB
     image: postgres:latest
     networks:
-      - network1
+      - default
     expose:
       - 5432
     healthcheck:
@@ -32,7 +32,7 @@ services:
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db:$POSTGRES_PORT/$POSTGRES_DB
     env_file: .env
     networks:
-      - network1
+      - default
     expose:
       - 5000
     restart: always
@@ -48,19 +48,10 @@ services:
     depends_on:
       - basehabilis
     restart: always
-    networks:
-      - network1
+    
 
   certbot:
     image: certbot/certbot:latest
     volumes:
       - ./certbot/www/:/var/www/certbot/:rw
       - ./certbot/conf/:/etc/letsencrypt/:rw
-    networks:
-      - network1
-
-    
-networks:
-  network1:
-    name: docker-jitsi-meet-stable-8960-1_meet.jitsi
-    external: true
