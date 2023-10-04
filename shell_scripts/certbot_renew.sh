@@ -4,4 +4,4 @@ DIR="${HOME}/ia_ras_anthropology"
 
 cd $DIR
 
-sudo docker compose run --rm certbot renew
+sudo docker compose run --rm certbot renew --cert-name base-habilis.ru
