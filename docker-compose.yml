@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.8'
 
 services:
 
@@ -36,31 +36,3 @@ services:
     expose:
       - 5000
     restart: always
-    
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./certbot/www:/var/www/certbot/:ro
-      - ./certbot/conf/:/etc/nginx/ssl/:ro
-    depends_on:
-      - basehabilis
-    restart: always
-    networks:
-      - default
-      - network1
-    
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - ./certbot/www/:/var/www/certbot/:rw
-      - ./certbot/conf/:/etc/letsencrypt/:rw
-
-
-networks:
-  network1:
-    name: docker-jitsi-meet-stable-8960-1_meet.jitsi
-    external: true
