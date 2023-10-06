@@ -15,10 +15,6 @@ class Researcher(BaseModel, Model):
     sites = relationship('ArchaeologicalSite', secondary=sites_researchers,
                             back_populates='researchers')
 
-    # почему-то не работает, проверить, если добавляю в релейшн
-    # primaryjoin='ArchaeologicalSite.id==sites_researchers.c.archaeological_site_id',
-    #   secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
-
     def __repr__(self):
         if self.middle_name:
             return f'{self.last_name} {self.first_name.capitalize()[0]}.{self.middle_name.capitalize()[0]}.'

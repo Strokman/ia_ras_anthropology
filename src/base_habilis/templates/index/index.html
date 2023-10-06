@@ -10,6 +10,12 @@
     <br>
     <p>Кратко о программе</p>
 <iframe width="700" height="400" src="https://www.youtube.com/embed/9Y_z2EzoPK0?si=5y7jRajFiXtssdGi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+<p>test</p>
+{% for path in urls %}
+    <img src="{{path}}" class="tutorialPics">
+    <br>
+{% endfor %}
 </div>
 </div>
 {% else %}
