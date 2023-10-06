@@ -22,6 +22,7 @@ RUN chmod +x boot.sh
 ENV FLASK_APP base_habilis.py
 
 RUN chown -R anthropos:anthropos ./
+RUN chown -R anthropos:anthropos ./logs
 USER anthropos
 
 EXPOSE 5000
