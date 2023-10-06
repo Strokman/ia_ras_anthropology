@@ -22,7 +22,7 @@ from src.base_habilis.map import bp as map_bp
 from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
-# from src.base_habilis.logging import dictConfig
+from src.base_habilis.logging import dictConfig
 # import logging
 # import sys
 
@@ -31,7 +31,7 @@ from src.base_habilis.user import bp as user_bp
 
 def create_app(config_class: Config = Config) -> Flask:
     app = Flask(__name__)
-
+    app.logger.handlers = []
     app.config.from_object(config_class)
 
     register_blueprints(app)
