@@ -10,7 +10,7 @@ dictConfig({
     'handlers': {'wsgi': {
         'level': 'INFO',
         'class': 'logging.StreamHandler',
-        'stream': 'ext://sys.stdout',
+        'stream': 'ext://sys.stderror',
         'formatter': 'default'
     }, },
     'root': {
