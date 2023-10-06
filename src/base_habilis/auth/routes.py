@@ -5,6 +5,7 @@ from datetime import datetime
 from urllib.parse import urlsplit
 
 from flask import (
+    current_app,
     flash,
     redirect,
     render_template,
@@ -72,6 +73,9 @@ def register() -> Response | str:
             user.role = 'admin'
         user.save()
         user.send_confirmation_email()
+
+        current_app.logger.info(f'User created - {user.username} - {user}')
+
         flash(f'Поздравляем, {user.username}, Вы зарегистрированы!', 'success')
         flash('Пожалуйста, подвертдите Ваш адрес почты - пройдите по ссылке в письме', 'info')
         return redirect(url_for('auth.login'))

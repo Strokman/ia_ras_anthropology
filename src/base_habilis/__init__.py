@@ -22,10 +22,16 @@ from src.base_habilis.map import bp as map_bp
 from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
+from src.base_habilis.logging import dictConfig
+# import logging
+# import sys
+
+# log_format = '%(asctime)s - %(levelname)s in %(module)s: %(message)s'
 
 
 def create_app(config_class: Config = Config) -> Flask:
     app = Flask(__name__)
+
     app.config.from_object(config_class)
 
     register_blueprints(app)
