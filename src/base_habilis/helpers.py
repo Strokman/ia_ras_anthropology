@@ -12,6 +12,7 @@ def export_xls(individs: list[Individ],
 
     export_data: dict = {}
 
+    export_data.setdefault('ID', [individ.id for individ in individs])
     export_data.setdefault('Индекс', [individ.index for individ in individs])
     export_data.setdefault('Памятник', [individ.site for individ in individs])
     export_data.setdefault('Погребение',
