@@ -23,36 +23,9 @@ from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
 
-from logging.config import dictConfig
-# import logging
-# import sys
-
-# log_format = '%(asctime)s - %(levelname)s in %(module)s: %(message)s'
-
-
-import logging
-
-
-log_format = '%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(message)s'
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': log_format, 'datefmt': '%Y-%m-%d %H:%M:%S',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'formatter': 'default'
-    }, },
-    'root': {
-        'level': 'DEBUG',
-        'handlers': ['wsgi']
-    }
-})
 
 def create_app(config_class: Config = Config) -> Flask:
     app = Flask(__name__)
-
     app.config.from_object(config_class)
 
     register_blueprints(app)

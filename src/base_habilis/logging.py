@@ -2,7 +2,7 @@
 # import logging
 
 # logging.StreamHandler
-# log_format = '%(asctime)s - %(name)s - %(levelname)s - %(module)s - %(message)s'
+# log_format = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
 
 # dictConfig({
 #     'version': 1,
