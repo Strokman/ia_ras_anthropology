@@ -1,4 +1,5 @@
 from datetime import datetime
+# import logging
 
 from flask import (
     flash,
@@ -100,7 +101,10 @@ def submit_individ():
 
         # commit all changes to the DB
         session.commit()
-
+        # l = logging.getLogger('sqlalchemy')
+        # l.setLevel(logging.INFO)
+        # print(l)
+        # l.info(f'KEK - {individ}')
         flash('Успешно добавлено', 'success')
         return redirect(url_for('individ.submit_individ'))
     return render_template('individ/submit_individ.html', form=form)
