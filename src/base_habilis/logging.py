@@ -16,7 +16,7 @@ dictConfig({
         'formatter': 'default'
     }, "file": {
                 "class": "logging.handlers.TimedRotatingFileHandler",
-                "filename": pth,
+                "filename": "flask.log",
                 "when": "D",
                 "interval": 10,
                 "backupCount": 5,
