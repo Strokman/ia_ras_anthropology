@@ -14,7 +14,7 @@ logger_conf = {
     }, },
     'root': {
         'level': 'WARNING',
-        'handlers': ['wsgi', 'file']
+        'handlers': ['wsgi']
     }
 }
 
