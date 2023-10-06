@@ -7,6 +7,7 @@ import traceback
 from botocore.exceptions import ClientError
 from flask_wtf.csrf import CSRFError
 
+
 @bp.app_errorhandler(ClientError)
 def handle_boto3_error(error: ClientError):
     response = {
@@ -22,6 +23,7 @@ def handle_boto3_error(error: ClientError):
             )
     return render_template('errors/base_error.html', response=response), response['code']
 
+
 @bp.app_errorhandler(CSRFError)
 def handle_csrf_error(error: CSRFError):
     flash(error.description, 'warning')
@@ -30,6 +32,8 @@ def handle_csrf_error(error: CSRFError):
 
 @bp.app_errorhandler(NotFound)
 def not_found_error(error: NotFound):
+    current_app.logger.info('Failed endpoint - ' + request.url)
+    current_app.logger.error(error.code, exc_info=True)
     response = {
         'code': error.code,
         'message': 'Страница не существует',
@@ -78,6 +82,7 @@ def bad_gateway(error: BadGateway):
 
 @bp.app_errorhandler(MethodNotAllowed)
 def method_not_allowed(error: MethodNotAllowed):
+    # root.error(traceback.format_exc())
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
