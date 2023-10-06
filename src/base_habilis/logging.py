@@ -1,4 +1,5 @@
 from logging.config import dictConfig
+import sys
 
 log_format = '%(asctime)s - %(levelname)s in %(module)s: %(message)s'
 
@@ -9,7 +10,7 @@ dictConfig({
     }},
     'handlers': {'wsgi': {
         'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'stream': sys.stdout,
         'formatter': 'default'
     }, },
     'root': {
