@@ -25,7 +25,7 @@ class IndividForm(FlaskForm):
         self.site.query = ArchaeologicalSite.get_all()
         self.sex.query = Sex.get_all('sex')
         self.type.choices = ['Выберите обряд', 'ингумация', 'кремация']
-        self.grave_type.choices = ['курганный', 'грунтовый', 'поселенческий', 'другой']
+        self.grave_type.choices = ['Выберите тип', 'курганный', 'грунтовый', 'поселенческий', 'другой']
         self.epoch.query = Epoch.get_all('id')
 
     site = QuerySelectField('Памятник', allow_blank=True, blank_text='Выберите памятник', validators=[DataRequiredImproved()])
@@ -40,7 +40,7 @@ class IndividForm(FlaskForm):
 
     grave_type = SelectField(label='Тип памятника', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])
-    grave_number = StringField(render_kw={'placeholder': 'номер погребения'}, validators=[CleanString(), DataRequiredImproved()])
+    grave_number = IntegerField(render_kw={'placeholder': 'номер погребения'}, validators=[DataRequiredImproved()])
     catacomb = StringField(render_kw={'placeholder': 'катакомба'} , validators=[CleanString()])
     chamber = StringField(render_kw={'placeholder': 'камера'}, validators=[CleanString()])
     trench = StringField(render_kw={'placeholder': 'раскоп'}, validators=[CleanString()])
@@ -60,4 +60,8 @@ class IndividForm(FlaskForm):
 
     def validate_type(self, type):
         if type.data == 'Выберите обряд':
+            raise ValidationError('Пожалуйста, выберите один из вариантов')
+    
+    def validate_grave_type(self, grave_type):
+        if grave_type.data == 'Выберите тип':
             raise ValidationError('Пожалуйста, выберите один из вариантов')

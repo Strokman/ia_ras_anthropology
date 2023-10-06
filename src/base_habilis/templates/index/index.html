@@ -8,12 +8,20 @@
 <div class='col'>
     <br>
     <br>
-    <p>Кратко о программе</p>
+    <h5>Кратко о программе</h5>
 <iframe width="700" height="400" src="https://www.youtube.com/embed/9Y_z2EzoPK0?si=5y7jRajFiXtssdGi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-
-<p>test</p>
-{% for path in urls %}
-    <img src="{{path}}" class="tutorialPics">
+<br>
+<br>
+<h5>Краткая инструкция по внесению данных</h5>
+<br>
+<br>
+{% for key, value in tutorial.items() %}
+    {% for i in key.split('\n') %}
+    {{i}} <br>
+    {% endfor %}
+    <br>
+    <img src="{{value}}" class="tutorialPics">
+    <br>
     <br>
 {% endfor %}
 </div>
