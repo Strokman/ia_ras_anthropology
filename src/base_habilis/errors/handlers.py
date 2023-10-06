@@ -8,8 +8,14 @@ from botocore.exceptions import ClientError
 from flask_wtf.csrf import CSRFError
 
 
+def save_logs(error):
+    current_app.logger.info('Failed endpoint - ' + request.url)
+    current_app.logger.error(error.code, exc_info=True)
+
+
 @bp.app_errorhandler(ClientError)
 def handle_boto3_error(error: ClientError):
+    save_logs(error)
     response = {
         'code': error.response['ResponseMetadata']['HTTPStatusCode'],
         'message': error.response['Error']['Message'],
@@ -26,30 +32,31 @@ def handle_boto3_error(error: ClientError):
 
 @bp.app_errorhandler(CSRFError)
 def handle_csrf_error(error: CSRFError):
+    save_logs(error)
     flash(error.description, 'warning')
     return redirect(request.referrer)
 
 
 @bp.app_errorhandler(NotFound)
 def not_found_error(error: NotFound):
-    current_app.logger.info('Failed endpoint - ' + request.url)
-    current_app.logger.error(error.code, exc_info=True)
+    save_logs(error)
     response = {
         'code': error.code,
         'message': 'Страница не существует',
         'tb': traceback.format_exc()
     }
-    # txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
-    # send_email(f'BaseHabilis - ошибка {response.get("code")}',
-    #         sender=current_app.config['ADMIN_EMAIL'],
-    #         recipients=[current_app.config['BACKUP_EMAIL']],
-    #         text_body=txt
-    #         )
+    txt = f"Возникла ошибка\nкод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\nTraceback:\n{response.get('tb')}"
+    send_email(f'BaseHabilis - ошибка {response.get("code")}',
+            sender=current_app.config['ADMIN_EMAIL'],
+            recipients=[current_app.config['BACKUP_EMAIL']],
+            text_body=txt
+            )
     return render_template('errors/base_error.html', response=response), 404
 
 
 @bp.app_errorhandler(InternalServerError)
 def internal_error(error: InternalServerError):
+    save_logs(error)
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
@@ -66,6 +73,7 @@ def internal_error(error: InternalServerError):
 
 @bp.app_errorhandler(BadGateway)
 def bad_gateway(error: BadGateway):
+    save_logs(error)
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
@@ -82,7 +90,7 @@ def bad_gateway(error: BadGateway):
 
 @bp.app_errorhandler(MethodNotAllowed)
 def method_not_allowed(error: MethodNotAllowed):
-    # root.error(traceback.format_exc())
+    save_logs(error)
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
@@ -99,6 +107,7 @@ def method_not_allowed(error: MethodNotAllowed):
 
 @bp.app_errorhandler(BadRequest)
 def bad_request(error: BadRequest):
+    save_logs(error)
     response = {
         'code': error.code,
         'message': 'Ошибка сервера, администратор уведомлен',
