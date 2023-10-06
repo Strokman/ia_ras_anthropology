@@ -1,5 +1,4 @@
 from logging.config import dictConfig
-import sys
 
 log_format = '%(asctime)s - %(levelname)s in %(module)s: %(message)s'
 
@@ -9,8 +8,9 @@ dictConfig({
         'format': log_format, 'datefmt': '%Y-%m-%d %H:%M:%S',
     }},
     'handlers': {'wsgi': {
+        'level': 'INFO',
         'class': 'logging.StreamHandler',
-        'stream': sys.stdout,
+        'stream': 'ext://sys.stdout',
         'formatter': 'default'
     }, },
     'root': {
