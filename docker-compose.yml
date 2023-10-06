@@ -36,5 +36,3 @@ services:
     expose:
       - 5000
     restart: always
-    volumes:
-      - ./logs:/home/base_habilis/logs

@@ -22,7 +22,6 @@ from src.base_habilis.map import bp as map_bp
 from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
-from src.base_habilis.logging import dictConfig
 
 
 def create_app(config_class: Config = Config) -> Flask:
