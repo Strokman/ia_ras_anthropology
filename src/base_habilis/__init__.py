@@ -23,13 +23,13 @@ from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
 
-from logging.config import dictConfig
-from src.base_habilis.logging import log_conf
+# from logging.config import dictConfig
+# from src.base_habilis.logging import log_conf
 
 
 
 def create_app(config_class: Config = Config) -> Flask:
-    dictConfig(log_conf)
+    # dictConfig(log_conf)
     app = Flask(__name__)
     app.config.from_object(config_class)
 

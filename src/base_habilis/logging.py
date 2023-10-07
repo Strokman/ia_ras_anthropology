@@ -19,19 +19,19 @@
 # }
 
 
-log_format = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
+# log_format = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
 
-log_conf = {
-    'version': 1,
-    'formatters': {'default': {
-        'format': log_format, 'datefmt': '%Y-%m-%d %H:%M:%S',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'formatter': 'default'
-    }, },
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-}
+# log_conf = {
+#     'version': 1,
+#     'formatters': {'default': {
+#         'format': log_format, 'datefmt': '%Y-%m-%d %H:%M:%S',
+#     }},
+#     'handlers': {'wsgi': {
+#         'class': 'logging.StreamHandler',
+#         'formatter': 'default'
+#     }, },
+#     'root': {
+#         'level': 'INFO',
+#         'handlers': ['wsgi']
+#     }
+# }
