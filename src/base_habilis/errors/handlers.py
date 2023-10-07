@@ -11,6 +11,8 @@ from flask_wtf.csrf import CSRFError
 def save_logs(error):
     current_app.logger.info('Failed endpoint - ' + request.url)
     current_app.logger.error(error.code, exc_info=True)
+    print(current_app.logger)
+    print(current_app.logger.name)
 
 
 @bp.app_errorhandler(ClientError)
