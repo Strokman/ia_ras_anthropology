@@ -38,5 +38,9 @@ log_conf = {
     'root': {
         'level': 'INFO',
         'handlers': ['wsgi']
+    },
+    'werkzeug': {
+        'level': 'INFO',
+        'handlers': ['wsgi']
     }
 }
