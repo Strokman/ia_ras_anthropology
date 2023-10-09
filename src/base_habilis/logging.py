@@ -34,13 +34,13 @@ log_conf = {
     'src.base_habilis': {
         'level': 'INFO',
         'handlers': ['wsgi']
-    },
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    },
-    'werkzeug': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
     }
+    # 'root': {
+    #     'level': 'INFO',
+    #     'handlers': ['wsgi']
+    # },
+    # 'werkzeug': {
+    #     'level': 'INFO',
+    #     'handlers': ['wsgi']
+    # }
 }
