@@ -30,7 +30,7 @@ services:
         condition: service_healthy
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db:$POSTGRES_PORT/$POSTGRES_DB
-    env_file: .env
+    env_file: .env.prod
     networks:
       - default
     expose:
