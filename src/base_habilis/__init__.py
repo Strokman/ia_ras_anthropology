@@ -25,9 +25,9 @@ from src.base_habilis.user import bp as user_bp
 
 from logging.config import dictConfig
 
-from src.base_habilis.logging import log_conf
+# from src.base_habilis.logging import log_conf
 
-dictConfig(log_conf)
+# dictConfig(log_conf)
 
 
 def create_app(config_class: Config = Config) -> Flask:
