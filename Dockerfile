@@ -1,5 +1,5 @@
 FROM python:3.11.3-slim-buster
-RUN useradd anthropos
+RUN useradd basehabilis
 
 # switch working directory
 WORKDIR /home/base_habilis
@@ -21,8 +21,8 @@ RUN chmod +x boot.sh
 
 ENV FLASK_APP base_habilis.py
 
-RUN chown -R anthropos:anthropos ./
-USER anthropos
+RUN chown -R basehabilis:basehabilis ./
+USER basehabilis
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]
