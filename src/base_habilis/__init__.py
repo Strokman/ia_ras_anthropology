@@ -23,11 +23,12 @@ from src.base_habilis.researcher import bp as researcher_bp
 from src.base_habilis.site import bp as site_bp
 from src.base_habilis.user import bp as user_bp
 
+import logging
 # from logging.config import dictConfig
 
-# from src.base_habilis.logging import log_conf
+from src.base_habilis.logging_conf import log_format
 
-# dictConfig(log_conf)
+# dictConfig(logger_conf)
 
 # from logging.config import dictConfig
 
@@ -46,16 +47,16 @@ from src.base_habilis.user import bp as user_bp
 #         'handlers': ['wsgi']
 #     }
 # })
+logging.basicConfig(level=logging.INFO, format=log_format)
 
 
 def create_app(config_class: Config = Config) -> Flask:
 
     app = Flask(__name__)
     app.config.from_object(config_class)
-
+    
     register_blueprints(app)
     register_extensions(app)
-
     return app
 
 

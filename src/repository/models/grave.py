@@ -9,16 +9,16 @@ class Grave(Model, BaseModel):
     grave_type = Column(String(32))
     kurgan_number = Column(String(32))
     grave_number = Column(Integer, nullable=False)
-    catacomb = Column(Integer)
-    chamber = Column(Integer)
+    catacomb = Column(String(32))
+    chamber = Column(String(32))
     trench = Column(String(32))
     area = Column(String(32))
     object = Column(String(32))
     layer = Column(String(32))
     square = Column(String(32))
     sector = Column(String(32))
-    niveau_point = Column(Integer)
-    tachymeter_point = Column(Integer)
+    niveau_point = Column(String(32))
+    tachymeter_point = Column(String(32))
     skeleton = Column(String(32))
     individ_id = Column(Integer, ForeignKey('individs.id'))
     site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
@@ -30,11 +30,11 @@ class Grave(Model, BaseModel):
         if self.kurgan_number:
             return f'{self.site}, к.{self.kurgan_number}/п.{self.grave_number}'
         return f'{self.site}, п.{self.grave_number}'
-    
+
     def __str__(self):
         desc = ', '.join([f'{k} {v}' for k, v in self.dict_russian().items() if v is not None])
         return desc
-    
+
     def dict_russian(self):
          return {
             'к.': self.kurgan_number,

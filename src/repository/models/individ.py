@@ -1,6 +1,7 @@
 from src.repository import Column, relationship, ForeignKey, Integer, DateTime, String, Model
 from src.repository import BaseModel
 from flask_moment import moment
+from datetime import datetime
 
 
 class Individ(BaseModel, Model):
@@ -12,8 +13,8 @@ class Individ(BaseModel, Model):
     age_min = Column(Integer)
     age_max = Column(Integer)
     type = Column(String(16))
-    created_at = Column(DateTime, nullable=False)
-    edited_at = Column(DateTime)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    edited_at = Column(DateTime, default=datetime.utcnow())
     sex_type = Column(String, ForeignKey('sex.sex'))
     site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
     epoch_id = Column(Integer, ForeignKey('epochs.id'))

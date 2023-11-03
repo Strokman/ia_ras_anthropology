@@ -1,3 +1,7 @@
+import os
+from flask import url_for
+
+
 class TutorialText:
 
     SCREEN_1 = """
@@ -64,3 +68,15 @@ class TutorialText:
     3. Номер погребения - только целые числа!
     4. В остальные поля можно записать все, что угодно, но вы должны понимать, что это усложнит поиск и фильтрацию.
     """
+    
+    def __init__(self, current_app) -> None:
+        self.current_app = current_app
+        
+    def create_tutorial(self):
+        tutorial_files = os.listdir(self.current_app.root_path + self.current_app.static_url_path + '/tutorial')
+        urls = []
+        for file in tutorial_files:
+            urls.append(url_for('static', filename=f'tutorial/{file}'))
+        urls.sort()
+        tutorial = dict(zip([k for k in dir(self) if not k.startswith('_')], urls))
+        return tutorial

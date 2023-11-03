@@ -15,11 +15,12 @@
 #     'root': {
 #         'level': 'INFO',
 #         'handlers': ['wsgi']
-#     }
+#     },
+#     'disable_existing_loggers': False
 # }
 
 
-# log_format = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
+log_format = '%(asctime)s - %(levelname)s - %(module)s - %(message)s'
 
 # log_conf = {
 #     'version': 1,

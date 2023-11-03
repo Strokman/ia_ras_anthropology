@@ -82,9 +82,10 @@ def create_table():
 
 @bp.cli.command("restore")
 def existed():
-    kurgan_regex = r'(?i)кург[^\s]*\s*\d{1,}'
-    individ_regex = r'(?i)инд[^\s]*\s*\d{1,}'
-    grave_regex = r'(?i)п[^\s]*\s*\d{1,}[^/.]'
+    kurgan_regex = r'(?i)кург[^\s]*\s*\d{1,}(?![./\-\+])'
+    individ_regex = r'(?i)инд[^\s]*\s*\d{1,}(?![./\-\+])'
+    kost_regex = r'(?i)кост[^\s]*\s*\d{1,}(?![./\-\+])'
+    grave_regex = r'(?i)п[^\s]*\s*\d{1,}(?![./\-\+])'
     folder = listdir(f'{path.dirname(__file__)}/бд_старая')
     folder.remove('.DS_Store')
     pathname = f'{path.dirname(__file__)}/бд_старая'
@@ -98,54 +99,151 @@ def existed():
             df.drop(to_drop, inplace=True, axis=1)
             site_name = df['Памятник'].unique()[0]
             site = session.execute(select(ArchaeologicalSite).filter_by(name=site_name)).scalars().one()
-            to_replace = ['Средневековье', 'Будет определено позже', 'Кремация', 'Ингумация', 'Мужской', 'Женский', 'Не определен', 'Курганный', 'Грунтовый', 'Другое', 'Ингумация', 'Кремация', 'Очень плохая', 'Плохая', 'Средняя', 'Хорошая']
-            replace_with = ['Развитое средневековье', '', 'кремация', 'ингумация', 'мужской', 'женский', 'не определен', 'курганный', 'грунтовый', 'другой', 'ингумация', 'кремация', 1, 2, 3, 4]
+            to_replace = ['Средневековье',
+                          'Будет определено позже',
+                          'Кремация',
+                          'Ингумация',
+                          'Мужской',
+                          'Женский',
+                          'Не определен',
+                          'Курганный',
+                          'Грунтовый',
+                          'Другое',
+                          'Ингумация',
+                          'Кремация',
+                          'Очень плохая',
+                          'Плохая', 
+                          'Средняя',
+                          'Хорошая']
+            replace_with = ['Развитое средневековье',
+                            '',
+                            'кремация',
+                            'ингумация',
+                            'мужской',
+                            'женский',
+                            'не определен',
+                            'курганный',
+                            'грунтовый',
+                            'другой',
+                            'ингумация',
+                            'кремация',
+                            1,
+                            2,
+                            3,
+                            4]
             df.replace(to_replace, replace_with, inplace=True)
-
             for index, row in df.iterrows():
                 individ_data = {}
                 age = row['Возраст'].replace(',', '.') if isinstance(row['Возраст'], str) else None
                 print(file)
                 try:
                     int(row['Номер погребения'])
-                    counter += 1
                     grave_data = {
                         'grave_number': int(row['Номер погребения']),
                         'grave_type': row['Тип погребения']
                     }
                 except:
-                    grave_data = {}
-                    grave_number = row['Номер погребения']
-                    grave_data['grave_type'] = row['Тип погребения']
-                    kurgan_num = re.findall(kurgan_regex, grave_number)
-                    grave_num = re.findall(grave_regex, grave_number)
-                    skeleton_num = re.findall(individ_regex, grave_number)
-                    if skeleton_num:
-                        try:
-                            grave_data['skeleton'] = skeleton_num[0].split()[1]
-                        except:
-                            corrupted.append(df.loc[index])
-                            continue
-                    if kurgan_num:
-                        grave_data['kurgan_number'] = kurgan_num[0].split()[1]
-                    if grave_num:
-                        try:
-                            if grave_num[0].split()[1].isnumeric():
-                                print(grave_num[0].split()[1].isnumeric())
-                                print(grave_num[0].split()[1])
+                    try:
+                        float(row['Номер погребения'])
+                        corrupted.append(df.loc[index])
+                        continue
+                    except:
+                        grave_number = row['Номер погребения'].lower()
+                        grave_data = {}
+                        if 'кург' in grave_number and 'погр' in grave_number and 'инд' in grave_number: 
+                            grave_data['grave_type'] = row['Тип погребения']
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            grave_num = re.findall(grave_regex, grave_number)
+                            skeleton_num = re.findall(individ_regex, grave_number)
+                            try:
+                                grave_data['skeleton'] = skeleton_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
                                 grave_data['grave_number'] = int(grave_num[0].split()[1])
-                        except:
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        elif 'кург' in grave_number and 'погр' in grave_number:
+                            grave_num = re.findall(grave_regex, grave_number)
+                            grave_data['grave_type'] = row['Тип погребения']
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            try:
+                                grave_data['grave_number'] = int(grave_num[0].split()[1])
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        elif 'кург' in grave_number and 'инд' in grave_number:
+                            grave_num = re.findall(grave_regex, grave_number)
+                            grave_data['grave_type'] = row['Тип погребения']
+                            grave_data['grave_number'] = 0
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            skeleton_num = re.findall(individ_regex, grave_number)
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
+                                grave_data['skeleton'] = skeleton_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        elif 'кург' in grave_number and 'п.' in grave_number:
+                            grave_data['grave_type'] = row['Тип погребения']
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            grave_num = re.findall(grave_regex, grave_number)
+                            try:
+                                grave_data['grave_number'] = int(grave_num[0].split()[1])
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        elif 'кург' in grave_number and 'кост' in grave_number:
+                            grave_num = re.findall(grave_regex, grave_number)
+                            grave_data['grave_type'] = row['Тип погребения']
+                            grave_data['grave_number'] = 0
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            skeleton_num = re.findall(kost_regex, grave_number)
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                            try:
+                                grave_data['skeleton'] = skeleton_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        elif 'кург' in grave_number and 'кост' not in grave_number and 'инд' not in grave_number and 'погр' not in grave_number and 'п.' not in grave_number:
+                            # grave_data = {}
+        
+                            grave_data['grave_type'] = row['Тип погребения']
+                            grave_data['grave_number'] = 0
+                            kurgan_num = re.findall(kurgan_regex, grave_number)
+                            try:
+                                grave_data['kurgan_number'] = kurgan_num[0].split()[1]
+                            except:
+                                corrupted.append(df.loc[index])
+                                continue
+                        else:
                             corrupted.append(df.loc[index])
-                            continue
-                        # except:
-                        #     corrupted.append(df.loc[index])
-                        #     continue
-                    else:
-                        grave_data['grave_number'] = 0
-                    
-                    # corrupted.append(df.loc[index])
-                    # continue
-                        
+                            continue   
                 if isinstance(age, str):
                     if '+' in age:
                         individ_data['age_min'] = int(age.replace('+', ''))
@@ -159,7 +257,7 @@ def existed():
                         except:
                             corrupted.append(df.loc(index))
                             continue
-                print(grave_data)
+                counter += 1
                 individ_data['year'] = row['Год раскопок']
                 individ_data['type'] = row['Тип индивида'].lower()
                 individ_data['created_by'] = user.id
@@ -168,7 +266,6 @@ def existed():
                 preservation_data = {'id': row['Сохранность']}
                 if row['Период']:
                     epoch_data = {'name': row['Период']}
-            
                 sex = session.execute(select(Sex).filter_by(**sex_data)).scalars().one()
                 preservation = session.execute(select(Preservation).filter_by(**preservation_data)).scalars().one()
                 try:
