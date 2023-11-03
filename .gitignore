@@ -6,6 +6,7 @@ __pycache__/
 /flask_session
 /.vscode
 *.xlsx
+!src/base_habilis/cli/db_old/*.xlsx
 *.pdf
 *.jpg
 *.jpeg

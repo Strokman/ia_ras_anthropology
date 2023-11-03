@@ -86,9 +86,10 @@ def existed():
     individ_regex = r'(?i)инд[^\s]*\s*\d{1,}(?![./\-\+])'
     kost_regex = r'(?i)кост[^\s]*\s*\d{1,}(?![./\-\+])'
     grave_regex = r'(?i)п[^\s]*\s*\d{1,}(?![./\-\+])'
-    folder = listdir(f'{path.dirname(__file__)}/бд_старая')
+    pathname = f'{path.dirname(__file__)}/db_old'
+    folder = listdir([pathname])
     folder.remove('.DS_Store')
-    pathname = f'{path.dirname(__file__)}/бд_старая'
+    pathname = f'{path.dirname(__file__)}/db_old'
     to_drop = ['Координаты', 'Шифр', 'Автор раскопок', 'Регион', 'Район', 'Автор']
     corrupted = []
     counter = 0
@@ -135,7 +136,6 @@ def existed():
             for index, row in df.iterrows():
                 individ_data = {}
                 age = row['Возраст'].replace(',', '.') if isinstance(row['Возраст'], str) else None
-                print(file)
                 try:
                     int(row['Номер погребения'])
                     grave_data = {
