@@ -103,7 +103,6 @@ def existed():
         with open(f'{pathname}/{file}', 'rb') as f:
             df = pd.read_excel(f, engine="openpyxl")
             df.drop(to_drop, inplace=True, axis=1)
-            print(df['Памятник'].unique()[0])
             site_name = df['Памятник'].unique()[0]
             site = session.execute(select(ArchaeologicalSite).filter_by(name=site_name)).scalars().one()
             to_replace = ['Средневековье',
@@ -237,8 +236,6 @@ def existed():
                                 corrupted.append(df.loc[index])
                                 continue
                         elif 'кург' in grave_number and 'кост' not in grave_number and 'инд' not in grave_number and 'погр' not in grave_number and 'п.' not in grave_number:
-                            # grave_data = {}
-        
                             grave_data['grave_type'] = row['Тип погребения']
                             grave_data['grave_number'] = 0
                             kurgan_num = re.findall(kurgan_regex, grave_number)
@@ -294,8 +291,6 @@ def existed():
     path_to_file: str = path.join(current_app.root_path,
                                   current_app.config['UPLOAD_FOLDER'],
                                   "corrupted.xlsx")
-    print(len(corrupted))
-    print(counter)
     corrupted_records = pd.DataFrame(corrupted)
     corrupted_records.to_excel(path_to_file, sheet_name='corrupted')
 
