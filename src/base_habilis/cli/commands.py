@@ -101,6 +101,7 @@ def existed():
         with open(f'{pathname}/{file}', 'rb') as f:
             df = pd.read_excel(f, engine="openpyxl")
             df.drop(to_drop, inplace=True, axis=1)
+            print(df['Памятник'].unique()[0])
             site_name = df['Памятник'].unique()[0]
             site = session.execute(select(ArchaeologicalSite).filter_by(name=site_name)).scalars().one()
             to_replace = ['Средневековье',
