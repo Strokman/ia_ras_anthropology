@@ -88,7 +88,10 @@ def existed():
     grave_regex = r'(?i)п[^\s]*\s*\d{1,}(?![./\-\+])'
     pathname = f'{path.dirname(__file__)}/db_old'
     folder = listdir(pathname)
-    folder.remove('.DS_Store')
+    try:
+        folder.remove('.DS_Store')
+    except:
+        pass
     pathname = f'{path.dirname(__file__)}/db_old'
     to_drop = ['Координаты', 'Шифр', 'Автор раскопок', 'Регион', 'Район', 'Автор']
     corrupted = []
