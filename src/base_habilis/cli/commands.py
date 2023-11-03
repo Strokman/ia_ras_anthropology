@@ -6,6 +6,8 @@ import pandas as pd
 import re
 from flask import current_app
 
+
+from datetime import datetime
 from src.repository.models import Epoch, FederalDistrict, Region,  Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
 from csv import DictReader
 
@@ -316,3 +318,11 @@ def sites():
         session.add(site)
         researcher.sites.append(site)
     session.commit()
+
+
+@bp.cli.command("delete-individs")
+def delete():
+    stmt = select(Individ).where(Individ.created_at > datetime(2023, 10, 1))
+    individs = session.execute(stmt).scalars().all()
+    for individ in individs:
+        individ.delete()
