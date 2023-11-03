@@ -87,7 +87,7 @@ def existed():
     kost_regex = r'(?i)кост[^\s]*\s*\d{1,}(?![./\-\+])'
     grave_regex = r'(?i)п[^\s]*\s*\d{1,}(?![./\-\+])'
     pathname = f'{path.dirname(__file__)}/db_old'
-    folder = listdir([pathname])
+    folder = listdir(pathname)
     folder.remove('.DS_Store')
     pathname = f'{path.dirname(__file__)}/db_old'
     to_drop = ['Координаты', 'Шифр', 'Автор раскопок', 'Регион', 'Район', 'Автор']
