@@ -50,7 +50,7 @@ class IndividForm(FlaskForm):
     square = StringField(render_kw={'placeholder': 'квадрат'}, validators=[CleanString()])
     sector = StringField(render_kw={'placeholder': 'сектор'}, validators=[CleanString()])
     niveau_point = StringField(render_kw={'placeholder': 'нив.отметка'}, validators=[CleanString()])
-    tachymeter_point = StringField(render_kw={'placeholder': 'тахеом.отметка'}, validators=[CleanString()])
+    tachymeter_point = StringField(render_kw={'placeholder': 'тахеом.отметка'})
     skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[CleanString()])
 
     comment = TextAreaField(label='Примечание')

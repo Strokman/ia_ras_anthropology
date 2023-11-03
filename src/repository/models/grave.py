@@ -18,7 +18,7 @@ class Grave(Model, BaseModel):
     square = Column(String(32))
     sector = Column(String(32))
     niveau_point = Column(String(32))
-    tachymeter_point = Column(String(32))
+    tachymeter_point = Column(String(64))
     skeleton = Column(String(32))
     individ_id = Column(Integer, ForeignKey('individs.id'))
     site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
