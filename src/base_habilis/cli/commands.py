@@ -1,5 +1,5 @@
 from src.base_habilis.cli import bp
-from src.repository import session
+from src.repository import session, db
 from os import path, listdir
 from math import ceil, trunc
 import pandas as pd
@@ -8,7 +8,7 @@ from flask import current_app
 
 
 from datetime import datetime
-from src.repository.models import Epoch, FederalDistrict, Region,  Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
+from src.repository.models import Epoch, FederalDistrict, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
 from csv import DictReader
 
 from sqlalchemy import select

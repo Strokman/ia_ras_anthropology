@@ -11,3 +11,4 @@ from src.repository.postgres_repo import Numeric
 from src.repository.postgres_repo import String
 from src.repository.postgres_repo import Table
 from src.repository.base_model import BaseModel
+from src.repository.paginate import Pagination
