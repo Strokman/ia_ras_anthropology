@@ -78,5 +78,5 @@ class TutorialText:
         for file in tutorial_files:
             urls.append(url_for('static', filename=f'tutorial/{file}'))
         urls.sort()
-        tutorial = dict(zip([k for k in dir(self) if not k.startswith('_')], urls))
+        tutorial = dict(zip([getattr(self, k) for k in dir(self) if not k.startswith('_')], urls))
         return tutorial

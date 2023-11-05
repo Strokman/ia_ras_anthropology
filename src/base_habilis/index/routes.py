@@ -8,7 +8,7 @@ from src.base_habilis.index.tutorial_service import TutorialText
 @bp.route('/')
 @bp.route('/index')
 def index() -> str:
-    current_app.logger.info('TEST MESSAGE')
     instance = TutorialText(current_app)
     tutorial = instance.create_tutorial()
+    print(tutorial)
     return render_template('index/index.html', title='Домашняя страница', tutorial=tutorial)
