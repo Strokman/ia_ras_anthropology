@@ -1,4 +1,6 @@
-from src.repository.models import Individ, ArchaeologicalSite, Epoch, Preservation, FederalDistrict,
+from src.repository.models import Individ, ArchaeologicalSite, Epoch, Preservation, FederalDistrict, Grave, User, Comment, Researcher, Sex, Region
+
+from sqlalchemy import select, or_, between, case
 
 
 def filtering(filters):
@@ -60,4 +62,5 @@ def filtering(filters):
             )
     # global individs
     stmt = stmt.group_by(Individ.id).order_by(Individ.index)
-    individs = session.scalars(stmt).all()
+    return stmt
+    # individs = session.scalars(stmt).all()
