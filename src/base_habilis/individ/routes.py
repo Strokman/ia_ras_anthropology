@@ -203,7 +203,7 @@ def edit_individ(individ_id):
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/individ_table', methods=['GET'])
+@bp.route('/individ_table/<int:page>', methods=['GET'])
 @login_required
 def individ_table():
     form: FilterForm = FilterForm()
