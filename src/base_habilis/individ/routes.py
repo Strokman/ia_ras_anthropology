@@ -212,7 +212,7 @@ def individ_table():
     form: FilterForm = FilterForm()
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=individs,
+                           individs=enumerate(individs, 1),
                            form=form,
                            key=key,
                            action=url_for('individ.individ_table'))
