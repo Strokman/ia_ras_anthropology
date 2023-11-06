@@ -26,7 +26,7 @@ from src.repository.models import (
     Grave,
     User,
     Comment)
-from src.repository import session, Pagination
+from src.repository import session
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -210,10 +210,9 @@ def individ_table():
     sess.pop(key, None)
     sess.setdefault(key, individs)
     form: FilterForm = FilterForm()
-    paginated = Pagination(individs, 50).paginate()
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=paginated,
+                           individs=individs,
                            form=form,
                            key=key,
                            action=url_for('individ.individ_table'))
