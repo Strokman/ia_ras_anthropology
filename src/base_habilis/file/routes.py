@@ -45,10 +45,10 @@ def delete_file(filename) -> Response:
 @bp.route('/export_excel/<key>', methods=['GET'])
 @login_required
 def export_excel(key) -> Response:
-    if key == 'all':
-        individs = repo.execute(session[key]).all()
-    else:
-        individs = session[key]
+    # if key == 'all':
+    #     individs = repo.execute(session[key]).all()
+    # else:
+    individs = session[key]
     print(individs)
 # try:
     file: str = export_xls(individs, current_app, export_name=key)
