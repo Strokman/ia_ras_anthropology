@@ -26,7 +26,7 @@ from src.repository.models import (
     Grave,
     User,
     Comment)
-from src.repository import session, Pagination, paginate
+from src.repository import session, paginate
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -209,8 +209,10 @@ def individ_table():
     stmt = select(Individ).order_by(Individ.index)
     individs = paginate(stmt, per_page=50)
     key = 'all'
-    # sess.pop(key, None)
-    # sess.setdefault(key, stmt)
+    to_save = Individ.get_all('index')
+    print(to_save)
+    # sess.pop(key, to_save)
+    # sess.setdefault(key, individs)
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
                            individs=individs,
