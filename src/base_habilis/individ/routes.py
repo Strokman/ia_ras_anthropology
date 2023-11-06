@@ -26,7 +26,7 @@ from src.repository.models import (
     Grave,
     User,
     Comment)
-from src.repository import session, Pagination
+from src.repository import session, Pagination, paginate
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -202,24 +202,21 @@ def edit_individ(individ_id):
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/individ_table/<int:page>', methods=['GET'])
+@bp.route('/individ_table', methods=['GET'])
 @login_required
-def individ_table(page):
-    individs: list[Individ] = Individ.get_all('index')
-    key = 'all'
-    sess.pop(key, None)
-    sess.setdefault(key, individs)
+def individ_table():
     form: FilterForm = FilterForm()
-    paginated = Pagination(individs, 50)
-    inds = paginated.paginate()
-    pages_count = paginated.pages_count
+    stmt = select(Individ).order_by(Individ.index)
+    individs = paginate(stmt, per_page=50)
+    key = 'all'
+    # sess.pop(key, None)
+    # sess.setdefault(key, stmt)
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=inds[page],
+                           individs=individs,
                            form=form,
                            key=key,
-                           pages_count=pages_count,
-                           action=url_for('individ.individ_table', page=page))
+                           action='individ.individ_table')
 
 
 @bp.route('/individ_filter', methods=['GET'])
@@ -291,15 +288,16 @@ def search():
                     else_=or_(between(Individ.age_max, 0, age_max), Individ.age_min <= age_max)
                     )
                 )
-        global individs
-        individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+        # global individs
+        stmt = stmt.group_by(Individ.id).order_by(Individ.index)
+        individs = session.scalars(stmt).all()
         sess[key] = individs
         return render_template('individ/individ_table.html',
                                title='Таблица индивидов',
-                               individs=enumerate(individs, 1),
+                               individs=individs,
                                form=form,
                                key=key,
-                               action=url_for('individ.search'))
+                               action='individ.search')
     return redirect(url_for('individ.individ_table'))
 
 
@@ -311,4 +309,4 @@ def individs_by_site(site_id):
     key = f'site_{site_id}_individs'
     sess.pop(key, None)
     sess.setdefault(key, individs)
-    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=enumerate(individs, 1))
+    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=individs)

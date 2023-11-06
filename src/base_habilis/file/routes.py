@@ -45,10 +45,14 @@ def delete_file(filename) -> Response:
 @bp.route('/export_excel/<key>', methods=['GET'])
 @login_required
 def export_excel(key) -> Response:
-    individs = session[key]
-    try:
-        file: str = export_xls(individs, current_app, export_name=key)
-        return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.now()).replace(' ', '_')}.xlsx")
-    except:
-        flash('Нет данных для экспорта/некорректные данные', 'warning')
-    return redirect(url_for('index.index'))
+    if key == 'all':
+        individs = repo.execute(session[key]).all()
+    else:
+        individs = session[key]
+    print(individs)
+# try:
+    file: str = export_xls(individs, current_app, export_name=key)
+    return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.now()).replace(' ', '_')}.xlsx")
+    # except:
+    #     flash('Нет данных для экспорта/некорректные данные', 'warning')
+    # return redirect(url_for('index.index'))

@@ -23,8 +23,8 @@ class Grave(Model, BaseModel):
     individ_id = Column(Integer, ForeignKey('individs.id'))
     site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
 
-    individ = relationship('Individ', back_populates='grave', lazy='subquery')
-    site = relationship('ArchaeologicalSite', back_populates='graves', lazy='subquery')
+    individ = relationship('Individ', back_populates='grave')
+    site = relationship('ArchaeologicalSite', back_populates='graves')
 
     def __repr__(self):
         if self.kurgan_number:

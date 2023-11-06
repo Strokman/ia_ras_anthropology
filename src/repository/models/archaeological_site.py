@@ -17,7 +17,7 @@ class ArchaeologicalSite(Model, BaseModel):
 
     creator = relationship("User", foreign_keys="ArchaeologicalSite.created_by", back_populates='sites_created')
     editor = relationship("User", foreign_keys="ArchaeologicalSite.edited_by", back_populates='sites_edited')
-    region = relationship('Region', back_populates='sites', lazy='subquery')
+    region = relationship('Region', back_populates='sites')
     individs = relationship("Individ", back_populates='site', cascade='all, delete-orphan')
     graves = relationship("Grave", back_populates='site', cascade='all, delete-orphan')
 
@@ -28,7 +28,7 @@ class ArchaeologicalSite(Model, BaseModel):
     researchers = relationship("Researcher", secondary=sites_researchers,
                                   primaryjoin='ArchaeologicalSite.id==sites_researchers.c.archaeological_site_id',
                                   secondaryjoin='Researcher.id==sites_researchers.c.researcher_id',
-                                  back_populates='sites', lazy='subquery')
+                                  back_populates='sites')
 
     def __repr__(self):
         return self.name
