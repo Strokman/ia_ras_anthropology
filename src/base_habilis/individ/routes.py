@@ -202,21 +202,24 @@ def edit_individ(individ_id):
     return render_template('individ/submit_individ.html', form=form)
 
 
-@bp.route('/individ_table', methods=['GET'])
+@bp.route('/individ_table/<int:page>', methods=['GET'])
 @login_required
-def individ_table():
+def individ_table(page):
     individs: list[Individ] = Individ.get_all('index')
     key = 'all'
     sess.pop(key, None)
     sess.setdefault(key, individs)
     form: FilterForm = FilterForm()
-    paginated = Pagination(individs, 50).paginate()
+    paginated = Pagination(individs, 50)
+    inds = paginated.paginate()
+    pages_count = paginated.pages_count
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=paginated,
+                           individs=inds[page],
                            form=form,
                            key=key,
-                           action=url_for('individ.individ_table'))
+                           pages_count=pages_count,
+                           action=url_for('individ.individ_table', page=page))
 
 
 @bp.route('/individ_filter', methods=['GET'])

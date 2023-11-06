@@ -11,7 +11,7 @@
     </li>
     {% endif %}
     <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('individ.individ_table') }}">Сбросить фильтры</a>
+      <a class="nav-link" href="{{ url_for('individ.individ_table', page=1) }}">Сбросить фильтры</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{{ url_for('file.export_excel', key=key) }}">Экспорт .xlsx</a>
@@ -39,6 +39,13 @@
       </div>
       <div class="row">
 <div class="col table-div">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      {% for page in range(pages_count) %}
+      <li class="page-item"><a class="page-link" href="{{url_for('individ.individ_table', page=page+1)}}">{{page + 1}}</a></li>
+      {% endfor %}
+    </ul>
+  </nav>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>

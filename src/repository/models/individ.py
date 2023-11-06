@@ -22,15 +22,15 @@ class Individ(BaseModel, Model):
     edited_by = Column(Integer, ForeignKey("users.id"))
     preservation_id = Column(Integer, ForeignKey('preservation.id'))
 
-    site = relationship('ArchaeologicalSite', back_populates='individs')
-    comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
-    epoch = relationship('Epoch', uselist=False, back_populates='individ')
-    creator = relationship("User", foreign_keys='Individ.created_by', back_populates='individs_created')
-    editor = relationship("User", foreign_keys='Individ.edited_by', back_populates='individs_edited')
-    sex = relationship('Sex', back_populates='individs')
-    preservation = relationship('Preservation', back_populates='individ')
-    file = relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
-    grave = relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan')
+    site = relationship('ArchaeologicalSite', back_populates='individs', lazy='subquery')
+    comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan', lazy='subquery')
+    epoch = relationship('Epoch', uselist=False, back_populates='individ', lazy='subquery')
+    creator = relationship("User", foreign_keys='Individ.created_by', back_populates='individs_created', lazy='subquery')
+    editor = relationship("User", foreign_keys='Individ.edited_by', back_populates='individs_edited', lazy='subquery')
+    sex = relationship('Sex', back_populates='individs', lazy='subquery')
+    preservation = relationship('Preservation', back_populates='individ', lazy='subquery')
+    file = relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan', lazy='subquery')
+    grave = relationship('Grave', uselist=False, back_populates='individ', cascade='all, delete-orphan', lazy='subquery')
 
     def create_index(self):
         if self.grave.grave_type == 'курганный' and self.grave.kurgan_number:

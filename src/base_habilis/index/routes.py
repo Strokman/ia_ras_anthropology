@@ -10,5 +10,4 @@ from src.base_habilis.index.tutorial_service import TutorialText
 def index() -> str:
     instance = TutorialText(current_app)
     tutorial = instance.create_tutorial()
-    print(tutorial)
     return render_template('index/index.html', title='Домашняя страница', tutorial=tutorial)

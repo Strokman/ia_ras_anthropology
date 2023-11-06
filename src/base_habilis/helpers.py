@@ -47,7 +47,7 @@ def export_xls(individs: list[Individ],
                            [individ.editor for individ in individs])
     export_data.setdefault('Изменено',
                            [individ.edited_at for individ in individs])
-
+    print(export_data)
     path_to_file: str = path.join(current_app.root_path,
                                   current_app.config['UPLOAD_FOLDER'],
                                   f"{export_name}.xlsx")
