@@ -4,6 +4,7 @@ db = SQLAlchemy()
 
 # Alias common SQLAlchemy names
 session = db.session
+paginate = db.paginate
 
 Model = db.Model
 Column = db.Column
