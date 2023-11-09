@@ -25,5 +25,5 @@ RUN chown -R basehabilis:basehabilis ./
 USER basehabilis
 
 EXPOSE 5000
-RUN source venv/bin/activate
+RUN . venv/bin/activate
 CMD ["bash", "-c", "source venv/bin/activate | flask db upgrade | gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
