@@ -24,8 +24,6 @@ ENV FLASK_APP base_habilis.py
 RUN chown -R basehabilis:basehabilis ./
 USER basehabilis
 
-RUN source venv/bin/activate
-RUN flask db upgrade
 EXPOSE 5000
 
-CMD ["sh", "-c", "gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
+CMD ["sh", "-c", "source venv/bin/activate | flask db upgrade | gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
