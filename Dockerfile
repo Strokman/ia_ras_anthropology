@@ -16,7 +16,7 @@ RUN pip install gunicorn
 COPY src src
 COPY migrations migrations
 
-COPY base_habilis.py config.py .env ./
+COPY base_habilis.py .env config.py ./
 # RUN chmod +x boot.sh
 
 ENV FLASK_APP base_habilis.py
