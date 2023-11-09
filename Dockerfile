@@ -8,7 +8,6 @@ WORKDIR /home/base_habilis
 COPY requirements.txt requirements.txt
 
 # install the dependencies and packages in the requirements file
-# RUN python -m venv venv
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
 
@@ -17,16 +16,10 @@ COPY src src
 COPY migrations migrations
 
 COPY base_habilis.py .env config.py ./
-# RUN chmod +x boot.sh
 
 ENV FLASK_APP base_habilis.py
-
-# RUN usr/bin/python flask db upgrade
 
 RUN chown -R basehabilis:basehabilis ./
 USER basehabilis
 
 EXPOSE 5000
-# RUN . venv/bin/activate
-# RUN flask db upgrade
-# CMD ["bash", "-c", "gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
