@@ -26,5 +26,5 @@ USER basehabilis
 
 EXPOSE 5000
 # RUN . venv/bin/activate
-RUN flask db upgrade
+# RUN flask db upgrade
 CMD ["bash", "-c", "gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
