@@ -25,4 +25,5 @@ RUN chown -R basehabilis:basehabilis ./
 USER basehabilis
 
 EXPOSE 5000
-ENTRYPOINT ["./boot.sh"]
+
+CMD ["source venv/bin/activate", "flask db upgrade", "exec gunicorn -w 2 -b :5000 --access-logfile - --error-logfile - base_habilis:app"]
