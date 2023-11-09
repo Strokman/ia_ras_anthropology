@@ -321,3 +321,14 @@ def delete():
     individs = session.execute(stmt).scalars().all()
     for individ in individs:
         individ.delete()
+
+
+@bp.cli.command("test")
+def test():
+    stmt = select(Individ).limit(2)
+    stmt_2 = select(Individ).join(ArchaeologicalSite).limit(1)
+    individs = session.execute(stmt).scalars().all()
+    try1 = session.execute(stmt_2).scalars().one()
+    print(try1.__dict__)
+    print(individs)
+    print(try1)
