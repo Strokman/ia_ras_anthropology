@@ -21,7 +21,7 @@ COPY base_habilis.py .env config.py ./
 
 ENV FLASK_APP base_habilis.py
 
-RUN flask db upgrade
+RUN ust/bin/python flask db upgrade
 
 RUN chown -R basehabilis:basehabilis ./
 USER basehabilis
