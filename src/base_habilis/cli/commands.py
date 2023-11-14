@@ -315,9 +315,10 @@ def sites():
     session.commit()
 
 
-@bp.cli.command("delete-individs")
+@bp.cli.command("test")
 def delete():
-    stmt = select(Individ).where(Individ.created_at > datetime(2023, 10, 1))
+    stmt = select(Individ).limit(10)
     individs = session.execute(stmt).scalars().all()
-    for individ in individs:
-        individ.delete()
+    for i in individs:
+        print(i)
+        
