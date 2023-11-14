@@ -9,7 +9,7 @@ from wtforms import (
     TextAreaField
     )
 from wtforms_sqlalchemy.fields import QuerySelectField
-from wtforms.validators import NumberRange, Optional, ValidationError
+from wtforms.validators import NumberRange, Optional, ValidationError, InputRequired
 
 from src.base_habilis.lib.validators import (
     CleanString,
@@ -40,7 +40,7 @@ class IndividForm(FlaskForm):
 
     grave_type = SelectField(label='Тип памятника', validators=[DataRequiredImproved()])
     kurgan_number = StringField(render_kw={'placeholder': 'номер кургана'}, validators=[CleanString()])
-    grave_number = IntegerField(render_kw={'placeholder': 'номер погребения'}, validators=[DataRequiredImproved()])
+    grave_number = IntegerField(render_kw={'placeholder': 'номер погребения'}, validators=[InputRequired("Пожалуйста, заполните данное поле")])
     catacomb = StringField(render_kw={'placeholder': 'катакомба'} , validators=[CleanString()])
     chamber = StringField(render_kw={'placeholder': 'камера'}, validators=[CleanString()])
     trench = StringField(render_kw={'placeholder': 'раскоп'}, validators=[CleanString()])

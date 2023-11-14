@@ -1,7 +1,7 @@
-from wtforms.validators import ValidationError, InputRequired
+from wtforms.validators import ValidationError, DataRequired
 
 
-class DataRequiredImproved(InputRequired):
+class DataRequiredImproved(DataRequired):
     def __init__(self):
         super().__init__()
         self.message = 'Пожалуйста, заполните данное поле'
