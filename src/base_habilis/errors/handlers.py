@@ -89,7 +89,7 @@ def method_not_allowed(error: MethodNotAllowed):
         'message': 'Ошибка сервера, администратор уведомлен',
         'tb': traceback.format_exc()
     }
-    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\n{request.url}\nTraceback:\n{response.get('tb')}"
+    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\n{request.remote_addr}\nTraceback:\n{response.get('tb')}"
     send_email(f'BaseHabilis - ошибка {response.get("code")}',
         sender=current_app.config['ADMIN_EMAIL'],
         recipients=[current_app.config['BACKUP_EMAIL']],
