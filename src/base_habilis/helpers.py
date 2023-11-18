@@ -19,8 +19,7 @@ def export_xls(individs: list[Individ],
                            [individ.grave for individ in individs])
     export_data.setdefault('Эпоха', [individ.epoch for individ in individs])
     export_data.setdefault('Исследователь',
-                           [', '.join(researcher.__repr__()
-                            for researcher in individ.site.researchers)
+                           [individ.site.researchers
                             for individ in individs])
     export_data.setdefault('Федеральный округ',
                            [individ.site.region.federal_district

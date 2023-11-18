@@ -59,6 +59,7 @@ class BaseModel:
             stmt = select(cls).where(getattr(cls, attr) == value)
             result = repo.scalar(stmt)
         return result
+    
 
     def save(self, commit: bool = True):
         """Save the record."""

@@ -2,6 +2,7 @@ from src.repository import Column, relationship, Model, Integer, String
 from src.repository.base_model import BaseModel
 
 
+
 class FederalDistrict(Model, BaseModel):
     __tablename__ = 'federal_districts'
 
