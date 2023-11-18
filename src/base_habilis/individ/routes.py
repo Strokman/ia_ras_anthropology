@@ -26,7 +26,8 @@ from src.repository.models import (
     Grave,
     User,
     Comment)
-from src.repository import session
+from src.repository import session, paginate
+from src.core.models import IndividCore
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -205,17 +206,19 @@ def edit_individ(individ_id):
 @bp.route('/individ_table', methods=['GET'])
 @login_required
 def individ_table():
-    individs: list[Individ] = Individ.get_all('index')
-    key = 'all'
-    sess.pop(key, None)
-    sess.setdefault(key, individs)
     form: FilterForm = FilterForm()
+    stmt = select(Individ).order_by(Individ.index)
+    individs = paginate(stmt, per_page=50)
+    key = 'all'
+    to_save = [IndividCore.model_validate(individ) for individ in Individ.get_all('index')]
+    sess.pop(key, None)
+    sess.setdefault(key, to_save)
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
-                           individs=enumerate(individs, 1),
+                           individs=individs,
                            form=form,
                            key=key,
-                           action=url_for('individ.individ_table'))
+                           action='individ.individ_table')
 
 
 @bp.route('/individ_filter', methods=['GET'])
@@ -287,15 +290,16 @@ def search():
                     else_=or_(between(Individ.age_max, 0, age_max), Individ.age_min <= age_max)
                     )
                 )
-        global individs
-        individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
-        sess[key] = individs
+        stmt = stmt.group_by(Individ.id).order_by(Individ.index)
+        individs = session.scalars(stmt).all()
+        to_save = [IndividCore.model_validate(individ) for individ in individs]
+        sess[key] = to_save
         return render_template('individ/individ_table.html',
                                title='Таблица индивидов',
-                               individs=enumerate(individs, 1),
+                               individs=individs,
                                form=form,
                                key=key,
-                               action=url_for('individ.search'))
+                               action='individ.search')
     return redirect(url_for('individ.individ_table'))
 
 
@@ -305,6 +309,7 @@ def individs_by_site(site_id):
     stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
     individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
     key = f'site_{site_id}_individs'
+    to_save = [IndividCore.model_validate(individ) for individ in individs]
     sess.pop(key, None)
-    sess.setdefault(key, individs)
-    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=enumerate(individs, 1))
+    sess.setdefault(key, to_save)
+    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=individs)
