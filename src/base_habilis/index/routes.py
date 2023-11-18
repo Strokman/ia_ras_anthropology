@@ -7,8 +7,8 @@ from src.base_habilis.index.tutorial_service import TutorialText
 
 from src.repository.models import Region, Individ
 from src.repository import session
-from src.core.models.region import RegionCore
-from src.core.models.individ import IndividCore
+from src.core.models import RegionCore
+from src.core.models import IndividCore
 from sqlalchemy import select
 
 @bp.route('/')
@@ -19,6 +19,7 @@ def index() -> str:
     res = session.execute(select(Region).limit(1)).scalar()
     ind_1 = session.execute(select(Individ).limit(1)).scalar()
     model = IndividCore.model_validate(ind_1)
+    print(model.site.researchers[0])
     print(model)
     # distr = res.federal_district
     # mdl = FedDistrClass.model_validate(distr)

@@ -291,7 +291,6 @@ def search():
                     )
                 )
         stmt = stmt.group_by(Individ.id).order_by(Individ.index)
-        print(stmt)
         individs = session.scalars(stmt).all()
         to_save = [IndividCore.model_validate(individ) for individ in individs]
         sess[key] = to_save

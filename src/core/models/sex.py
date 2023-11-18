@@ -1,11 +1,10 @@
 from pydantic import BaseModel as Base, ConfigDict
 
 
-class FedDistrCore(Base):
+class SexCore(Base):
     model_config = ConfigDict(from_attributes=True)
 
-    id: int
-    name: str
+    sex: str
 
     def __str__(self):
-        return f'{self.name} федеральный округ'
+        return self.sex

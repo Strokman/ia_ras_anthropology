@@ -5,7 +5,7 @@
 
 {% macro render_pagination(pagination, endpoint) %}
   <div class=page-items>
-    {{ pagination.first }} - {{ pagination.last }} of {{ pagination.total }}
+    {{ pagination.first }} - {{ pagination.last }} из {{ pagination.total }}
   </div>
   <nav aria-label="Page navigation example">
     <ul class="pagination">
@@ -74,7 +74,6 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-          <!-- <th class="text-end" click>Nr</th> -->
           <th class="text-end" click>ID</th>
             <th class="text-end" click>Индекс индивида</th>
             <th class="text-end" click>Памятник</th>
@@ -85,9 +84,7 @@
             <th class="text-end" click>Обряд</th>
             <th class="text-end" click>Сохранность</th>
             <th class="text-end" click>Эпоха</th>
-            
             <th class="text-end" click>Добавлено</th>
-            
         </tr>
     </thead>
     <tbody>
@@ -99,7 +96,7 @@
                 <td class="text-end">{{ individ.site.name }}</td>
                 <td class="text-end">{% for researcher in individ.site.researchers %}{{ researcher }}<br>{% endfor %}</td>
                 <td class="text-end">{{ individ.site.region}}</td>
-                <td class="text-end">{{ individ.age() }}</td>
+                <td class="text-end">{{ individ.age if individ.age else '' }}</td>
                 <td class="text-end">{{ individ.sex.sex }}</td>
                 <td class="text-end">{{ individ.type }}</td>
                 <td class="text-end">{{ individ.preservation }}</td>

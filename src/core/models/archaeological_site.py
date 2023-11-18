@@ -3,6 +3,7 @@ from src.core.models.region import RegionCore
 from src.core.models.researcher import ResearcherCore
 from typing import List
 
+
 class ArchaeologicalSiteCore(Base):
     model_config = ConfigDict(from_attributes=True)
 
@@ -13,3 +14,6 @@ class ArchaeologicalSiteCore(Base):
 
     region: RegionCore
     researchers: List[ResearcherCore]
+
+    def __str__(self):
+        return self.name
