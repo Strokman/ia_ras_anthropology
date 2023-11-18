@@ -220,7 +220,6 @@ def individ_table():
                            key=key,
                            action='individ.individ_table')
 
-
 @bp.route('/individ_filter', methods=['GET'])
 @login_required
 def search():
