@@ -27,6 +27,7 @@ from src.repository.models import (
     User,
     Comment)
 from src.repository import session, paginate
+from src.core.models import IndividCore
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -209,10 +210,9 @@ def individ_table():
     stmt = select(Individ).order_by(Individ.index)
     individs = paginate(stmt, per_page=50)
     key = 'all'
-    to_save = Individ.get_all('index')
-    print(to_save)
-    # sess.pop(key, to_save)
-    # sess.setdefault(key, individs)
+    to_save = [IndividCore.model_validate(individ) for individ in Individ.get_all('index')]
+    sess.pop(key, None)
+    sess.setdefault(key, to_save)
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
                            individs=individs,
@@ -290,11 +290,10 @@ def search():
                     else_=or_(between(Individ.age_max, 0, age_max), Individ.age_min <= age_max)
                     )
                 )
-        # global individs
         stmt = stmt.group_by(Individ.id).order_by(Individ.index)
-        print(stmt)
         individs = session.scalars(stmt).all()
-        sess[key] = individs
+        to_save = [IndividCore.model_validate(individ) for individ in individs]
+        sess[key] = to_save
         return render_template('individ/individ_table.html',
                                title='Таблица индивидов',
                                individs=individs,
@@ -310,6 +309,7 @@ def individs_by_site(site_id):
     stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
     individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
     key = f'site_{site_id}_individs'
+    to_save = [IndividCore.model_validate(individ) for individ in individs]
     sess.pop(key, None)
-    sess.setdefault(key, individs)
+    sess.setdefault(key, to_save)
     return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=individs)

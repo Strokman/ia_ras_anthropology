@@ -3,10 +3,10 @@ from os import path, remove
 import pandas as pd
 from flask import Flask
 
-from src.repository.models.individ import Individ
+from src.core.models.individ import IndividCore
 
 
-def export_xls(individs: list[Individ],
+def export_xls(individs: list[IndividCore],
                current_app: Flask,
                export_name: str = 'default') -> str:
 
@@ -19,7 +19,7 @@ def export_xls(individs: list[Individ],
                            [individ.grave for individ in individs])
     export_data.setdefault('Эпоха', [individ.epoch for individ in individs])
     export_data.setdefault('Исследователь',
-                           [individ.site.researchers
+                           [individ.site.researchers[0]
                             for individ in individs])
     export_data.setdefault('Федеральный округ',
                            [individ.site.region.federal_district
@@ -31,7 +31,7 @@ def export_xls(individs: list[Individ],
     export_data.setdefault('Широта',
                            [individ.site.lat for individ in individs])
     export_data.setdefault('Год', [individ.year for individ in individs])
-    export_data.setdefault('Возраст', [individ.age() for individ in individs])
+    export_data.setdefault('Возраст', [individ.age for individ in individs])
     export_data.setdefault('Обряд', [individ.type for individ in individs])
     export_data.setdefault('Пол', [individ.sex for individ in individs])
     export_data.setdefault('Сохранность',
@@ -46,7 +46,6 @@ def export_xls(individs: list[Individ],
                            [individ.editor for individ in individs])
     export_data.setdefault('Изменено',
                            [individ.edited_at for individ in individs])
-    print(export_data)
     path_to_file: str = path.join(current_app.root_path,
                                   current_app.config['UPLOAD_FOLDER'],
                                   f"{export_name}.xlsx")

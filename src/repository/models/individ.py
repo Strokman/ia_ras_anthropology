@@ -41,6 +41,7 @@ class Individ(BaseModel, Model):
     def __repr__(self):
         return f'{self.index}'
 
+    @property
     def age(self):
         if self.age_min and self.age_max:
             return f'{self.age_min}-{self.age_max}'
@@ -48,7 +49,7 @@ class Individ(BaseModel, Model):
             return f'{self.age_min}+'
         if self.age_max and not self.age_min:
             return f'до {self.age_max}'
-        return ''
+        return None
     
     def dict_russian(self):
         return {
@@ -64,7 +65,7 @@ class Individ(BaseModel, Model):
             'Автор раскопок': self.site.researchers,
             'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
-            'Возраст': self.age(),
+            'Возраст': self.age,
             'Пол': self.sex.sex,
             'Сохранность': self.preservation.description,
             'Примечание': self.comment.text if self.comment else '',
