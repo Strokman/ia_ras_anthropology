@@ -46,7 +46,6 @@ def delete_file(filename) -> Response:
 @login_required
 def export_excel(key) -> Response:
     individs = session[key]
-    print(individs)
     try:
         file: str = export_xls(individs, current_app, export_name=key)
         return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.now()).replace(' ', '_')}.xlsx")
