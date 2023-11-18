@@ -292,6 +292,7 @@ def search():
                 )
         # global individs
         stmt = stmt.group_by(Individ.id).order_by(Individ.index)
+        print(stmt)
         individs = session.scalars(stmt).all()
         sess[key] = individs
         return render_template('individ/individ_table.html',

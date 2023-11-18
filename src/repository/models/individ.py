@@ -25,8 +25,8 @@ class Individ(BaseModel, Model):
     site = relationship('ArchaeologicalSite', back_populates='individs')
     comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
     epoch = relationship('Epoch', uselist=False, back_populates='individ')
-    creator = relationship("User", foreign_keys='Individ.created_by', back_populates='individs_created')
-    editor = relationship("User", foreign_keys='Individ.edited_by', back_populates='individs_edited')
+    creator = relationship("User", uselist=False, foreign_keys='Individ.created_by', back_populates='individs_created')
+    editor = relationship("User", uselist=False, foreign_keys='Individ.edited_by', back_populates='individs_edited')
     sex = relationship('Sex', back_populates='individs')
     preservation = relationship('Preservation', back_populates='individ')
     file = relationship('File', back_populates='individ', uselist=False, cascade='all, delete-orphan')
@@ -61,7 +61,7 @@ class Individ(BaseModel, Model):
             'Область': self.site.region,
             'Долгота': self.site.long,
             'Широта': self.site.lat,
-            'Автор раскопок': ''.join((researcher.__repr__() for researcher in self.site.researchers)),
+            'Автор раскопок': self.site.researchers,
             'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
             'Возраст': self.age(),
