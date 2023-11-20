@@ -15,6 +15,7 @@ class Config:
     TEMPLATES_AUTO_RELOAD = True
     SESSION_PERMANENT = True
     HOST = environ.get('HOST')
+    REMEMBER_COOKIE_DURATION = timedelta(days=1)
     PERMANENT_SESSION_LIFETIME = timedelta(days=1)
     SESSION_TYPE = 'filesystem'
     FLASK_ADMIN_SWATCH = 'cerulean'
