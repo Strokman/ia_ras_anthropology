@@ -74,6 +74,7 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
+          <th class="text-end" click>№</th>
           <th class="text-end" click>ID</th>
             <th class="text-end" click>Индекс индивида</th>
             <th class="text-end" click>Памятник</th>
@@ -90,7 +91,7 @@
     <tbody>
         {% for individ in individs %}
             <tr class="clickable-row" data-bs-toggle="modal" data-bs-target="#individ{{individ.id}}">
-              <!-- <td class="text-start">{{ num }}</td> -->
+              <td class="text-start">{% if request.endpoint == 'individ.individ_table' %}{{ (page -1) * per_page + loop.index }}{% else %}{{loop.index}}{% endif %}</td>
               <td class="text-start">{{ individ.id }}</td>
                 <td class="text-start">{{ individ.index }}</td>
                 <td class="text-end">{{ individ.site.name }}</td>

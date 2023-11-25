@@ -208,13 +208,17 @@ def edit_individ(individ_id):
 def individ_table():
     form: FilterForm = FilterForm()
     stmt = select(Individ).order_by(Individ.index)
-    individs = paginate(stmt, per_page=50)
+    per_page = 50
+    individs = paginate(stmt, per_page=per_page)
+    page = int(request.args.get('page', 1))
     key = 'all'
     to_save = [IndividCore.model_validate(individ) for individ in Individ.get_all('index')]
     sess.pop(key, None)
     sess.setdefault(key, to_save)
     return render_template('individ/individ_table.html',
                            title='Таблица индивидов',
+                           page=page,
+                           per_page=per_page,
                            individs=individs,
                            form=form,
                            key=key,
