@@ -30,7 +30,7 @@ class IndividCore(Base):
     creator: UserCore
     editor: UserCore
     site: ArchaeologicalSiteCore
-    comment: CommentCore
+    comment: CommentCore | None
 
     def __str__(self):
         return f'{self.index}'
