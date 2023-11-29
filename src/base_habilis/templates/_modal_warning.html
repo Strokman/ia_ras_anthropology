@@ -6,7 +6,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Вы уверены? <br>Это действие приведет к удалению записи из базы данных, его нельзя будет отменить!
+        Вы уверены? <br>Это действие приведет к удалению {% if 'delete_file' in url %}файла индивида <b>{{ individ.index}}</b> {% else %}всех данных индивида <b>{{ individ.index}}</b> {% endif %} из базы данных , его нельзя будет отменить!
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
