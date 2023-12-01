@@ -1,11 +1,15 @@
 from flask import flash, redirect, render_template, url_for
+from flask import session as sess
 from flask_login import current_user, login_required
 from werkzeug.wrappers import Response
 
+from sqlalchemy import select, desc
+
 from src.repository import session
 from src.base_habilis.user import bp
-from src.repository.models import User
+from src.repository.models import User, Individ
 from src.base_habilis.user.forms import EditProfileForm
+from src.core.models import IndividCore
 
 
 @bp.route('/user/<username>', methods=['GET'])
@@ -19,7 +23,17 @@ def user(username) -> str:
     profile_form.middle_name.data = current_user.middle_name
     profile_form.affiliation.data = current_user.affiliation
     profile_form.email.data = current_user.email
-    return render_template('user/profile.html', user=user, profile_form=profile_form)
+    stmt = select(Individ).filter_by(created_by=user.id).order_by(desc(Individ.created_at))
+    individs = session.execute(stmt).scalars().all()
+    key = user.username
+    sess.pop(key, None)
+    to_save = [IndividCore.model_validate(individ) for individ in individs]
+    sess[key] = to_save
+    return render_template('user/profile.html',
+                           user=user,
+                           profile_form=profile_form,
+                           individs=individs,
+                           key=key)
 
 
 @bp.route('/edit_profile', methods=['POST'])

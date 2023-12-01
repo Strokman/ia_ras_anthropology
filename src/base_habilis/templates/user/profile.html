@@ -15,6 +15,11 @@
 {% with form=profile_form, task='Редактировать профиль', action=url_for('user.edit_profile'), id='editProfile' %}
 {% include "_modal.html" %}
 {% endwith %}
-                {% endif %}
 
+                {% endif %}
+<div class="row" style="margin-top: 30px">
+<h4>Добавленные Вами индивиды</h4>
+</div>
+
+{% include "_individs.html" %}
 {% endblock %}

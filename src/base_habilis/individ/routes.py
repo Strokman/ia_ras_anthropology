@@ -126,27 +126,27 @@ def edit_individ(individ_id):
     individ = Individ.get_by_id(individ_id)
     form = IndividForm()
     if request.method == 'POST' and form.validate_on_submit():
-        individ.grave.grave_type=form.data.get('grave_type', None)
-        individ.grave.kurgan_number=form.data.get('kurgan_number', None)
-        individ.grave.grave_number=form.data.get('grave_number', None)
-        individ.grave.catacomb=form.data.get('catacomb', None)
-        individ.grave.chamber=form.data.get('chamber', None)
-        individ.grave.trench=form.data.get('trench', None)
-        individ.grave.area=form.data.get('area', None)
-        individ.grave.object=form.data.get('object', None)
-        individ.grave.layer=form.data.get('layer', None)
-        individ.grave.square=form.data.get('square', None)
-        individ.grave.sector=form.data.get('sector', None)
-        individ.grave.niveau_point=form.data.get('niveau_point', None)
-        individ.grave.tachymeter_point=form.data.get('tachymeter_point', None)
-        individ.grave.skeleton=form.data.get('skeleton', None)
-        individ.year=form.data.get('year', None)
-        individ.age_min=form.data.get('age_min', None)
-        individ.age_max=form.data.get('age_max', None)
-        individ.preservation_id=form.data.get('preservation', None)     # ПРОВЕРИТЬ
-        individ.type=form.data.get('type', None)
-        individ.edited_at=datetime.utcnow()
-        individ.edited_by=current_user.id
+        individ.grave.grave_type = form.data.get('grave_type', None)
+        individ.grave.kurgan_number = form.data.get('kurgan_number', None)
+        individ.grave.grave_number = form.data.get('grave_number', None)
+        individ.grave.catacomb = form.data.get('catacomb', None)
+        individ.grave.chamber = form.data.get('chamber', None)
+        individ.grave.trench = form.data.get('trench', None)
+        individ.grave.area = form.data.get('area', None)
+        individ.grave.object = form.data.get('object', None)
+        individ.grave.layer = form.data.get('layer', None)
+        individ.grave.square = form.data.get('square', None)
+        individ.grave.sector = form.data.get('sector', None)
+        individ.grave.niveau_point = form.data.get('niveau_point', None)
+        individ.grave.tachymeter_point = form.data.get('tachymeter_point', None)
+        individ.grave.skeleton = form.data.get('skeleton', None)
+        individ.year = form.data.get('year', None)
+        individ.age_min = form.data.get('age_min', None)
+        individ.age_max = form.data.get('age_max', None)
+        individ.preservation_id = form.data.get('preservation', None)     # ПРОВЕРИТЬ
+        individ.type = form.data.get('type', None)
+        individ.edited_at = datetime.utcnow()
+        individ.edited_by = current_user.id
 
         sex = form.sex.data
         sex.individs.append(individ)
@@ -171,7 +171,8 @@ def edit_individ(individ_id):
             epoch.individ.append(individ)
         session.commit()
         flash('Изменения сохранены', 'success')
-        return redirect(url_for('individ.individ_table'))
+        return redirect(request.referrer)
+        # return redirect(url_for('individ.individ_table'))
     elif request.method == 'GET':
         form.submit.label.text = 'Редактировать'
         form.site.data = individ.site
