@@ -80,7 +80,8 @@
             <th class="text-end" click>Обряд</th>
             <th class="text-end" click>Сохранность</th>
             <th class="text-end" click>Эпоха</th>
-            <th class="text-end" click>Добавлено</th>
+            <th class="text-end" click>Кем добавлено</th>
+            <th class="text-end" click>Последнее изменение</th>
         </tr>
     </thead>
     <tbody>
@@ -98,6 +99,7 @@
                 <td class="text-end">{{ individ.preservation }}</td>
                 <td class="text-end">{{ individ.epoch if individ.epoch else '' }}</td>
                 <td class="text-end">{{ individ.creator.__str__() }} <br> {{ moment(individ.created_at).format('L') }}</td>
+                <td class="text-end">{{ individ.editor.__str__() }} <br> {{ moment(individ.edited_at).format('L') }}</td>
                 
             </tr>
 
