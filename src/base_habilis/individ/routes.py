@@ -103,7 +103,7 @@ def submit_individ():
         # commit all changes to the DB
         session.commit()
         current_app.logger.info(f'Individ created: {individ} by {current_user}')
-        flash('Успешно добавлено', 'success')
+        flash(f'Индивид {individ} успешно добавлен', 'success')
         return redirect(url_for('individ.submit_individ'))
     return render_template('individ/submit_individ.html', form=form)
 
@@ -172,7 +172,7 @@ def edit_individ(individ_id):
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
         session.commit()
-        flash('Изменения сохранены', 'success')
+        flash(f'Индивид {individ} успешно отредактирован', 'success')
         return redirect(request.referrer)
         # return redirect(url_for('individ.individ_table'))
     elif request.method == 'GET':
