@@ -155,6 +155,8 @@ def edit_individ(individ_id):
             comment = Comment(text=input_comment)
             session.add(comment)
             individ.comment = comment
+        else:
+            individ.comment.delete()
         if individ.site != (site := form.site.data):
             site.individ.append(individ)
         individ.create_index()
