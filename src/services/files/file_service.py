@@ -34,6 +34,8 @@ class FileDTO:
     @classmethod
     def create(cls, file: FileStorage):
         filename: str = secure_filename(file.filename)
+        if '.' not in filename:
+            filename = '.' + filename
         extension: str = filename.rsplit('.', 1)[1].lower()
         filename: str = f'{uuid1()}.{extension}'
         stream = file.stream

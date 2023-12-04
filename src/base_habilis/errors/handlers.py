@@ -47,7 +47,7 @@ def not_found_error(error: NotFound):
     return render_template('errors/base_error.html', response=response), 404
 
 
-@bp.app_errorhandler(InternalServerError)
+@bp.app_errorhandler(500)
 def internal_error(error: InternalServerError):
     save_logs(error)
     response = {
