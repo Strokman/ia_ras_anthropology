@@ -42,7 +42,6 @@ def submit_individ():
             age_min=form.data.get('age_min', None),
             age_max=form.data.get('age_max', None),
             site_id=form.data.get('site', None).id,
-            preservation_id=form.data.get('preservation', None),
             type=form.data.get('type', None),
             created_at=datetime.utcnow(),
             created_by=current_user.id,
@@ -67,7 +66,7 @@ def submit_individ():
             tachymeter_point=form.data.get('tachymeter_point', None),
             skeleton=form.data.get('skeleton', None)
         )
-
+        individ.preservation = form.data.get('preservation', None)
         # add both to the session, so that everything
         # will work correct with ID's etc.
         session.add_all((individ, grave))
@@ -143,7 +142,7 @@ def edit_individ(individ_id):
         individ.year = form.data.get('year', None)
         individ.age_min = form.data.get('age_min', None)
         individ.age_max = form.data.get('age_max', None)
-        individ.preservation_id = form.data.get('preservation', None)     # ПРОВЕРИТЬ
+        individ.preservation = form.data.get('preservation', None)     # ПРОВЕРИТЬ
         individ.type = form.data.get('type', None)
         individ.edited_at = datetime.utcnow()
         individ.edited_by = current_user.id
@@ -183,7 +182,7 @@ def edit_individ(individ_id):
         form.age_min.data = individ.age_min
         form.age_max.data = individ.age_max
         form.year.data = individ.year
-        form.preservation.data = individ.preservation.id
+        form.preservation.data = individ.preservation
         form.epoch.data = individ.epoch
         form.grave_type.data = individ.grave.grave_type
         form.kurgan_number.data = individ.grave.kurgan_number
@@ -210,7 +209,12 @@ def edit_individ(individ_id):
 @login_required
 def individ_table():
     form: FilterForm = FilterForm()
-    stmt = select(Individ).order_by(Individ.index)
+    stmt = select(Individ, ArchaeologicalSite, Grave).join(Individ.site).join(Individ.grave).order_by(
+            ArchaeologicalSite.name,
+            Individ.year,
+            Grave.kurgan_number,
+            Grave.grave_number
+        )
     per_page = 50
     individs = paginate(stmt, per_page=per_page)
     page = int(request.args.get('page', 1))
@@ -312,8 +316,19 @@ def search():
 @bp.route('/by_site/<site_id>', methods=['GET', 'POST'])
 @login_required
 def individs_by_site(site_id):
-    stmt = select(Individ).join(Individ.site).where(ArchaeologicalSite.id==site_id)
-    individs = session.scalars(stmt.group_by(Individ.id).order_by(Individ.index)).all()
+    stmt = stmt = select(Individ).join(
+        Individ.site
+        ).join(
+            Individ.grave
+            ).where(
+                ArchaeologicalSite.id==site_id
+                ).order_by(
+                    ArchaeologicalSite.name,
+                    Individ.year,
+                    Grave.kurgan_number,
+                    Grave.grave_number
+        )
+    individs = session.scalars(stmt).all()
     key = f'site_{site_id}_individs'
     to_save = [IndividCore.model_validate(individ) for individ in individs]
     sess.pop(key, None)

@@ -7,7 +7,7 @@ from src.repository import session
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(label='Логин', validators=[Length(min=2, max=50), CleanString(), DataRequiredImproved()])
+    username = StringField(label='Логин', validators=[Length(min=2, max=50), OnlyCharsValidator(), DataRequiredImproved()])
     last_name = StringField(label='Фамилия', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     first_name = StringField(label='Имя', validators=[Length(min=2, max=50), DataRequiredImproved(), CleanName(), OnlyCharsValidator()])
     middle_name = StringField(label='Отчество', validators=[Length(min=0, max=50), CleanName(), OnlyCharsValidator()])

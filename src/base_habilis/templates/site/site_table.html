@@ -16,8 +16,9 @@
             <th class="text-end">Регион</th>
             <th class="text-end">Эпохи</th>
             <th class="text-end">Исследователь</th>
-            <th class="text-end">Индивиды</th>
-            <th class="text-end">Кем редактировалось</th>
+            <th class="text-end">Количество индивидов</th>
+            <th class="text-end">Кем создано</th>
+            <th class="text-end">Кем изменено</th>
             <th class="text-end"></th>
         </tr>
     </thead>
@@ -31,7 +32,8 @@
                 <td class="text-end">{{ site.region }}</td>
                 <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
                 <td class="text-end">{% for researcher in site.researchers %}{{ researcher }}<br>{% endfor %}</td>
-                <td class="text-end">{% for individ in site.individs %} {{individ}} <br>{% endfor %}</td>
+                <td class="text-end">{{ site.individs|length }}</td>
+                <td class="text-end">{{ site.creator }}</td>
                 <td class="text-end">{{ site.editor }}</td>
                 <td class="text-end"><a href="{{ url_for('site.edit_site', site_id=site.id) }}" class="btn btn-primary" tabindex="-1" role="button">Ред.</a></td>
             </tr>

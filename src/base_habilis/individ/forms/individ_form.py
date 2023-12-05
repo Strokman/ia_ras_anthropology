@@ -5,7 +5,6 @@ from wtforms import (
     SubmitField,
     SelectField,
     IntegerField,
-    IntegerRangeField,
     TextAreaField
     )
 from wtforms_sqlalchemy.fields import QuerySelectField
@@ -15,7 +14,7 @@ from src.base_habilis.lib.validators import (
     CleanString,
     DataRequiredImproved
     )
-from src.repository.models import ArchaeologicalSite, Epoch, Sex
+from src.repository.models import ArchaeologicalSite, Epoch, Sex, Preservation
 
 
 class IndividForm(FlaskForm):
@@ -26,6 +25,7 @@ class IndividForm(FlaskForm):
         self.sex.query = Sex.get_all('sex')
         self.type.choices = ['Выберите обряд', 'ингумация', 'кремация']
         self.grave_type.choices = ['Выберите тип', 'курганный', 'грунтовый', 'поселенческий', 'другой']
+        self.preservation.query = Preservation.get_all('id')
         self.epoch.query = Epoch.get_all('id')
 
     site = QuerySelectField('Памятник', allow_blank=True, blank_text='Выберите памятник', validators=[DataRequiredImproved()])
@@ -35,7 +35,7 @@ class IndividForm(FlaskForm):
     age_min = IntegerField(validators=[NumberRange(message='Только число', min=0, max=150), Optional()])
     age_max = IntegerField(validators=[NumberRange(min=0, max=150), Optional()])
     sex = QuerySelectField('Пол', allow_blank=True, blank_text='Выберите пол', validators=[DataRequiredImproved()])
-    preservation = IntegerRangeField(label='Сохранность', validators=[NumberRange(min=1, max=4), DataRequiredImproved()])
+    preservation = QuerySelectField(label='Сохранность', allow_blank=True, blank_text='Выберите степень сохранности', validators=[DataRequiredImproved()])
     epoch = QuerySelectField('Эпоха', allow_blank=True, blank_text='Выберите эпоху', validators=[Optional()])
 
     grave_type = SelectField(label='Тип памятника', validators=[DataRequiredImproved()])
