@@ -10,6 +10,7 @@ from flask import (
     url_for)
 from flask_login import current_user, login_required
 from sqlalchemy import between, case, or_, select
+from sqlalchemy.sql.expression import collate
 
 from src.base_habilis.extensions import csrf
 from src.base_habilis.individ.forms import IndividForm, FilterForm
@@ -210,11 +211,10 @@ def edit_individ(individ_id):
 def individ_table():
     form: FilterForm = FilterForm()
     stmt = select(Individ, ArchaeologicalSite, Grave).join(Individ.site).join(Individ.grave).order_by(
-            ArchaeologicalSite.name,
-            Individ.year,
-            Grave.kurgan_number,
-            Grave.grave_number
+            collate(Individ.index, "numeric")
         )
+    print(stmt)
+    # collation = collate('index', )
     per_page = 50
     individs = paginate(stmt, per_page=per_page)
     page = int(request.args.get('page', 1))
