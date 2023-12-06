@@ -210,11 +210,9 @@ def edit_individ(individ_id):
 @login_required
 def individ_table():
     form: FilterForm = FilterForm()
-    stmt = select(Individ, ArchaeologicalSite, Grave).join(Individ.site).join(Individ.grave).order_by(
+    stmt = select(Individ).order_by(
             collate(Individ.index, "numeric")
         )
-    print(stmt)
-    # collation = collate('index', )
     per_page = 50
     individs = paginate(stmt, per_page=per_page)
     page = int(request.args.get('page', 1))
@@ -300,7 +298,7 @@ def search():
                     else_=or_(between(Individ.age_max, 0, age_max), Individ.age_min <= age_max)
                     )
                 )
-        stmt = stmt.group_by(Individ.id).order_by(Individ.index)
+        stmt = stmt.group_by(Individ.id).order_by(collate(Individ.index, "numeric"))
         individs = session.scalars(stmt).all()
         to_save = [IndividCore.model_validate(individ) for individ in individs]
         sess[key] = to_save
@@ -317,16 +315,10 @@ def search():
 @login_required
 def individs_by_site(site_id):
     stmt = stmt = select(Individ).join(
-        Individ.site
-        ).join(
-            Individ.grave
-            ).where(
-                ArchaeologicalSite.id==site_id
+        Individ.site).where(
+            ArchaeologicalSite.id == site_id
                 ).order_by(
-                    ArchaeologicalSite.name,
-                    Individ.year,
-                    Grave.kurgan_number,
-                    Grave.grave_number
+                    collate(Individ.index, "numeric")
         )
     individs = session.scalars(stmt).all()
     key = f'site_{site_id}_individs'
