@@ -65,7 +65,7 @@ class Individ(BaseModel, Model):
             'Автор раскопок': ''.join((researcher.__repr__() for researcher in self.site.researchers)),
             'Эпоха': self.epoch if self.epoch else '',
             'Тип погребения': self.grave.grave_type,
-            'Возраст': self.age,
+            'Возраст': self.age if self.age else '',
             'Пол': self.sex.sex,
             'Сохранность': self.preservation.description,
             'Примечание': self.comment.text if self.comment else '',
