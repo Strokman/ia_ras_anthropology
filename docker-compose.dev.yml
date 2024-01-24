@@ -38,4 +38,4 @@ services:
       - "55000:5000"
     restart: always
     volumes:
-      - ./src:./src
+      - ./src:/src
