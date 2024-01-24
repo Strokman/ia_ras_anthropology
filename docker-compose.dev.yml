@@ -37,3 +37,5 @@ services:
     ports:
       - "55000:5000"
     restart: always
+    volumes:
+      - .:/home/base_habilis

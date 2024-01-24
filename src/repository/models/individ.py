@@ -50,7 +50,7 @@ class Individ(BaseModel, Model):
         if self.age_max and not self.age_min:
             return f'до {self.age_max}'
         return None
-    
+
     def dict_russian(self):
         return {
             'ID': self.id,

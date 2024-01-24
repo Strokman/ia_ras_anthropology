@@ -313,12 +313,3 @@ def sites():
         session.add(site)
         researcher.sites.append(site)
     session.commit()
-
-
-@bp.cli.command("test")
-def delete():
-    stmt = select(Individ).limit(10)
-    individs = session.execute(stmt).scalars().all()
-    for i in individs:
-        print(i)
-        
