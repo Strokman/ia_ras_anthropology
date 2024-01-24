@@ -38,5 +38,5 @@ services:
     restart: always
     volumes:
       - type: bind
-      - source: ./src
-      - target: /home/basehabilis/src
+        source: ./src
+        target: /home/basehabilis/src
