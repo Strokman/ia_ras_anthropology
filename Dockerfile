@@ -1,5 +1,5 @@
 FROM python:3.11.3-slim-buster
-RUN useradd basehabilis
+# RUN useradd basehabilis
 
 # switch working directory
 WORKDIR /home/base_habilis
@@ -20,7 +20,7 @@ RUN pip install gunicorn
 
 ENV FLASK_APP base_habilis.py
 
-RUN chown -R basehabilis:basehabilis ./
-USER basehabilis
+# RUN chown -R basehabilis:basehabilis ./
+# USER basehabilis
 
-EXPOSE 5000
+# EXPOSE 5000
