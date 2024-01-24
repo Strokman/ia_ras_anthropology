@@ -5,7 +5,8 @@ RUN useradd basehabilis
 WORKDIR /home/base_habilis
 
 # copy the requirements file into the image
-COPY requirements.txt requirements.txt
+COPY . .
+# COPY requirements.txt requirements.txt
 
 # install the dependencies and packages in the requirements file
 RUN pip install --no-cache-dir -r requirements.txt
