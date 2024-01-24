@@ -13,10 +13,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
 
 # copy every content from the local directory to the image
-COPY src src
-COPY migrations migrations
+# COPY src src
+# COPY migrations migrations
 
-COPY base_habilis.py .env config.py ./
+# COPY base_habilis.py .env config.py ./
 
 ENV FLASK_APP base_habilis.py
 
