@@ -37,4 +37,4 @@ services:
       - "55000:5000"
     restart: always
     volumes:
-      - ./src:/home/basehabilis/src:consistent
+      - ./src:/home/basehabilis/src
