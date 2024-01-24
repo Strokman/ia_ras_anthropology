@@ -5,17 +5,18 @@ RUN useradd basehabilis
 WORKDIR /home/base_habilis
 
 # copy the requirements file into the image
-COPY requirements.txt requirements.txt
+COPY . .
+# COPY requirements.txt requirements.txt
 
 # install the dependencies and packages in the requirements file
 RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install gunicorn
 
 # copy every content from the local directory to the image
-COPY src src
-COPY migrations migrations
+# COPY src src
+# COPY migrations migrations
 
-COPY base_habilis.py .env config.py ./
+# COPY base_habilis.py .env config.py ./
 
 ENV FLASK_APP base_habilis.py
 
