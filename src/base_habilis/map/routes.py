@@ -9,4 +9,5 @@ from src.repository.models import ArchaeologicalSite
 @login_required
 def map() -> str:
     sites: list[ArchaeologicalSite] = ArchaeologicalSite.get_all()
+    print(sites)
     return render_template('map/map.html', title='Карта', sites=sites)
