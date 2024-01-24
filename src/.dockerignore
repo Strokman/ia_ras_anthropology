@@ -3,3 +3,4 @@ docker-compose.prod.yml
 .env*
 README.md
 tox.ini
+.DS_Store
