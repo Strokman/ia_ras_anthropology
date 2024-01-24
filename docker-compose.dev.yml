@@ -27,7 +27,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    # command: bash -c "flask db upgrade | gunicorn -w 2 -b :55000 --access-logfile - --error-logfile - base_habilis:app"
     command: bash -c "flask db upgrade | flask run --host=0.0.0.0"
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://$POSTGRES_USER:$POSTGRES_PASSWORD@db:$POSTGRES_PORT/$POSTGRES_DB
@@ -38,4 +37,4 @@ services:
       - "55000:5000"
     restart: always
     volumes:
-      - ./src:/src
+      - ./src:/home/basehabilis/src
