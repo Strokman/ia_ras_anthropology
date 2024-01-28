@@ -1,13 +1,11 @@
 from src.base_habilis.cli import bp
-from src.repository import session, db
+from src.repository import session
 from os import path, listdir
 from math import ceil, trunc
 import pandas as pd
 import re
 from flask import current_app
 
-
-from datetime import datetime
 from src.repository.models import Epoch, FederalDistrict, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
 from csv import DictReader
 
@@ -313,3 +311,44 @@ def sites():
         session.add(site)
         researcher.sites.append(site)
     session.commit()
+
+
+@bp.cli.command("nefed")
+def nefed():
+    pathname = f'{path.dirname(__file__)}/db_old/nefed'
+    folder = listdir(pathname)
+    user = session.execute(select(User).filter_by(username='strokman')).scalar_one()
+    print(folder)
+    for file in folder:
+        site = session.execute(select(ArchaeologicalSite).where(ArchaeologicalSite.name==file.split('.')[0])).scalar_one()
+        with open(f'{pathname}/{file}', 'r', encoding='utf-8-sig') as f:
+            data = DictReader(f, delimiter=';')
+            for row in data:
+                grave = Grave(grave_number=row['Погребение'], grave_type='грунтовый')
+                preservation = session.execute(select(Preservation).filter_by(description=row['Сохранность'])).scalar_one()
+                sex = session.execute(select(Sex).filter_by(sex=row['Пол'])).scalar_one()
+                epoch = session.execute(select(Epoch).filter_by(name='Развитое средневековье')).scalar_one()
+                individ_data = {
+                    'year': row['Год'],
+                    'type': row['Обряд'],
+                    'created_by': user.id,
+                    'edited_by': user.id,
+                }
+                age = row['Возраст']
+                if '+' in age:
+                    individ_data['age_min'] = int(age.replace('+', ''))
+                if 'до' in age:
+                    individ_data['age_max'] = int(age.split()[1])
+                if '-' in age and age[-1] != '-':       
+                    age_min, age_max = age.split('-')
+                    individ_data['age_min'] = age_min
+                    individ_data['age_max'] = age_max
+                individ = Individ(**individ_data)
+                session.add_all([individ, grave])
+                individ.grave = grave  
+                sex.individs.append(individ)
+                epoch.individ.append(individ)
+                preservation.individ.append(individ)
+                site.individs.append(individ)
+                individ.create_index()
+        session.commit()

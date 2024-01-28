@@ -10,10 +10,3 @@ COPY . .
 
 # install the dependencies and packages in the requirements file
 RUN pip install --no-cache-dir -r requirements.txt
-
-# ENV FLASK_APP base_habilis.py
-
-# RUN chown -R basehabilis:basehabilis ./
-# USER basehabilis
-
-# EXPOSE 5000
