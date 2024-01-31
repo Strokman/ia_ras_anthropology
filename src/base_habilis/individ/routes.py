@@ -173,9 +173,9 @@ def edit_individ(individ_id):
             epoch.individ.append(individ)
         session.commit()
         flash(f'Индивид {individ} успешно отредактирован', 'success')
-        return redirect(request.referrer)
-        # return redirect(url_for('individ.individ_table'))
+        return redirect(sess['prev'])
     elif request.method == 'GET':
+        sess['prev'] = request.referrer
         form.submit.label.text = 'Редактировать'
         form.site.data = individ.site
         form.sex.data = individ.sex
