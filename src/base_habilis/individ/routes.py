@@ -117,7 +117,7 @@ def delete_individ(individ_id):
         delete_file_from_s3(s3_client, individ.file)
     individ.delete()
     flash('Запись удалена', 'success')
-    return redirect(url_for('individ.individ_table'))
+    return redirect(request.referrer)
 
 
 @bp.route('/edit_individ/<int:individ_id>', methods=['GET', 'POST'])
