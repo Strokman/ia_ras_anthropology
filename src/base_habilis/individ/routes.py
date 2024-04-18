@@ -230,7 +230,7 @@ def individ_table(sort='index'):
                     Region.name
                 )
         case 'index':
-            stmt.order_by(
+            stmt = stmt.order_by(
                 collate(Individ.index, "numeric")
             )
     per_page = 50
