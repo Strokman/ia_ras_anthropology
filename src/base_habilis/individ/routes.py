@@ -221,7 +221,7 @@ def individ_table(sort='index'):
                 Individ.id
             )
         case 'researcher':
-            stmt = stmt.join(
+            stmt = stmt.join(ArchaeologicalSite).join(
                 Researcher).order_by(
                     Researcher.last_name
                 )
