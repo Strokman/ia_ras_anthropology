@@ -205,14 +205,35 @@ def edit_individ(individ_id):
             form.comment.data = individ.comment.text
     return render_template('individ/submit_individ.html', form=form)
 
-
-@bp.route('/individ_table', methods=['GET'])
+@bp.route('/individ_table/', methods=['GET'])
+@bp.route('/individ_table/<string:sort>', methods=['GET'])
 @login_required
-def individ_table():
+def individ_table(sort='index'):
     form: FilterForm = FilterForm()
-    stmt = select(Individ).order_by(
-            collate(Individ.index, "numeric")
-        )
+    stmt = select(Individ)
+    match sort:
+        case 'site':
+            stmt = stmt.join(ArchaeologicalSite).order_by(
+                    ArchaeologicalSite.name
+                )
+        case 'id':
+            stmt = stmt.order_by(
+                Individ.id
+            )
+        case 'researcher':
+            stmt = stmt.join(
+                Researcher).order_by(
+                    Researcher.last_name
+                )
+        case 'region':
+            stmt = stmt.join(
+                Region).order_by(
+                    Region.name
+                )
+        case 'index':
+            stmt.order_by(
+                collate(Individ.index, "numeric")
+            )
     per_page = 50
     individs = paginate(stmt, per_page=per_page)
     page = int(request.args.get('page', 1))
@@ -227,7 +248,7 @@ def individ_table():
                            individs=individs,
                            form=form,
                            key=key,
-                           action='individ.individ_table')
+                           action=url_for('individ.individ_table', sort=sort))
 
 @bp.route('/individ_filter', methods=['GET'])
 @login_required
@@ -314,7 +335,7 @@ def search():
 @bp.route('/by_site/<site_id>', methods=['GET', 'POST'])
 @login_required
 def individs_by_site(site_id):
-    stmt = stmt = select(Individ).join(
+    stmt = select(Individ).join(
         Individ.site).where(
             ArchaeologicalSite.id == site_id
                 ).order_by(

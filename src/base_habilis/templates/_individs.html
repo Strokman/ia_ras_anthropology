@@ -7,7 +7,7 @@
     {% for page in pagination.iter_pages() %}
       {% if page %}
         {% if page != pagination.page %}
-        <li class="page-item"><a class="page-link" href="{{ url_for(endpoint, page=page) }}">{{ page }}</a></li>
+        <li class="page-item"><a class="page-link" href="{{ endpoint}}?page={{page}}">{{ page }}</a></li>
         {% else %}
         <li class="page-item active" aria-current="page">
           <a class="page-link">{{ page }}</a>
@@ -69,19 +69,19 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-          <th class="text-end" click>№</th>
-          <th class="text-end" click>ID</th>
-            <th class="text-end" click>Индекс индивида</th>
-            <th class="text-end" click>Памятник</th>
-            <th class="text-end" click>Автор раскопок</th>
-            <th class="text-end" click>Регион</th>
-            <th class="text-end" click>Возраст</th>
-            <th class="text-end" click>Пол</th>
-            <th class="text-end" click>Обряд</th>
-            <th class="text-end" click>Сохранность</th>
-            <th class="text-end" click>Эпоха</th>
-            <th class="text-end" click>Кем добавлено</th>
-            <th class="text-end" click>Последнее изменение</th>
+          <th class="text-end">№</th>
+          <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='id') }}">ID</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='index') }}">Индекс индивида</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='researcher') }}">Автор раскопок</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='site') }}">Памятник</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='region') }}">Регион</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='age') }}">Возраст</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='sex') }}">Пол</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='type') }}">Обряд</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='preservation') }}">Сохранность</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='epoch') }}">Эпоха</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='creator') }}">Кем добавлено</a></th>
+            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='edito') }}">Последнее изменение</a></th>
         </tr>
     </thead>
     <tbody>
@@ -90,8 +90,8 @@
               <td class="text-start">{% if request.endpoint == 'individ.individ_table' %}{{ (page -1) * per_page + loop.index }}{% else %}{{loop.index}}{% endif %}</td>
               <td class="text-start">{{ individ.id }}</td>
                 <td class="text-start">{{ individ.index }}</td>
-                <td class="text-end">{{ individ.site.name }}</td>
                 <td class="text-end">{% for researcher in individ.site.researchers %}{{ researcher }}<br>{% endfor %}</td>
+                <td class="text-end">{{ individ.site}}</td>
                 <td class="text-end">{{ individ.site.region}}</td>
                 <td class="text-end">{{ individ.age if individ.age else '' }}</td>
                 <td class="text-end">{{ individ.sex.sex }}</td>

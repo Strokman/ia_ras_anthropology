@@ -10,9 +10,10 @@ from src.base_habilis.user import bp
 from src.repository.models import User, Individ
 from src.base_habilis.user.forms import EditProfileForm
 from src.core.models import IndividCore
-
+from src.repository.models.user import owner_required
 
 @bp.route('/user/<username>', methods=['GET'])
+@owner_required
 @login_required
 def user(username) -> str:
     user = User.get_one_by_attr('username', session, username)

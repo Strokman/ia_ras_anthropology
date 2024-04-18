@@ -2,8 +2,8 @@ from src.base_habilis.extensions import login
 from src.repository import Column, relationship, Model, String, Integer, Boolean, DateTime
 from werkzeug.security import check_password_hash, generate_password_hash
 from src.repository.base_model import BaseModel
-from flask_login import UserMixin
-from flask import url_for, flash, session, redirect, current_app, render_template
+from flask_login import UserMixin, current_user
+from flask import url_for, flash, redirect, current_app, render_template
 from uuid import uuid4
 from sqlalchemy.dialects.postgresql import UUID
 from src.base_habilis.lib.email import send_email
@@ -69,12 +69,10 @@ class User(UserMixin, Model, BaseModel):
                    html_body=render_template('email/mail_confirmation.html',
                                              link=link))
 
-
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
             current_app.config['SECRET_KEY'], algorithm='HS256')
-    
 
     def send_password_reset_email(self):
         link = current_app.config['HOST'] + url_for('auth.reset_password', token=self.get_reset_password_token())
@@ -122,9 +120,20 @@ def load_user(user_id):
 def admin_required(f):
     @wraps(f)
     def decorated_view(*args, **kwargs):
-        if session['user_role'] != 'admin':
+        if current_user.role != 'admin':
             flash('Недостаточно прав', 'warning')
             return redirect(url_for('index.index'))
         else:
             return f(*args, **kwargs)
+    return decorated_view
+
+
+def owner_required(f):
+    @wraps(f)
+    def decorated_view(*args, **kwargs):
+        username = kwargs['username']
+        if current_user.username != username:
+            flash('Доступ к чужому личному кабинету ограничен', 'danger')
+            return redirect(url_for('index.index'))
+        return f(*args, **kwargs)
     return decorated_view
