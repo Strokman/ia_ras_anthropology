@@ -221,14 +221,28 @@ def individ_table(sort='index'):
                 Individ.id
             )
         case 'researcher':
-            stmt = stmt.join(ArchaeologicalSite).join(ArchaeologicalSite.researchers).group_by(Individ.id, Researcher.last_name).order_by(
-                    Researcher.last_name
-                )
+            stmt = stmt.join(
+                ArchaeologicalSite
+                ).join(
+                    ArchaeologicalSite.researchers
+                    ).group_by(
+                        Individ.id, Researcher.last_name
+                        ).order_by(
+                            Researcher.last_name
+                            )
         case 'region':
             stmt = stmt.join(
-                Region).order_by(
+                ArchaeologicalSite
+            ).join(
+                ArchaeologicalSite.region).group_by(
+                    Individ.id
+                ).order_by(
                     Region.name
                 )
+        case "preservation":
+            stmt = stmt.order_by(
+                Individ.preservation_id
+            )
         case 'index':
             stmt = stmt.order_by(
                 collate(Individ.index, "numeric")
