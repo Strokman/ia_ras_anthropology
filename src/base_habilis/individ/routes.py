@@ -235,7 +235,7 @@ def individ_table(sort='index'):
                 ArchaeologicalSite
             ).join(
                 ArchaeologicalSite.region).group_by(
-                    Individ.id
+                    Individ.id, Region.name
                 ).order_by(
                     Region.name
                 )
