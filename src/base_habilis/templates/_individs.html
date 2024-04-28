@@ -7,7 +7,7 @@
     {% for page in pagination.iter_pages() %}
       {% if page %}
         {% if page != pagination.page %}
-        <li class="page-item"><a class="page-link" href="{{ endpoint}}?page={{page}}">{{ page }}</a></li>
+        <li class="page-item"><a class="page-link" href="{{ endpoint}}{{sort}}?page={{page}}">{{ page }}</a></li>
         {% else %}
         <li class="page-item active" aria-current="page">
           <a class="page-link">{{ page }}</a>

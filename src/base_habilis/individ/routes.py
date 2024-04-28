@@ -227,6 +227,7 @@ def individ_table(sort=None):
                            individs=individs,
                            form=form,
                            key=key,
+                           sort=sort,
                            action=url_for('individ.individ_table'))
 
 
