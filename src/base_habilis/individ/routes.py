@@ -29,6 +29,7 @@ from src.repository.models import (
     Comment)
 from src.repository import session, paginate
 from src.core.models import IndividCore
+from src.core.services.sort import sort_func
 
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 
@@ -205,48 +206,13 @@ def edit_individ(individ_id):
             form.comment.data = individ.comment.text
     return render_template('individ/submit_individ.html', form=form)
 
+
 @bp.route('/individ_table/', methods=['GET'])
 @bp.route('/individ_table/<string:sort>', methods=['GET'])
 @login_required
-def individ_table(sort='index'):
+def individ_table(sort=None):
     form: FilterForm = FilterForm()
-    stmt = select(Individ)
-    match sort:
-        case 'site':
-            stmt = stmt.join(ArchaeologicalSite).order_by(
-                    ArchaeologicalSite.name
-                )
-        case 'id':
-            stmt = stmt.order_by(
-                Individ.id
-            )
-        case 'researcher':
-            stmt = stmt.join(
-                ArchaeologicalSite
-                ).join(
-                    ArchaeologicalSite.researchers
-                    ).group_by(
-                        Individ.id, Researcher.last_name
-                        ).order_by(
-                            Researcher.last_name
-                            )
-        case 'region':
-            stmt = stmt.join(
-                ArchaeologicalSite
-            ).join(
-                ArchaeologicalSite.region).group_by(
-                    Individ.id, Region.name
-                ).order_by(
-                    Region.name
-                )
-        case "preservation":
-            stmt = stmt.order_by(
-                Individ.preservation_id
-            )
-        case 'index':
-            stmt = stmt.order_by(
-                collate(Individ.index, "numeric")
-            )
+    stmt = sort_func(sort)
     per_page = 50
     individs = paginate(stmt, per_page=per_page)
     page = int(request.args.get('page', 1))
@@ -262,6 +228,7 @@ def individ_table(sort='index'):
                            form=form,
                            key=key,
                            action=url_for('individ.individ_table', sort=sort))
+
 
 @bp.route('/individ_filter', methods=['GET'])
 @login_required
@@ -345,10 +312,12 @@ def search():
     return redirect(url_for('individ.individ_table'))
 
 
-@bp.route('/by_site/<site_id>', methods=['GET', 'POST'])
+@bp.route('/by-site/<int:site_id>', methods=['GET', 'POST'])
+@bp.route('/by-site/<int:site_id>/<string:sort>', methods=['GET'])
 @login_required
-def individs_by_site(site_id):
-    stmt = select(Individ).join(
+def individs_by_site(site_id, sort=None):
+    stmt = sort_func(sort)
+    stmt = stmt.join(
         Individ.site).where(
             ArchaeologicalSite.id == site_id
                 ).order_by(
@@ -359,4 +328,5 @@ def individs_by_site(site_id):
     to_save = [IndividCore.model_validate(individ) for individ in individs]
     sess.pop(key, None)
     sess.setdefault(key, to_save)
-    return render_template('individ/individ_table.html', title='Таблица индивидов', key=key, individs=individs)
+    print(site_id)
+    return render_template('map/individ_by_site.html', title='Таблица индивидов', site_id=site_id, key=key, individs=individs)

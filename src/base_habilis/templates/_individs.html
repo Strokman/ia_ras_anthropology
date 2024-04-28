@@ -70,18 +70,18 @@
     <thead>
         <tr>
           <th class="text-end">№</th>
-          <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='id') }}">ID</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='index') }}">Индекс индивида</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='researcher') }}">Автор раскопок</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='site') }}">Памятник</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='region') }}">Регион</a></th>
+          <th class="text-end"><a href="{{ action }}id">ID</a></th>
+            <th class="text-end"><a href="{{ action }}index">Индекс индивида</a></th>
+            <th class="text-end"><a href="{{ action }}researcher">Автор раскопок</a></th>
+            <th class="text-end"><a href="{{ action }}site">Памятник</a></th>
+            <th class="text-end"><a href="{{ action }}region">Регион</a></th>
             <th class="text-end">Возраст</th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='sex') }}">Пол</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='type') }}">Обряд</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='preservation') }}">Сохранность</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='epoch') }}">Эпоха</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='creator') }}">Кем добавлено</a></th>
-            <th class="text-end"><a href="{{ url_for('individ.individ_table', sort='edito') }}">Последнее изменение</a></th>
+            <th class="text-end"><a href="{{ action }}sex">Пол</a></th>
+            <th class="text-end"><a href="{{ action }}type">Обряд</a></th>
+            <th class="text-end"><a href="{{ action }}preservation">Сохранность</a></th>
+            <th class="text-end"><a href="{{ action }}epoch">Эпоха</a></th>
+            <th class="text-end"><a href="{{ action }}creator">Кем добавлено</a></th>
+            <th class="text-end"><a href="{{ action }}editor">Последнее изменение</a></th>
         </tr>
     </thead>
     <tbody>

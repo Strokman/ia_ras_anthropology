@@ -1,7 +1,13 @@
 from flask import render_template, current_app, flash, redirect, request
 from src.base_habilis.errors import bp
 from src.base_habilis.lib.email import send_email
-from werkzeug.exceptions import InternalServerError, NotFound, BadGateway, MethodNotAllowed, BadRequest
+from werkzeug.exceptions import (
+    InternalServerError,
+    NotFound,
+    BadGateway,
+    MethodNotAllowed,
+    BadRequest
+    )
 import traceback
 
 from botocore.exceptions import ClientError
@@ -9,7 +15,8 @@ from flask_wtf.csrf import CSRFError
 
 
 def save_logs(error):
-    current_app.logger.info('Failed endpoint - ' + request.url)
+    current_app.logger.error('Client - ' + request.environ['REMOTE_ADDR'])
+    current_app.logger.error('Failed endpoint - ' + request.path)
     current_app.logger.error(error.code, exc_info=True)
 
 @bp.app_errorhandler(ClientError)

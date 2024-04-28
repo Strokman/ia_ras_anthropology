@@ -10,12 +10,14 @@ from src.base_habilis.user import bp
 from src.repository.models import User, Individ
 from src.base_habilis.user.forms import EditProfileForm
 from src.core.models import IndividCore
+from src.core.services.sort import sort_func
 from src.repository.models.user import owner_required
 
 @bp.route('/user/<username>', methods=['GET'])
+@bp.route('/user/<username>/<string:sort>', methods=['GET'])
 @owner_required
 @login_required
-def user(username) -> str:
+def user(username, sort='created_at') -> str:
     user = User.get_one_by_attr('username', session, username)
     profile_form = EditProfileForm(current_user.username, current_user.email)
     profile_form.username.data = current_user.username
@@ -24,7 +26,9 @@ def user(username) -> str:
     profile_form.middle_name.data = current_user.middle_name
     profile_form.affiliation.data = current_user.affiliation
     profile_form.email.data = current_user.email
-    stmt = select(Individ).filter_by(created_by=user.id).order_by(desc(Individ.created_at))
+    print(sort)
+    filter = {'created_by': user.id}
+    stmt = sort_func(sort, filter)
     individs = session.execute(stmt).scalars().all()
     key = user.username
     sess.pop(key, None)

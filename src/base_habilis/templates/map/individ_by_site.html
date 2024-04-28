@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+{% with action=url_for('individ.individs_by_site', site_id=site_id) + '/' %}
+{% include "_individs.html" %}
+{% endwith %}
+
+{% endblock %}
