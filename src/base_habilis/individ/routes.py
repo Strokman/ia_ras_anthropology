@@ -208,7 +208,7 @@ def edit_individ(individ_id):
 
 
 @bp.route('/individ_table/', methods=['GET'])
-@bp.route('/individ_table/<string:sort>', methods=['GET'])
+@bp.route('/individ_table/<string:sort>/', methods=['GET'])
 @login_required
 def individ_table(sort=None):
     form: FilterForm = FilterForm()
@@ -232,7 +232,7 @@ def individ_table(sort=None):
 
 @bp.route('/individ_filter', methods=['GET'])
 @login_required
-def search():
+def search(sort=None):
     form: FilterForm = FilterForm()
     key = 'filtered'
     sess.pop(key, None)
@@ -303,12 +303,12 @@ def search():
         individs = session.scalars(stmt).all()
         to_save = [IndividCore.model_validate(individ) for individ in individs]
         sess[key] = to_save
-        return render_template('individ/individ_table.html',
+        return render_template('individ/individ_filter.html',
                                title='Таблица индивидов',
                                individs=individs,
                                form=form,
                                key=key,
-                               action='individ.search')
+                               action=url_for('individ.search'))
     return redirect(url_for('individ.individ_table'))
 
 
@@ -316,13 +316,8 @@ def search():
 @bp.route('/by-site/<int:site_id>/<string:sort>', methods=['GET'])
 @login_required
 def individs_by_site(site_id, sort=None):
-    stmt = sort_func(sort)
-    stmt = stmt.join(
-        Individ.site).where(
-            ArchaeologicalSite.id == site_id
-                ).order_by(
-                    collate(Individ.index, "numeric")
-        )
+    filter = {'site_id': site_id}
+    stmt = sort_func(sort, filter)
     individs = session.scalars(stmt).all()
     key = f'site_{site_id}_individs'
     to_save = [IndividCore.model_validate(individ) for individ in individs]
