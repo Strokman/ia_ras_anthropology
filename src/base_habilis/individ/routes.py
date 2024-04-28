@@ -227,7 +227,7 @@ def individ_table(sort=None):
                            individs=individs,
                            form=form,
                            key=key,
-                           action=url_for('individ.individ_table', sort=sort))
+                           action=url_for('individ.individ_table'))
 
 
 @bp.route('/individ_filter', methods=['GET'])
