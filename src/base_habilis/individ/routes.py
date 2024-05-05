@@ -45,9 +45,9 @@ def submit_individ():
             age_max=form.data.get('age_max', None),
             site_id=form.data.get('site', None).id,
             type=form.data.get('type', None),
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(datetime.UTC),
             created_by=current_user.id,
-            edited_at=datetime.utcnow(),
+            edited_at=datetime.now(datetime.UTC),
             edited_by=current_user.id,
         )
 
@@ -146,7 +146,7 @@ def edit_individ(individ_id):
         individ.age_max = form.data.get('age_max', None)
         individ.preservation = form.data.get('preservation', None)     # ПРОВЕРИТЬ
         individ.type = form.data.get('type', None)
-        individ.edited_at = datetime.utcnow()
+        individ.edited_at = datetime.now(datetime.UTC)
         individ.edited_by = current_user.id
 
         sex = form.sex.data
@@ -210,7 +210,7 @@ def edit_individ(individ_id):
 @bp.route('/individ_table/', methods=['GET'])
 @bp.route('/individ_table/<string:sort>/', methods=['GET'])
 @login_required
-def individ_table(sort=None):
+def individ_table(sort='index'):
     form: FilterForm = FilterForm()
     stmt = sort_func(sort)
     per_page = 50

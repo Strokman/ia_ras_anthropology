@@ -21,6 +21,11 @@ class ArchaeologicalSite(Model, BaseModel):
     individs = relationship("Individ", back_populates='site', cascade='all, delete-orphan')
     graves = relationship("Grave", back_populates='site', cascade='all, delete-orphan')
 
+    supplementary_file = relationship(
+        'SupplementaryFile',
+        back_populates='site',
+        cascade='all, delete-orphan'
+    )
     epochs = relationship("Epoch", secondary=sites_epochs,
                              primaryjoin='ArchaeologicalSite.id==sites_epochs.c.archaeological_site_id',
                              secondaryjoin='Epoch.id==sites_epochs.c.epoch_id',

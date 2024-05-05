@@ -39,3 +39,4 @@ class Config:
     MAIL_PASSWORD = environ.get('MAIL_PASSWORD')
     OBJECT_STORAGE_URL = environ.get('OBJECT_STORAGE_URL')
     BUCKET = environ.get('BUCKET')
+    YMAPS_API_KEY = environ.get('YMAPS_API_KEY')

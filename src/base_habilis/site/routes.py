@@ -4,8 +4,10 @@ from werkzeug.wrappers import Response
 
 from src.repository import session
 from src.base_habilis.site import bp
-from src.repository.models import ArchaeologicalSite, Region, FederalDistrict
+from src.repository.models import ArchaeologicalSite, Region, FederalDistrict, Country
 from src.base_habilis.site.forms import ArchaeologicalSiteForm
+from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
+from src.services import geocode
 
 
 @bp.route('/submit_site', methods=['GET', 'POST'])
@@ -13,17 +15,31 @@ from src.base_habilis.site.forms import ArchaeologicalSiteForm
 def submit_site() -> Response | str:
     site_form = ArchaeologicalSiteForm()
     if site_form.validate_on_submit():
+        long = site_form.long.data
+        lat = site_form.lat.data
         site = ArchaeologicalSite.create(
             name=site_form.name.data,
-            long=site_form.long.data,
-            lat=site_form.lat.data
+            long=long,
+            lat=lat
             )
         site.epochs.extend(site_form.epoch.data)
         site.researchers.extend([site_form.researcher.data])   # if possibility of multiple selection will be added - just remove the list parentheses
-        region = Region.get_one_by_attr('id', session, site_form.region.data)
+        region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
+        region = Region.get_one_by_attr('name', session, region_data['region'])
+        country = Country.get_one_by_attr('name', session, region_data['country'])
+        if not country:
+            country = Country.create(name=region_data['country'])
+        if not region:
+            region = Region.create(name=region_data['region'])
+        country.region.append(region)
         region.sites.append(site)
         current_user.sites_created.append(site)
         current_user.sites_edited.append(site)
+        if uploaded_file := site_form.file.data:
+            file_dto = FileDTO.create(uploaded_file)
+            upload_file_to_s3(s3_client, file_dto)
+            session.add(file_dto.file)
+            site.file.append(file_dto.file)
         session.commit()
         flash('Памятник добавлен', 'success')
         return redirect(url_for('site.submit_site'))
@@ -36,15 +52,32 @@ def edit_site(site_id) -> Response | str:
     site: ArchaeologicalSite = ArchaeologicalSite.get_one_by_attr('id', session, site_id)
     form = ArchaeologicalSiteForm()
     if request.method == 'POST' and form.validate_on_submit():
-        site.update(
-            name=form.name.data,
-            long=form.long.data,
-            lat=form.lat.data,
-            epochs=form.epoch.data,
-            researchers=[form.researcher.data]   # if possibility of multiple selection will be added - just remove the list parentheses
+        long = form.long.data
+        lat = form.lat.data
+        if long == site.long and lat == site.lat:
+            site.update(
+                name=form.name.data,
+                epochs=form.epoch.data,
+                researchers=[form.researcher.data]
             )
-        region: Region | None = Region.get_by_id(form.region.data)
-        region.sites.append(site)
+        else:
+            site.update(
+                name=form.name.data,
+                long=long,
+                lat=lat,
+                epochs=form.epoch.data,
+                researchers=[form.researcher.data]   # if possibility of multiple selection will be added - just remove the list parentheses
+                )
+            region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
+            region = Region.get_one_by_attr('name', session, region_data['region'])
+            country = Country.get_one_by_attr('name', session, region_data['country'])
+            if not country:
+                country = Country.create(name=region_data['country'])
+            if not region:
+                region = Region.create(name=region_data['region'])
+                country.region.append(region)
+            # region: Region | None = Region.get_by_id(form.region.data)
+            region.sites.append(site)
         current_user.sites_edited.append(site)
         session.commit()
         flash('Изменения сохранены', 'success')
@@ -56,8 +89,8 @@ def edit_site(site_id) -> Response | str:
         form.lat.data = site.lat
         form.epoch.data = site.epochs
         form.researcher.data = site.researchers[0]    # if possibility of multiple selection will be added - just remove the index
-        form.federal_district.data = site.region.federal_district
-        form.region.choices = [(site.region.id, site.region)]
+        # form.federal_district.data = site.region.federal_district
+        # form.region.choices = [(site.region.id, site.region)]
     return render_template('site/site_input.html', title='Редактировать памятник', form=form)
 
 
@@ -68,14 +101,14 @@ def site_table() -> str:
     return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
 
 
-@bp.route('/get_region/<int:fd_id>')
-def region(fd_id: int):
-    fed_distr: FederalDistrict = FederalDistrict.get_one_by_attr('id', session, fd_id)
-    regions: list[Region] = fed_distr.region
-    regionArray: list[dict[int, str]] = [{'id': 0, 'name': 'Выберите субъект'}]
-    for region in regions:
-        regionObj: dict = {}
-        regionObj['id'] = region.id
-        regionObj['name'] = region.name
-        regionArray.append(regionObj)
-    return {'regions': regionArray}
+# @bp.route('/get_region/<int:fd_id>')
+# def region(fd_id: int):
+#     fed_distr: FederalDistrict = FederalDistrict.get_one_by_attr('id', session, fd_id)
+#     regions: list[Region] = fed_distr.region
+#     regionArray: list[dict[int, str]] = [{'id': 0, 'name': 'Выберите субъект'}]
+#     for region in regions:
+#         regionObj: dict = {}
+#         regionObj['id'] = region.id
+#         regionObj['name'] = region.name
+#         regionArray.append(regionObj)
+#     return {'regions': regionArray}

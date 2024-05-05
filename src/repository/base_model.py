@@ -82,7 +82,6 @@ class BaseModel:
     def delete(self, commit: bool = True) -> None:
         """Remove the record from the database."""
         session.delete(self)
-        current_app.logger.info(f'Individ deleted: {self} by {current_user}')
         if commit:
             return session.commit()
         return

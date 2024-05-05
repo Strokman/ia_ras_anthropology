@@ -51,7 +51,7 @@ class IndividForm(FlaskForm):
     sector = StringField(render_kw={'placeholder': 'сектор'}, validators=[CleanString()])
     niveau_point = StringField(render_kw={'placeholder': 'нив.отметка'}, validators=[CleanString()])
     tachymeter_point = StringField(render_kw={'placeholder': 'тахеом.отметка'}, validators=[CleanString()])
-    skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[CleanString()])
+    skeleton = StringField(render_kw={'placeholder': 'скелет'}, validators=[DataRequiredImproved(), CleanString()])
 
     comment = TextAreaField(label='Примечание')
     file = FileField(label='Файл: pdf, jpeg', validators=[Optional(), FileAllowed(['pdf', 'jpg', 'jpeg', 'png'], 'Формат файла не поддерживается')])
