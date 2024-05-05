@@ -23,6 +23,9 @@ def get_location_data(url):
                 region_data['region'] = i['name']
             case 'locality' if 'region' not in region_data:
                 region_data['region'] = i['name']
+    print(url)
+    print(resp)
+    print(region_data)
     if not region_data:
         raise ValueError('Неверные координаты')
     return region_data

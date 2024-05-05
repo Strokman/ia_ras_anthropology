@@ -8,7 +8,7 @@ import pprint
 from src.services import geocode
 from src.repository.models import Epoch, Country, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
 from csv import DictReader
-
+from decimal import Decimal
 from sqlalchemy import select
 
 import warnings
@@ -40,8 +40,8 @@ def fix_regions():
     stmt = select(ArchaeologicalSite)
     res = session.execute(stmt).scalars().all()
     for site in res:
-        long = site.long
-        lat = site.lat
+        long = Decimal(site.long)
+        lat = Decimal(site.lat)
         region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
         region = Region.get_one_by_attr('name', session, region_data['region'])
         country = Country.get_one_by_attr('name', session, region_data['country'])
