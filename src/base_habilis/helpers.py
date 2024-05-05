@@ -21,8 +21,8 @@ def export_xls(individs: list[IndividCore],
     export_data.setdefault('Исследователь',
                            [individ.site.researchers[0]
                             for individ in individs])
-    export_data.setdefault('Федеральный округ',
-                           [individ.site.region.federal_district
+    export_data.setdefault('Страна',
+                           [individ.site.region.country
                             for individ in individs])
     export_data.setdefault('Регион',
                            [individ.site.region for individ in individs])

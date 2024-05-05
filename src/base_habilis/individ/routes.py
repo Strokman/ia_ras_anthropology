@@ -21,7 +21,7 @@ from src.repository.models import (
     Researcher,
     ArchaeologicalSite,
     Epoch,
-    FederalDistrict,
+    Country,
     Region,
     Preservation,
     Grave,
@@ -252,8 +252,8 @@ def search(sort=None):
             stmt = stmt.join(Individ.epoch).where(getattr(Epoch, 'id').in_(epoch_filter))
         if researcher_filter := filters.get('researcher'):
             stmt = stmt.where(getattr(Researcher, 'id').in_(researcher_filter))
-        if feddistrict_filter := filters.get('federal_district'):
-            stmt = stmt.join(Region.federal_district).where(getattr(FederalDistrict, 'id').in_(feddistrict_filter))
+        if country_filter := filters.get('country'):
+            stmt = stmt.join(Region.country).where(getattr(Country, 'id').in_(country_filter))
         if year_min_filter := filters.get('year_min'):
             stmt = stmt.where(Individ.year >= year_min_filter)
         if year_max_filter := filters.get('year_max'):

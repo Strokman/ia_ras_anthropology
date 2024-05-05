@@ -5,8 +5,8 @@ from collections import defaultdict
 import pandas as pd
 import re
 import pprint
-
-from src.repository.models import Epoch, FederalDistrict, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
+from src.services import geocode
+from src.repository.models import Epoch, Country, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
 from csv import DictReader
 
 from sqlalchemy import select
@@ -33,6 +33,24 @@ def drop_regions():
     res = session.execute(stmt).scalars().all()
     for i in res:
         i.delete()
+    session.commit()
+
+@bp.cli.command("fix-regions")
+def fix_regions():
+    stmt = select(ArchaeologicalSite)
+    res = session.execute(stmt).scalars().all()
+    for site in res:
+        long = site.long
+        lat = site.lat
+        region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
+        region = Region.get_one_by_attr('name', session, region_data['region'])
+        country = Country.get_one_by_attr('name', session, region_data['country'])
+        if not country:
+            country = Country.create(name=region_data['country'])
+        if not region:
+            region = Region.create(name=region_data['region'])
+            country.region.append(region)
+        region.sites.append(site)
     session.commit()
 
 

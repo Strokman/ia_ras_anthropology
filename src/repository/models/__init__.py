@@ -9,7 +9,6 @@ from src.repository.models.sex import Sex
 from src.repository.models.comment import Comment
 from src.repository.models.file import File
 from src.repository.models.preservation import Preservation
-from src.repository.models.federal_district import FederalDistrict
 from src.repository.models.region import Region
 from src.repository.base_model import BaseModel
 from src.repository.models.file_site import SupplementaryFile

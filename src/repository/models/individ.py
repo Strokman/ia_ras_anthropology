@@ -58,7 +58,7 @@ class Individ(BaseModel, Model):
             'Год раскопок': self.year,
             'Памятник': self.site,
             'Погребение': self.grave.__str__(),
-            'Федеральный округ': self.site.region.federal_district,
+            'Страна': self.site.region.country,
             'Область': self.site.region,
             'Долгота': self.site.long,
             'Широта': self.site.lat,

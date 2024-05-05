@@ -16,7 +16,7 @@ from src.repository.models import (
     Individ,
     Preservation,
     Comment,
-    FederalDistrict,
+    Country,
     File,
     Grave,
     Researcher,
@@ -35,7 +35,7 @@ admin.add_view(MyModelView(Researcher, session, endpoint='researchers'))
 admin.add_view(MyModelView(Grave, session))
 admin.add_view(MyModelView(Comment, session))
 admin.add_view(MyModelView(File, session, endpoint='files'))
-admin.add_view(MyModelView(FederalDistrict, session, category='Locations'))
+admin.add_view(MyModelView(Country, session, category='Locations'))
 admin.add_view(MyModelView(Region, session, category='Locations'))
 admin.add_view(MyModelView(Epoch, session, category='Fixed tables'))
 admin.add_view(MyModelView(Preservation, session, category='Fixed tables'))

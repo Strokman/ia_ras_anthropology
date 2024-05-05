@@ -4,7 +4,7 @@ from werkzeug.wrappers import Response
 
 from src.repository import session
 from src.base_habilis.site import bp
-from src.repository.models import ArchaeologicalSite, Region, FederalDistrict, Country
+from src.repository.models import ArchaeologicalSite, Region, Country
 from src.base_habilis.site.forms import ArchaeologicalSiteForm
 from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
 from src.services import geocode

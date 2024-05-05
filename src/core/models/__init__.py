@@ -1,5 +1,5 @@
 from .archaeological_site import ArchaeologicalSiteCore
-from .federal_district import FedDistrCore
+from .country import CountryCore
 from .individ import IndividCore
 from .region import RegionCore
 from .researcher import ResearcherCore

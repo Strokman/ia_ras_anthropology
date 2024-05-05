@@ -4,7 +4,7 @@ from wtforms.validators import Optional
 from wtforms_sqlalchemy.fields import QuerySelectMultipleField
 
 from src.repository.models import (
-    FederalDistrict,
+    Country,
     Epoch,
     Researcher,
     Sex,
@@ -20,7 +20,7 @@ class FilterForm(FlaskForm):
 
     def __init__(self):
         super().__init__()
-        self.federal_district.query = FederalDistrict.get_all()
+        self.country.query = Country.get_all()
         self.researcher.query = Researcher.get_all('last_name')
         self.epoch.query = Epoch.get_all('id')
         self.sex.query = Sex.get_all('sex')
@@ -43,7 +43,7 @@ class FilterForm(FlaskForm):
     grave = IntegerField(label='Номер погребения', validators=[Optional()])
     grave_type = SelectMultipleField(label='Тип погребения')
     researcher = QuerySelectMultipleField('Исследователи')
-    federal_district = QuerySelectMultipleField('Федеральный округ')
+    country = QuerySelectMultipleField('Страна')
     comment = SearchField('Поиск по примечанию', validators=[Optional()])
     creator = QuerySelectMultipleField('Кем создан')
     submit = SubmitField('Выбрать')

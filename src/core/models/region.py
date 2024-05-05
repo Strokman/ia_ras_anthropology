@@ -1,5 +1,5 @@
 from pydantic import BaseModel as Base, ConfigDict
-from src.core.models.federal_district import FedDistrCore
+from src.core.models.country import CountryCore
 
 
 class RegionCore(Base):
@@ -7,7 +7,7 @@ class RegionCore(Base):
 
     id: int
     name: str
-    federal_district: FedDistrCore
+    country: CountryCore
 
     def __str__(self):
         return f'{self.name}'
