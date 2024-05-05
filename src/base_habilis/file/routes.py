@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from src.services.files.file_service import get_file_from_db
 
 from flask import send_file, flash, redirect, url_for, session, current_app
@@ -60,7 +60,7 @@ def export_excel(key) -> Response:
     individs = session[key]
     try:
         file: str = export_xls(individs, current_app, export_name=key)
-        return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.now()).replace(' ', '_')}.xlsx")
+        return send_file(file, as_attachment=True, download_name=f"{key}-{str(datetime.datetime.now(datetime.UTC),).replace(' ', '_')}.xlsx")
     except:
         flash('Нет данных для экспорта/некорректные данные', 'warning')
     return redirect(url_for('index.index'))

@@ -1,7 +1,7 @@
 """
     Module contains all routes of auth package
 """
-from datetime import datetime
+import datetime
 from urllib.parse import urlsplit
 
 from flask import (
@@ -38,7 +38,7 @@ def login() -> Response | str:
     if form.validate_on_submit():
         user: User | None = User.get_one_by_attr('username', session, form.username.data)
         login_user(user, remember=form.remember_me.data)
-        user.last_login = datetime.now(datetime.UTC)
+        user.last_login = datetime.datetime.now(datetime.UTC),
         session.commit()
         next_page = request.args.get('next')
         if not next_page or urlsplit(next_page).netloc != '':
@@ -65,8 +65,8 @@ def register() -> Response | str:
                             form.last_name.data,
                             form.affiliation.data,
                             form.email.data,
-                            datetime.now(datetime.UTC),
-                            datetime.now(datetime.UTC),
+                            datetime.datetime.now(datetime.UTC),
+                            datetime.datetime.now(datetime.UTC),
                             form.middle_name.data
                             )
         if user.email == 'anton.strokov@me.com':

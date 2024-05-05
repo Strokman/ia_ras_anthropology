@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from flask import (
     current_app,
@@ -45,9 +45,9 @@ def submit_individ():
             age_max=form.data.get('age_max', None),
             site_id=form.data.get('site', None).id,
             type=form.data.get('type', None),
-            created_at=datetime.now(datetime.UTC),
+            created_at=datetime.datetime.now(datetime.UTC),
             created_by=current_user.id,
-            edited_at=datetime.now(datetime.UTC),
+            edited_at=datetime.datetime.now(datetime.UTC),
             edited_by=current_user.id,
         )
 
@@ -146,7 +146,7 @@ def edit_individ(individ_id):
         individ.age_max = form.data.get('age_max', None)
         individ.preservation = form.data.get('preservation', None)     # ПРОВЕРИТЬ
         individ.type = form.data.get('type', None)
-        individ.edited_at = datetime.now(datetime.UTC)
+        individ.edited_at = datetime.datetime.now(datetime.UTC),
         individ.edited_by = current_user.id
 
         sex = form.sex.data
