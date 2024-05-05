@@ -19,7 +19,11 @@ warnings.simplefilter("ignore")
 @bp.cli.command("fix-graves")
 def fix_graves():
     stmt = select(Grave)
-    session.execute(stmt).scalars().all()
+    res = session.execute(stmt).scalars().all()
+    for i in res:
+        if not i.site:
+            i.site = i.individ.site
+            print(i.site)
     session.commit()
 
 
