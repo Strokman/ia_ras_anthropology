@@ -7,7 +7,7 @@
         </div>
         <div class="modal-body">
             {% for file in site.supplementary_file %}
-            <a href="{{url_for('file.get_suppl_file', filename=file.filename)}}" tabindex="-1" target="_blank">{{file.original_filename}}</a>
+            <a href="{{url_for('file.get_suppl_file', filename=file.filename)}}" tabindex="-1" target="_blank">{{file.original_filename}}</a><br>
             {% endfor %}
         </div>
         <div class="modal-footer">

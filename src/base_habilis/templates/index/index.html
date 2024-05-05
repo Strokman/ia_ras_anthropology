@@ -3,13 +3,39 @@
 {% block app_content %}
 
 {% if current_user.is_authenticated %}
+
 <div class="row">
-<h3>Добрый день, {{current_user.first_name}}{% if current_user.middle_name %} {{current_user.middle_name}}{% endif %}!</h3>
+    <h3>Добрый день, {{current_user.first_name}}{% if current_user.middle_name %} {{current_user.middle_name}}{% endif %}!</h3>
+    <div class="col"></div>
+    <div class="col-8 pt-5">
+<h5>Последние изменения. 03.05.2024. v.1.0.1</h5>
+
+<ol class="list-group list-group-numbered ">
+    <li class="list-group-item align-items-start">Добавлена корректная сортировка по полям таблицы индивидов.</li>
+    <li class="list-group-item">Изменена система привязки памятника к региону - теперь она делается
+        автоматически по координатам (назначается страна и регион). Теперь при добавлении памятников не в России тоже будет работать.
+        Но теперь необходимо следить за корректностью координат - если, к примеру, они будут выпадать на водоем, то адрес не будет получен
+        с сервера и выдаст ошибку.
+    </li>
+    <li class="list-group-item">Добвлена возможность прикреплять файлы к памятника. По количеству файлов лимита нет, но один за раз.
+        Если нужно прикрепить еще - при редактировании можно добавить один и далее файлы. Отображаются они в таблице памятников отдельной
+        кнопкой для скачивания.
+    </li>
+    <li class="list-group-item">В логине (юзернейме) теперь допустимы только буквы.
+    </li>
+  </ol>
+</div>
+<div class="col"></div>
+</div>
+<div class="row">
+
 <div class='col'>
     <br>
     <br>
-    <h5>Кратко о программе</h5>
-<iframe width="700" height="400" src="https://www.youtube.com/embed/9Y_z2EzoPK0?si=5y7jRajFiXtssdGi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+
+    <!-- <h5>Кратко о программе</h5>
+<iframe width="700" height="400" src="https://www.youtube.com/embed/9Y_z2EzoPK0?si=5y7jRajFiXtssdGi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> -->
 <br>
 <br>
 <h5>Краткая инструкция по внесению данных</h5>
