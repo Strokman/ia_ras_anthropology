@@ -9,10 +9,10 @@ from werkzeug.exceptions import NotFound
 from src.base_habilis.extensions import csrf
 from src.base_habilis.file import bp
 from src.base_habilis.helpers import export_xls
-from src.repository.models import File
+from src.repository.models import File, SupplementaryFile
 from src.repository import session as repo
 from src.services.files.file_service import FileDTO, get_file_from_s3, s3_client, delete_file_from_s3
-
+from src.services.files.s3file_handler import S3FileHandler
 
 @bp.route('/file/<filename>', methods=['GET'])
 @login_required
@@ -24,6 +24,18 @@ def get_file(filename) -> Response:
         return send_file(return_file, as_attachment=file.as_attachment, download_name=file.return_filename)
     except (NotFound) as e:
         flash(e.description, 'danger')
+    return redirect(url_for('individ.individ_table'))
+
+@bp.route('/suppl-file/<filename>', methods=['GET'])
+@login_required
+def get_suppl_file(filename) -> Response:
+    file = SupplementaryFile.get_one_by_attr('filename', repo, filename)
+    handler = S3FileHandler(file)
+
+    return_file = handler.get_file_from_s3()
+    return send_file(return_file, as_attachment=True, download_name=file.original_filename)
+    # except (NotFound) as e:
+    #     flash(e.description, 'danger')
     return redirect(url_for('individ.individ_table'))
 
 

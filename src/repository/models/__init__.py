@@ -11,5 +11,5 @@ from src.repository.models.file import File
 from src.repository.models.preservation import Preservation
 from src.repository.models.region import Region
 from src.repository.base_model import BaseModel
-from src.repository.models.file_site import SupplementaryFile
+from src.repository.models.file_suppl import SupplementaryFile
 from src.repository.models.country import Country

@@ -4,9 +4,11 @@
 {{ super() }}
 
 {% block app_content %}
+
 <div class="row">
     <h2>{{ title }}</h2>
 </div>
+
 <div class="container">
 <div class="col table-div">
 <table class="table table-bordered table-hover">
@@ -25,9 +27,15 @@
    
     
     <tbody>
-        {% for num, site in sites %}
-            <tr class="clickable-row">
-                <td class="text-end">{{ num + 1 }}</td>
+        {% for site in sites %}
+        
+            {% if site.supplementary_file %}
+            {% with site=site %}
+            {% include "_modal_sites.html" %}
+            {% endwith %}
+            {% endif %}
+            <tr>
+                <td class="text-end">{{ loop.index }}</td>
                 <td class="text-end">{{ site.name }}</td>
                 <td class="text-end">{{ site.region }}</td>
                 <td class="text-end">{% for epoch in site.epochs %}{{ epoch }}<br> {% endfor %}</td>
@@ -35,7 +43,8 @@
                 <td class="text-end">{{ site.individs|length }}</td>
                 <td class="text-end">{{ site.creator }}</td>
                 <td class="text-end">{{ site.editor }}</td>
-                <td class="text-end"><a href="{{ url_for('site.edit_site', site_id=site.id) }}" class="btn btn-primary" tabindex="-1" role="button">Ред.</a></td>
+                <td class="text-end"><a href="{{ url_for('site.edit_site', site_id=site.id) }}" class="btn btn-primary mb-3" tabindex="-1" role="button">Ред.</a>
+                    {% if site.supplementary_file %}<a href="" data-bs-toggle="modal" data-bs-target="#site{{site.id}}" class="btn btn-primary" tabindex="-1" role="button">Файлы</a>{% endif %}</td>
             </tr>
             {% endfor %}
 
@@ -43,6 +52,8 @@
 </table>
 </div>
 </div>
+
+
 {% endblock %}
 {% block scripts %}
 {{super()}}

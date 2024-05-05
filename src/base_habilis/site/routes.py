@@ -6,7 +6,9 @@ from src.repository import session
 from src.base_habilis.site import bp
 from src.repository.models import ArchaeologicalSite, Region, Country
 from src.base_habilis.site.forms import ArchaeologicalSiteForm
-from src.services.files.file_service import upload_file_to_s3, s3_client, FileDTO, delete_file_from_s3
+from src.services.files.file_handler import FileHandler
+from src.services.files.s3file_handler import S3FileHandler
+from src.repository.models import SupplementaryFile
 from src.services import geocode
 
 
@@ -36,10 +38,13 @@ def submit_site() -> Response | str:
         current_user.sites_created.append(site)
         current_user.sites_edited.append(site)
         if uploaded_file := site_form.file.data:
-            file_dto = FileDTO.create(uploaded_file)
-            upload_file_to_s3(s3_client, file_dto)
-            session.add(file_dto.file)
-            site.file.append(file_dto.file)
+            file = FileHandler(
+                uploaded_file,
+                site,
+                'supplementary_file'
+                )
+            saved_file = file.to_orm(SupplementaryFile)
+            site.supplementary_file.append(saved_file)
         session.commit()
         flash('Памятник добавлен', 'success')
         return redirect(url_for('site.submit_site'))
@@ -54,6 +59,14 @@ def edit_site(site_id) -> Response | str:
     if request.method == 'POST' and form.validate_on_submit():
         long = form.long.data
         lat = form.lat.data
+        if uploaded_file := form.file.data:
+            file = FileHandler(
+                uploaded_file,
+                site,
+                'supplementary_file'
+                )
+            saved_file = file.to_orm(SupplementaryFile)
+            site.supplementary_file.append(saved_file)
         if long == site.long and lat == site.lat:
             site.update(
                 name=form.name.data,
@@ -97,7 +110,7 @@ def edit_site(site_id) -> Response | str:
 @bp.route('/site_table')
 @login_required
 def site_table() -> str:
-    sites = enumerate(ArchaeologicalSite.get_all())
+    sites = ArchaeologicalSite.get_all()
     return render_template('site/site_table.html', title='Таблица археологических памятников', sites=sites)
 
 

@@ -1,0 +1,20 @@
+<div class="modal fade" id="site{{site.id}}" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Дополнительные файлы</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {% for file in site.supplementary_file %}
+            <a href="{{url_for('file.get_suppl_file', filename=file.filename)}}" tabindex="-1" target="_blank">{{file.original_filename}}</a>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+
+        </div>
+        
+      
+    </div>
+  </div>
+  </div>  

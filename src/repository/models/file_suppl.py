@@ -8,9 +8,11 @@ class SupplementaryFile(Model, BaseModel):
     id = Column(Integer, primary_key=True)
     filename = Column(String(128), nullable=False)
     extension = Column(String(36), nullable=False)
+    original_filename = Column(String(128), nullable=False)
+    object_storage_key = Column(String(256), nullable=False)
     site_id = Column(Integer, ForeignKey('archaeological_sites.id'))
 
     site = relationship('ArchaeologicalSite', back_populates='supplementary_file')
 
     def __repr__(self):
-        return f'{self.site}-suppl.{self.extension}'
+        return f'{self.site}-suppl{self.extension}'

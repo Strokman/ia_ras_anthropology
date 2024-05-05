@@ -55,9 +55,17 @@ def get_file_from_db(repo, params: FileDTO):
     if not file:
         raise NotFound('Неверное имя файла')
     if file.extension == 'pdf':
-        return FileDTO(filename=file.filename, file=file, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=False)
+        return FileDTO(filename=file.filename,
+                       file=file,
+                       return_filename=f'{file.individ.index}.{file.extension}',
+                       extension=file.extension,
+                       as_attachment=False)
     elif file.extension != 'pdf':
-        return FileDTO(filename=file.filename, file=file, return_filename=f'{file.individ.index}.{file.extension}', extension=file.extension, as_attachment=True)
+        return FileDTO(filename=file.filename,
+                       file=file,
+                       return_filename=f'{file.individ.index}.{file.extension}',
+                       extension=file.extension,
+                       as_attachment=True)
 
 
 def upload_file_to_s3(client, params: FileDTO):
