@@ -14,6 +14,7 @@ from flask import (
     )
 from flask_login import (
     current_user,
+    login_required,
     login_user,
     logout_user
     )
@@ -27,7 +28,7 @@ from src.base_habilis.auth.forms import (
     ResetPasswordForm,
     RegistrationForm
     )
-from src.repository.models import User
+from src.repository.models import User, admin_required
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -54,9 +55,11 @@ def logout() -> Response:
 
 
 @bp.route('/register', methods=['GET', 'POST'])
+@admin_required
+@login_required
 def register() -> Response | str:
-    if current_user.is_authenticated:
-        return redirect(url_for('index.index'))
+    # if current_user.is_authenticated:
+    #     return redirect(url_for('index.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(form.username.data,

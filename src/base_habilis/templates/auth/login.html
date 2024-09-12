@@ -6,11 +6,15 @@
 {% block app_content %}
 <div class="row text-center">
     <h1>{{ title }}</h1>
-</div> 
+</div>
+
+<div class="row text-center">
+    <h6>Доступ возможен только для сотрудников Лаборатории контекстуальной антропологии ИА РАН</h6>
+</div>
 
 {% include "_form.html" %}
-<div class=row>
-<p>Новый пользователь? Для регистрации <a href="{{ url_for('auth.register') }}">нажмите здесь</a></p>
+<div class="row">
+<!-- <p>Новый пользователь? Для регистрации <a href="{{ url_for('auth.register') }}">нажмите здесь</a></p> -->
     <p>
         Забыли пароль? Для восстановления пароля
         <a href="{{ url_for('auth.reset_password_request') }}">нажмите здесь</a>
