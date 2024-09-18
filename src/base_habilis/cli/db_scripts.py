@@ -29,7 +29,7 @@ def fix_graves():
 
 @bp.cli.command("drop-regions")
 def drop_regions():
-    stmt = select(Region)
+    stmt = select(Country)
     res = session.execute(stmt).scalars().all()
     for i in res:
         i.delete()

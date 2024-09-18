@@ -7,7 +7,7 @@ class Country(Model, BaseModel):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(64), nullable=False)
-    region = relationship('Region', back_populates='country')
+    region = relationship('Region', back_populates='country', cascade='all, delete-orphan')
 
     def __repr__(self):
         return f'{self.name}'
