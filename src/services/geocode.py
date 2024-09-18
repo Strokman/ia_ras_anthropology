@@ -22,5 +22,5 @@ def get_location_data(url):
         if region_data['region'] == 'Автономная Республика Крым':
             region_data['region'] = 'Республика Крым'
         return region_data
-    except IndexError:
+    except (IndexError, KeyError):
         raise ValueError('Неверные координаты')
