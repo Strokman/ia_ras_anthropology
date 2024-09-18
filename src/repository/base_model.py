@@ -5,8 +5,6 @@ the Base Habilis app.
 """
 from typing import Self
 
-from flask import current_app
-from flask_login import current_user
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 

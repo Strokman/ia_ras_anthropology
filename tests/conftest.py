@@ -14,10 +14,10 @@ def app():
 
 @pytest.fixture()
 def client(app):
-    return app.test_client()
+    yield app.test_client()
 
+@pytest.fixture()
+def coords():
+    # test_coords = {
 
-def test_map(client):
-    resp = client.get('/map')
-
-    assert resp.status_code == 200
+    # }

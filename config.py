@@ -31,6 +31,7 @@ class Config:
     POSTGRES_PORT = environ.get('POSTGRES_PORT')
     POSTGRES_DB = environ.get('POSTGRES_DB')
 
+    GMAPS_API_KEY = environ.get('GMAPS_API_KEY')
     # Yandex conf
     MAIL_SERVER = environ.get('MAIL_SERVER')
     MAIL_PORT = environ.get('MAIL_PORT')
@@ -40,3 +41,4 @@ class Config:
     OBJECT_STORAGE_URL = environ.get('OBJECT_STORAGE_URL')
     BUCKET = environ.get('BUCKET')
     YMAPS_API_KEY = environ.get('YMAPS_API_KEY')
+    MAPBOX_TOKEN = environ.get('MAPBOX_TOKEN')

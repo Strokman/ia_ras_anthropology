@@ -35,6 +35,7 @@ def drop_regions():
         i.delete()
     session.commit()
 
+
 @bp.cli.command("fix-regions")
 def fix_regions():
     stmt = select(ArchaeologicalSite)

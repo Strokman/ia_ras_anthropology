@@ -19,6 +19,11 @@ def submit_site() -> Response | str:
     if site_form.validate_on_submit():
         long = site_form.long.data
         lat = site_form.lat.data
+        try:
+            region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
+        except ValueError as e:
+            flash(e, 'warning')
+            return redirect(url_for('site.submit_site'))
         site = ArchaeologicalSite.create(
             name=site_form.name.data,
             long=long,
@@ -26,11 +31,7 @@ def submit_site() -> Response | str:
             )
         site.epochs.extend(site_form.epoch.data)
         site.researchers.extend([site_form.researcher.data])   # if possibility of multiple selection will be added - just remove the list parentheses
-        try:
-            region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
-        except ValueError as e:
-            flash(e, 'warning')
-            return redirect(url_for('site.submit_site'))
+
         region = Region.get_one_by_attr('name', session, region_data['region'])
         country = Country.get_one_by_attr('name', session, region_data['country'])
         if not country:
@@ -87,6 +88,7 @@ def edit_site(site_id) -> Response | str:
                 )
             try:
                 region_data = geocode.get_location_data(geocode.create_geocode_url(lat, long))
+                print(region_data)
             except ValueError as e:
                 flash(e, 'warning')
                 return redirect(url_for('site.site_table'))
