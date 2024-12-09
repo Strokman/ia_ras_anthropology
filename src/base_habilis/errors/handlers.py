@@ -88,21 +88,21 @@ def bad_gateway(error: BadGateway):
     return render_template('errors/base_error.html', response=response), 502
 
 
-@bp.app_errorhandler(MethodNotAllowed)
-def method_not_allowed(error: MethodNotAllowed):
-    save_logs(error)
-    response = {
-        'code': error.code,
-        'message': 'Ошибка сервера, администратор уведомлен',
-        'tb': traceback.format_exc()
-    }
-    txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\n{request.remote_addr}\nTraceback:\n{response.get('tb')}"
-    send_email(f'BaseHabilis - ошибка {response.get("code")}',
-        sender=current_app.config['ADMIN_EMAIL'],
-        recipients=[current_app.config['BACKUP_EMAIL']],
-        text_body=txt
-        )
-    return render_template('errors/base_error.html', response=response), 405
+# @bp.app_errorhandler(MethodNotAllowed)
+# def method_not_allowed(error: MethodNotAllowed):
+#     save_logs(error)
+#     response = {
+#         'code': error.code,
+#         'message': 'Ошибка сервера, администратор уведомлен',
+#         'tb': traceback.format_exc()
+#     }
+#     txt = f"Возникла ошибка\nКод ошибки: {response.get('code')}\nСообщение: {response.get('message')}\n{request.remote_addr}\nTraceback:\n{response.get('tb')}"
+#     send_email(f'BaseHabilis - ошибка {response.get("code")}',
+#         sender=current_app.config['ADMIN_EMAIL'],
+#         recipients=[current_app.config['BACKUP_EMAIL']],
+#         text_body=txt
+#         )
+#     return render_template('errors/base_error.html', response=response), 405
 
 
 @bp.app_errorhandler(BadRequest)
