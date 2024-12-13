@@ -13,6 +13,7 @@ class Individ(BaseModel, Model):
     age_min = Column(Integer)
     age_max = Column(Integer)
     type = Column(String(16))
+    comment = Column(Text())
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     edited_at = Column(DateTime, default=datetime.utcnow)
     sex_type = Column(String, ForeignKey('sex.sex'))
@@ -23,7 +24,7 @@ class Individ(BaseModel, Model):
     preservation_id = Column(Integer, ForeignKey('preservation.id'))
 
     site = relationship('ArchaeologicalSite', back_populates='individs')
-    comment = Column(Text())
+
     epoch = relationship('Epoch', uselist=False, back_populates='individ')
     creator = relationship("User", uselist=False, foreign_keys='Individ.created_by', back_populates='individs_created')
     editor = relationship("User", uselist=False, foreign_keys='Individ.edited_by', back_populates='individs_edited')

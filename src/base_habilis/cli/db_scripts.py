@@ -54,35 +54,3 @@ def fix_regions():
         region.sites.append(site)
     session.commit()
 
-
-# @bp.cli.command("migrate-comments")
-# def migrate_comments():
-#     stmt = select(Individ)
-#     res = session.execute(stmt).scalars().all()
-#     for individ in res:
-#         try:
-#             individ.comment_temp = individ.comment.text
-#         except:
-#             pass
-#     session.commit()
-
-# @bp.cli.command("fix-skeletons")
-# def fix_skeletons():
-#     stmt = select(Grave).group_by(Grave.id, Grave.grave_number)
-#     res = session.execute(stmt).scalars().all()
-#     graves_dict = defaultdict(list)
-#     for i in sorted(res, key=lambda x: x.grave_number):
-#         graves_dict[i.site].append(i)
-#     for k, v in graves_dict.items():
-#         b = defaultdict(list)
-#         for j in v:
-#             b[j.grave_number].append(j)
-#         graves_dict[k] = b
-#     for k, v in graves_dict.items():
-#         for i, j in v.items():
-#             for i in range(len(j)):
-#                 if j[i].skeleton is None or j[i].skeleton == 0:
-#                     j[i].skeleton = i + 1
-#                 pprint.pprint(j)
-    # session.commit()
-    

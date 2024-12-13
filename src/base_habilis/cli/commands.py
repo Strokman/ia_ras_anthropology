@@ -6,7 +6,7 @@ import pandas as pd
 import re
 from flask import current_app
 
-from src.repository.models import Epoch, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher
+from src.repository.models import Epoch, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher
 from csv import DictReader
 
 from sqlalchemy import select
@@ -275,8 +275,8 @@ warnings.simplefilter("ignore")
 #                     pass
 #                 grave = Grave(**grave_data)
 #                 individ = Individ(**individ_data)
-#                 comment = Comment(text=f"Исходные данные, погребение: {row['Номер погребения']}, возраст: {row['Возраст']}")
-#                 session.add_all([grave, individ, comment])
+#                 comment = f"Исходные данные, погребение: {row['Номер погребения']}, возраст: {row['Возраст']}"
+#                 session.add_all([grave, individ])
 #                 individ.grave = grave
 #                 individ.comment = comment
 #                 preservation.individ.append(individ)

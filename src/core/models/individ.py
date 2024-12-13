@@ -5,7 +5,6 @@ from src.core.models.epoch import EpochCore
 from src.core.models.sex import SexCore
 from src.core.models.preservation import PreservationCore
 from src.core.models.grave import GraveCore
-# from src.core.models.comment import CommentCore
 
 from datetime import datetime
 
