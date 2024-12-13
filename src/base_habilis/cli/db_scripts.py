@@ -55,6 +55,17 @@ def fix_regions():
     session.commit()
 
 
+@bp.cli.command("migrate-comments")
+def migrate_comments():
+    stmt = select(Individ)
+    res = session.execute(stmt).scalars().all()
+    for individ in res:
+        try:
+            individ.comment_temp = individ.comment.text
+        except:
+            pass
+    session.commit()
+
 # @bp.cli.command("fix-skeletons")
 # def fix_skeletons():
 #     stmt = select(Grave).group_by(Grave.id, Grave.grave_number)

@@ -18,3 +18,4 @@ DateTime = db.DateTime
 Integer = db.Integer
 Numeric = db.Numeric
 String = db.String
+Text = db.Text

@@ -9,6 +9,7 @@ from src.repository.postgres_repo import Boolean
 from src.repository.postgres_repo import DateTime
 from src.repository.postgres_repo import Numeric
 from src.repository.postgres_repo import String
+from src.repository.postgres_repo import Text
 from src.repository.postgres_repo import Table
 from src.repository.base_model import BaseModel
 from src.repository.paginate import Pagination

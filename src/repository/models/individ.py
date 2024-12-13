@@ -1,4 +1,4 @@
-from src.repository import Column, relationship, ForeignKey, Integer, DateTime, String, Model
+from src.repository import Column, relationship, ForeignKey, Integer, DateTime, String, Model, Text
 from src.repository import BaseModel
 from flask_moment import moment
 from datetime import datetime
@@ -23,6 +23,7 @@ class Individ(BaseModel, Model):
     preservation_id = Column(Integer, ForeignKey('preservation.id'))
 
     site = relationship('ArchaeologicalSite', back_populates='individs')
+    comment_temp = Column(Text())
     comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
     epoch = relationship('Epoch', uselist=False, back_populates='individ')
     creator = relationship("User", uselist=False, foreign_keys='Individ.created_by', back_populates='individs_created')
