@@ -5,7 +5,7 @@ from src.core.models.epoch import EpochCore
 from src.core.models.sex import SexCore
 from src.core.models.preservation import PreservationCore
 from src.core.models.grave import GraveCore
-from src.core.models.comment import CommentCore
+# from src.core.models.comment import CommentCore
 
 from datetime import datetime
 
@@ -22,6 +22,7 @@ class IndividCore(Base):
     type: str
     created_at: datetime
     edited_at: datetime
+    comment: str | None
 
     epoch: EpochCore | None
     sex: SexCore
@@ -30,7 +31,6 @@ class IndividCore(Base):
     creator: UserCore
     editor: UserCore
     site: ArchaeologicalSiteCore
-    comment: CommentCore | None
 
     def __str__(self):
         return f'{self.index}'

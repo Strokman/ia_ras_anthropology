@@ -15,7 +15,6 @@ from src.repository.models import (
     Epoch,
     Individ,
     Preservation,
-    Comment,
     Country,
     File,
     Grave,
@@ -33,7 +32,6 @@ admin.add_view(MyModelView(Individ, session, name='Individs', url='individs', en
 admin.add_view(MyModelView(ArchaeologicalSite, session, name='Sites'))
 admin.add_view(MyModelView(Researcher, session, endpoint='researchers'))
 admin.add_view(MyModelView(Grave, session))
-admin.add_view(MyModelView(Comment, session))
 admin.add_view(MyModelView(File, session, endpoint='files'))
 admin.add_view(MyModelView(Country, session, category='Locations'))
 admin.add_view(MyModelView(Region, session, category='Locations'))

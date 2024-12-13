@@ -23,8 +23,7 @@ class Individ(BaseModel, Model):
     preservation_id = Column(Integer, ForeignKey('preservation.id'))
 
     site = relationship('ArchaeologicalSite', back_populates='individs')
-    comment_temp = Column(Text())
-    comment = relationship('Comment', uselist=False, back_populates='individ', cascade='all, delete-orphan')
+    comment = Column(Text())
     epoch = relationship('Epoch', uselist=False, back_populates='individ')
     creator = relationship("User", uselist=False, foreign_keys='Individ.created_by', back_populates='individs_created')
     editor = relationship("User", uselist=False, foreign_keys='Individ.edited_by', back_populates='individs_edited')
@@ -69,7 +68,7 @@ class Individ(BaseModel, Model):
             'Возраст': self.age if self.age else '',
             'Пол': self.sex.sex,
             'Сохранность': self.preservation.description,
-            'Примечание': self.comment.text if self.comment else '',
+            'Примечание': self.comment if self.comment else '',
             'Кем создано': self.creator,
             'Когда создано': moment(self.created_at).format('L'),
             'Кем изменено': self.editor,

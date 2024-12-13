@@ -1,4 +1,4 @@
-from src.repository.models import Individ, ArchaeologicalSite, Epoch, Preservation, Country, Grave, User, Comment, Researcher, Sex, Region
+from src.repository.models import Individ, ArchaeologicalSite, Epoch, Preservation, Country, Grave, User, Researcher, Sex, Region
 
 from sqlalchemy import select, or_, between, case
 
@@ -33,7 +33,7 @@ def filtering(filters):
     if grave_number_filter := filters.get('grave'):
         stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(grave_number_filter))
     if comment_filter := filters.get('comment'):
-        stmt = stmt.join(Individ.comment).where(Comment.text.ilike(f'%{comment_filter}%'))
+        stmt = stmt.join(Individ.comment).where(Individ.comment.ilike(f'%{comment_filter}%'))
     if filters.get('age_min') and filters.get('age_max'):
         age_min = filters.get('age_min')
         age_max = filters.get('age_max')

@@ -6,7 +6,7 @@ import pandas as pd
 import re
 import pprint
 from src.services import geocode
-from src.repository.models import Epoch, Country, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher, Comment
+from src.repository.models import Epoch, Country, Region, Preservation, Sex, Individ, ArchaeologicalSite, Grave, User, Researcher
 from csv import DictReader
 from decimal import Decimal
 from sqlalchemy import select
@@ -55,16 +55,16 @@ def fix_regions():
     session.commit()
 
 
-@bp.cli.command("migrate-comments")
-def migrate_comments():
-    stmt = select(Individ)
-    res = session.execute(stmt).scalars().all()
-    for individ in res:
-        try:
-            individ.comment_temp = individ.comment.text
-        except:
-            pass
-    session.commit()
+# @bp.cli.command("migrate-comments")
+# def migrate_comments():
+#     stmt = select(Individ)
+#     res = session.execute(stmt).scalars().all()
+#     for individ in res:
+#         try:
+#             individ.comment_temp = individ.comment.text
+#         except:
+#             pass
+#     session.commit()
 
 # @bp.cli.command("fix-skeletons")
 # def fix_skeletons():

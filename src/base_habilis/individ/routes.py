@@ -25,8 +25,7 @@ from src.repository.models import (
     Region,
     Preservation,
     Grave,
-    User,
-    Comment)
+    User)
 from src.repository import session, paginate
 from src.core.models import IndividCore
 from src.core.services.sort import sort_func
@@ -88,9 +87,7 @@ def submit_individ():
         # check if file, comment and epoch were submitted, than instanciate everything,\
         #  add to session to create relations
         if form.comment.data:
-            comment = Comment(text=form.comment.data)
-            session.add(comment)
-            individ.comment = comment
+            individ.comment = form.comment.data
 
         if epoch := form.epoch.data:
             epoch.individ.append(individ)
@@ -153,11 +150,9 @@ def edit_individ(individ_id):
         sex.individs.append(individ)
 
         if input_comment := form.comment.data:
-            comment = Comment(text=input_comment)
-            session.add(comment)
-            individ.comment = comment
+            individ.comment = input_comment
         elif individ.comment:
-            individ.comment.delete()
+            individ.comment = None
         if individ.site != (site := form.site.data):
             site.individ.append(individ)
         individ.create_index()
@@ -203,7 +198,7 @@ def edit_individ(individ_id):
         form.tachymeter_point.data = individ.grave.tachymeter_point
         form.skeleton.data = individ.grave.skeleton
         if individ.comment:
-            form.comment.data = individ.comment.text
+            form.comment.data = individ.comment
     return render_template('individ/submit_individ.html', form=form)
 
 
@@ -273,7 +268,7 @@ def search(sort=None):
         if grave_number_filter := filters.get('grave'):
             stmt = stmt.join(Individ.grave).where(getattr(Grave, 'grave_number').in_(grave_number_filter))
         if comment_filter := filters.get('comment'):
-            stmt = stmt.join(Individ.comment).where(Comment.text.ilike(f'%{comment_filter}%'))
+            stmt = stmt.join(Individ.comment).where(Individ.comment.ilike(f'%{comment_filter}%'))
         if filters.get('age_min') and filters.get('age_max'):
             age_min = filters.get('age_min')
             age_max = filters.get('age_max')
