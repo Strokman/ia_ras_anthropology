@@ -1,5 +1,4 @@
 FROM python:3.11.3-slim-buster
-# RUN useradd basehabilis
 
 # switch working directory
 WORKDIR /home/base_habilis

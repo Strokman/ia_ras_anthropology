@@ -8,8 +8,8 @@ services:
     image: postgres:16
     networks:
       - default
-    expose:
-      - 5432
+    ports:
+      - 51432:5432
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "basehabilis" ]
       interval: 10s
