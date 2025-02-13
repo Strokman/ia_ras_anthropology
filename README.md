@@ -7,7 +7,7 @@
 
 2. Скачайте исходный код из репозитория:
 
-```git clone https://github.com/Strokman/architecture_archaeology_ia_ras.git ```
+```git clone https://github.com/Strokman/ia_ras_anthropology.git ```
 
 3. В корневой папке проекта нужно создать файл ```.env```. Содержимое предоставлю по запросу.
 
