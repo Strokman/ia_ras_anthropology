@@ -8,4 +8,5 @@ with ZipFile(f'/home/basehabilis//basehabilis_dumps/{filename}', 'w', ZIP_DEFLAT
     for dirname, subdirs, files in os.walk('postgres-data'):
         archive.write(dirname, arcname=dirname)
         for filename in files:
+            print(filename)
             archive.write(name := os.path.join(dirname, filename), arcname=name)
